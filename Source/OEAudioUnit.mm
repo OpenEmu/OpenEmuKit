@@ -148,7 +148,7 @@ static OSStatus audioConverterComplexInputDataProc(AudioConverterRef inAudioConv
     OSStatus status = AudioConverterNew(srcDesc, dstDesc, &_conv);
     if (status != noErr) {
         NSLog(@"unable to create audio converter: %d", status);
-        return nil;
+        return NO;
     }
     /* 64 bytes of padding above self.maximumFramesToRender because
      * CoreAudio is stupid and likes to request more bytes than the maximum
