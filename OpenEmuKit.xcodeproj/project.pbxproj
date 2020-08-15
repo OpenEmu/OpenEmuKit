@@ -42,7 +42,7 @@
 		05E6BA2A24CCD75900ACFB35 /* OEAudioUnit.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05E6BA2624CCD75800ACFB35 /* OEAudioUnit.mm */; };
 		05E6BA2B24CCD75900ACFB35 /* OEGameAudio.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E6BA2724CCD75900ACFB35 /* OEGameAudio.h */; };
 		05E6BA3024CCD77600ACFB35 /* OEGameLayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05E6BA2D24CCD77300ACFB35 /* OEGameLayerView.m */; };
-		05E6BA3124CCD77600ACFB35 /* OEGameLayerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E6BA2E24CCD77400ACFB35 /* OEGameLayerView.h */; };
+		05E6BA3124CCD77600ACFB35 /* OEGameLayerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E6BA2E24CCD77400ACFB35 /* OEGameLayerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		05E6BA3C24CCD79600ACFB35 /* OEThreadProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E6BA3624CCD79200ACFB35 /* OEThreadProxy.h */; };
 		05E6BA3D24CCD79600ACFB35 /* OELogging.m in Sources */ = {isa = PBXBuildFile; fileRef = 05E6BA3724CCD79300ACFB35 /* OELogging.m */; };
 		05E6BA3E24CCD79600ACFB35 /* OEThreadProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 05E6BA3824CCD79500ACFB35 /* OEThreadProxy.m */; };
