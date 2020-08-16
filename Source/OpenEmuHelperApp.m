@@ -73,9 +73,6 @@ extern NSString * const kCAContextCIFilterBehavior;
 @property(readonly) OEIntSize screenSize;
 @property(readonly) OEIntSize aspectSize;
 
-- (void)setupProcessPollingTimer;
-- (void)quitHelperTool;
-
 @end
 
 @implementation OpenEmuHelperApp
@@ -83,14 +80,9 @@ extern NSString * const kCAContextCIFilterBehavior;
     OEIntRect _previousScreenRect;
     OEIntSize _previousAspectSize;
     
-    NSRunningApplication *_parentApplication; // the process id of the parent app (Open Emu or our debug helper)
-    
     // Video
     id <OEGameRenderer>   _gameRenderer;
     OECoreVideoTexture    *_surface;
-    
-    // poll parent ID, KVO does not seem to be working with NSRunningApplication
-    NSTimer              *_pollingTimer;
     
     // OE stuff
     OEGameCoreController *_gameController;
@@ -136,35 +128,6 @@ extern NSString * const kCAContextCIFilterBehavior;
     
 }
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
-{
-    _parentApplication = [NSRunningApplication runningApplicationWithProcessIdentifier:getppid()];
-    [_parentApplication addObserver:self forKeyPath:@"terminated" options:NSKeyValueObservingOptionNew context:nil];
-    if(_parentApplication != nil)
-    {
-        NSLog(@"parent application is: %@", [_parentApplication localizedName]);
-        [self setupProcessPollingTimer];
-    }
-    
-    OEDeviceManager *dm = [OEDeviceManager sharedDeviceManager];
-    if (@available(macOS 10.15, *))
-    {
-        if (dm.accessType != OEDeviceAccessTypeGranted)
-        {
-            [dm requestAccess];
-            NSLog(@"Input Monitoring: Access Denied");
-        }
-    }
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath
-                      ofObject:(id)object
-                        change:(NSDictionary<NSKeyValueChangeKey,id> *)change
-                       context:(void *)context
-{
-    NSLog(@"TERMINATED");
-}
-
 - (void)OE_loadPlugins
 {
     
@@ -206,31 +169,6 @@ extern NSString * const kCAContextCIFilterBehavior;
     if (shaderURL != nil) {
         [self setShaderURL:shaderURL error:nil];
     }
-}
-
-- (void)setupProcessPollingTimer
-{
-    _pollingTimer = [NSTimer scheduledTimerWithTimeInterval:5
-                                                     target:self
-                                                   selector:@selector(pollParentProcess)
-                                                   userInfo:nil
-                                                    repeats:YES];
-    _pollingTimer.tolerance = 1;
-}
-
-- (void)pollParentProcess
-{
-    if([_parentApplication isTerminated])
-    {
-        [self quitHelperTool];
-    }
-}
-
-- (void)quitHelperTool
-{
-    [_pollingTimer invalidate];
-    
-    [[NSApplication sharedApplication] terminate:nil];
 }
 
 #pragma mark - Core Video and Generic Video
@@ -533,9 +471,6 @@ extern NSString * const kCAContextCIFilterBehavior;
 
 - (void)stopEmulationWithCompletionHandler:(void(^)(void))handler
 {
-    [_pollingTimer invalidate];
-    _pollingTimer = nil;
-    
     [_gameCore stopEmulationWithCompletionHandler: ^{
         [self->_gameAudio stopAudio];
         [self->_gameCore setRenderDelegate:nil];

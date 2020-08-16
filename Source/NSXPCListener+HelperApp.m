@@ -22,27 +22,46 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import <Foundation/Foundation.h>
+#import "NSXPCListener+HelperApp.h"
+#import "OEXPCCMatchMaking.h"
 
-//! Project version number for OpenEmuKit.
-FOUNDATION_EXPORT double OpenEmuKitVersionNumber;
+extern NSString *kHelperIdentifierArgumentPrefix;
 
-//! Project version string for OpenEmuKit.
-FOUNDATION_EXPORT const unsigned char OpenEmuKitVersionString[];
+@implementation NSXPCListener (HelperApp)
 
-// In this header, you should import all the public headers of your framework using statements like #import <OpenEmuKit/PublicHeader.h>
++ (NSString *)helperIdentifierFromArguments
+{
+    for(NSString *argument in NSProcessInfo.processInfo.arguments)
+        if([argument hasPrefix:kHelperIdentifierArgumentPrefix])
+            return [argument substringFromIndex:kHelperIdentifierArgumentPrefix.length];
 
-#import <OpenEmuKit/OEPlugin.h>
-#import <OpenEmuKit/OECorePlugin.h>
-#import <OpenEmuKit/OESystemPlugin.h>
-#import <OpenEmuKit/OEShaderParamValue.h>
-#import <OpenEmuKit/OEGameCoreHelper.h>
-#import <OpenEmuKit/OpenEmuHelperApp.h>
-#import <OpenEmuKit/OpenEmuXPCHelperApp.h>
-#import <OpenEmuKit/OEGameCoreManager.h>
-#import <OpenEmuKit/OEThreadGameCoreManager.h>
-#import <OpenEmuKit/OEXPCGameCoreManager.h>
-#import <OpenEmuKit/OEGameLayerView.h>
-#import <OpenEmuKit/NSXPCConnection+HelperApp.h>
-#import <OpenEmuKit/NSXPCListener+HelperApp.h>
-#import <OpenEmuKit/OEXPCDebugSupport.h>
+    return nil;
+}
+
++ (nullable instancetype)helperListenerWithServiceName:(NSString *)name error:(NSError **)error
+{
+    NSString *identifier = self.helperIdentifierFromArguments;
+    
+    __auto_type cn = [[NSXPCConnection alloc] initWithServiceName:name];
+    cn.remoteObjectInterface = [NSXPCInterface interfaceWithProtocol:@protocol(OEXPCCMatchMaking)];
+    [cn resume];
+    
+    __block NSError *proxyErr = nil;
+    id<OEXPCCMatchMaking> mm = [cn remoteObjectProxyWithErrorHandler:^(NSError * _Nonnull err) {
+        proxyErr = err;
+    }];
+    
+    if (mm == nil || proxyErr != nil) {
+        if (error != nil && proxyErr != nil)
+        {
+            *error = proxyErr;
+        }
+        return nil;
+    }
+    
+    __auto_type listener = [NSXPCListener anonymousListener];
+    [mm registerListenerEndpoint:listener.endpoint forIdentifier:identifier completionHandler:^{}];
+    return listener;
+}
+
+@end

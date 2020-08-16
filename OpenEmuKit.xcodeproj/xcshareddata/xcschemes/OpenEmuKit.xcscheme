@@ -20,6 +20,20 @@
                ReferencedContainer = "container:OpenEmuKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "0547FE2A24E871B0005C1FFC"
+               BuildableName = "libOpenEmuXPC.a"
+               BlueprintName = "OpenEmuXPC"
+               ReferencedContainer = "container:OpenEmuKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
