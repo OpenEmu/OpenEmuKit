@@ -21,10 +21,8 @@
 		0547FDD324E85783005C1FFC /* OEXPCGameCoreManagerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 0547FDD124E85783005C1FFC /* OEXPCGameCoreManagerBase.m */; };
 		0547FDDF24E8622B005C1FFC /* OpenEmuXPCHelperAppBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FDDD24E8622B005C1FFC /* OpenEmuXPCHelperAppBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0547FDE024E8622B005C1FFC /* OpenEmuXPCHelperAppBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 0547FDDE24E8622B005C1FFC /* OpenEmuXPCHelperAppBase.m */; };
-		0547FE3424E871DD005C1FFC /* OEXPCCMatchMaker.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FDA024E78EA6005C1FFC /* OEXPCCMatchMaker.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0547FE3524E871E4005C1FFC /* OEXPCCMatchMaking.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FDA224E78EA6005C1FFC /* OEXPCCMatchMaking.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0547FE3624E87201005C1FFC /* OEXPCCMatchMaker.m in Sources */ = {isa = PBXBuildFile; fileRef = 0547FDA124E78EA6005C1FFC /* OEXPCCMatchMaker.m */; };
-		0547FE3724E8728B005C1FFC /* OpenEmuXPC.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FE0324E86B1B005C1FFC /* OpenEmuXPC.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		05D828D524E9881E00BB975E /* OEXPCMatchMaking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D828D424E9881E00BB975E /* OEXPCMatchMaking.swift */; };
+		05D828DB24E98A8E00BB975E /* OEXPCMatchMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D828DA24E98A8E00BB975E /* OEXPCMatchMaker.swift */; };
 		05E6958424CA5D4200ACFB35 /* OpenEmuKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E6958224CA5D4200ACFB35 /* OpenEmuKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		05E6B9E024CCD43A00ACFB35 /* OpenEmuHelperApp.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E6B9DB24CCD43800ACFB35 /* OpenEmuHelperApp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		05E6B9E124CCD43A00ACFB35 /* OpenEmuHelperApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 05E6B9DC24CCD43900ACFB35 /* OpenEmuHelperApp.m */; };
@@ -88,9 +86,6 @@
 		0533EA6624CDFD030095146E /* XADMaster.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XADMaster.framework; path = ../OpenEmu/XADMaster.framework; sourceTree = "<group>"; };
 		0547FD9724E7717E005C1FFC /* OEShadersModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OEShadersModel.swift; sourceTree = "<group>"; };
 		0547FD9F24E78EA6005C1FFC /* OEXPCDebugSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEXPCDebugSupport.h; sourceTree = "<group>"; };
-		0547FDA024E78EA6005C1FFC /* OEXPCCMatchMaker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEXPCCMatchMaker.h; sourceTree = "<group>"; };
-		0547FDA124E78EA6005C1FFC /* OEXPCCMatchMaker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OEXPCCMatchMaker.m; sourceTree = "<group>"; };
-		0547FDA224E78EA6005C1FFC /* OEXPCCMatchMaking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEXPCCMatchMaking.h; sourceTree = "<group>"; };
 		0547FDA324E78EA6005C1FFC /* OEXPCDebugSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OEXPCDebugSupport.m; sourceTree = "<group>"; };
 		0547FDC824E84498005C1FFC /* NSXPCConnection+HelperApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSXPCConnection+HelperApp.h"; sourceTree = "<group>"; };
 		0547FDC924E84498005C1FFC /* NSXPCConnection+HelperApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSXPCConnection+HelperApp.m"; sourceTree = "<group>"; };
@@ -100,8 +95,8 @@
 		0547FDD124E85783005C1FFC /* OEXPCGameCoreManagerBase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OEXPCGameCoreManagerBase.m; sourceTree = "<group>"; };
 		0547FDDD24E8622B005C1FFC /* OpenEmuXPCHelperAppBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenEmuXPCHelperAppBase.h; sourceTree = "<group>"; };
 		0547FDDE24E8622B005C1FFC /* OpenEmuXPCHelperAppBase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OpenEmuXPCHelperAppBase.m; sourceTree = "<group>"; };
-		0547FE0324E86B1B005C1FFC /* OpenEmuXPC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenEmuXPC.h; sourceTree = "<group>"; };
-		0547FE2B24E871B0005C1FFC /* libOpenEmuXPC.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOpenEmuXPC.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		05D828D424E9881E00BB975E /* OEXPCMatchMaking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OEXPCMatchMaking.swift; sourceTree = "<group>"; };
+		05D828DA24E98A8E00BB975E /* OEXPCMatchMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OEXPCMatchMaker.swift; sourceTree = "<group>"; };
 		05E6957F24CA5D4200ACFB35 /* OpenEmuKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OpenEmuKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		05E6958224CA5D4200ACFB35 /* OpenEmuKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenEmuKit.h; sourceTree = "<group>"; };
 		05E6958324CA5D4200ACFB35 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -151,13 +146,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		0547FE2924E871B0005C1FFC /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		05E6957C24CA5D4200ACFB35 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -175,7 +163,8 @@
 		0547FD9E24E78E92005C1FFC /* XPC */ = {
 			isa = PBXGroup;
 			children = (
-				0547FDA224E78EA6005C1FFC /* OEXPCCMatchMaking.h */,
+				05D828D424E9881E00BB975E /* OEXPCMatchMaking.swift */,
+				05D828DA24E98A8E00BB975E /* OEXPCMatchMaker.swift */,
 				0547FD9F24E78EA6005C1FFC /* OEXPCDebugSupport.h */,
 				0547FDA324E78EA6005C1FFC /* OEXPCDebugSupport.m */,
 				0547FDC824E84498005C1FFC /* NSXPCConnection+HelperApp.h */,
@@ -186,22 +175,11 @@
 			name = XPC;
 			sourceTree = "<group>";
 		};
-		0547FE2C24E871B0005C1FFC /* OpenEmuXPC */ = {
-			isa = PBXGroup;
-			children = (
-				0547FE0324E86B1B005C1FFC /* OpenEmuXPC.h */,
-				0547FDA024E78EA6005C1FFC /* OEXPCCMatchMaker.h */,
-				0547FDA124E78EA6005C1FFC /* OEXPCCMatchMaker.m */,
-			);
-			path = OpenEmuXPC;
-			sourceTree = "<group>";
-		};
 		05E6957524CA5D4200ACFB35 = {
 			isa = PBXGroup;
 			children = (
 				05E6959324CA5E1100ACFB35 /* Source */,
 				05E6958124CA5D4200ACFB35 /* OpenEmuKit */,
-				0547FE2C24E871B0005C1FFC /* OpenEmuXPC */,
 				05E6958024CA5D4200ACFB35 /* Products */,
 				05E6BA0D24CCD53100ACFB35 /* Frameworks */,
 			);
@@ -211,7 +189,6 @@
 			isa = PBXGroup;
 			children = (
 				05E6957F24CA5D4200ACFB35 /* OpenEmuKit.framework */,
-				0547FE2B24E871B0005C1FFC /* libOpenEmuXPC.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -390,16 +367,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		0547FE2724E871B0005C1FFC /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0547FE3424E871DD005C1FFC /* OEXPCCMatchMaker.h in Headers */,
-				0547FE3524E871E4005C1FFC /* OEXPCCMatchMaking.h in Headers */,
-				0547FE3724E8728B005C1FFC /* OpenEmuXPC.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		05E6957A24CA5D4200ACFB35 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -438,24 +405,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		0547FE2A24E871B0005C1FFC /* OpenEmuXPC */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 0547FE3124E871B0005C1FFC /* Build configuration list for PBXNativeTarget "OpenEmuXPC" */;
-			buildPhases = (
-				0547FE2724E871B0005C1FFC /* Headers */,
-				0547FE2824E871B0005C1FFC /* Sources */,
-				0547FE2924E871B0005C1FFC /* Frameworks */,
-				05D828CA24E8AFA200BB975E /* Prepare Framework */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = OpenEmuXPC;
-			productName = OpenEmuXPC;
-			productReference = 0547FE2B24E871B0005C1FFC /* libOpenEmuXPC.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 		05E6957E24CA5D4200ACFB35 /* OpenEmuKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 05E6958724CA5D4200ACFB35 /* Build configuration list for PBXNativeTarget "OpenEmuKit" */;
@@ -483,9 +432,6 @@
 			attributes = {
 				LastUpgradeCheck = 1200;
 				TargetAttributes = {
-					0547FE2A24E871B0005C1FFC = {
-						CreatedOnToolsVersion = 12.0;
-					};
 					05E6957E24CA5D4200ACFB35 = {
 						CreatedOnToolsVersion = 12.0;
 						LastSwiftMigration = 1200;
@@ -517,7 +463,6 @@
 			projectRoot = "";
 			targets = (
 				05E6957E24CA5D4200ACFB35 /* OpenEmuKit */,
-				0547FE2A24E871B0005C1FFC /* OpenEmuXPC */,
 			);
 		};
 /* End PBXProject section */
@@ -532,36 +477,7 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		05D828CA24E8AFA200BB975E /* Prepare Framework */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Prepare Framework";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "set -e\n\nmkdir -p \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.framework/Versions/A/Headers\"\n\n# Link the \"Current\" version to \"A\"\n/bin/ln -sfh A \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.framework/Versions/Current\"\n/bin/ln -sfh Versions/Current/Headers \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.framework/Headers\"\n/bin/ln -sfh \"Versions/Current/${PRODUCT_NAME}\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.framework/${PRODUCT_NAME}\"\n\n# The -a ensures that the headers maintain the source modification date so that we don't constantly\n# cause propagating rebuilds of files that import these headers.\n/bin/cp -ac \"${TARGET_BUILD_DIR}/${PUBLIC_HEADERS_FOLDER_PATH}/\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.framework/Versions/A/Headers\"\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
-		0547FE2824E871B0005C1FFC /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0547FE3624E87201005C1FFC /* OEXPCCMatchMaker.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		05E6957B24CA5D4200ACFB35 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -570,6 +486,7 @@
 				05E6BA5C24CCDFC700ACFB35 /* OEShaderParamValue.m in Sources */,
 				0547FDE024E8622B005C1FFC /* OpenEmuXPCHelperAppBase.m in Sources */,
 				05E6BA4B24CCD7DB00ACFB35 /* OEGameCoreManager.m in Sources */,
+				05D828D524E9881E00BB975E /* OEXPCMatchMaking.swift in Sources */,
 				05E6BA2824CCD75900ACFB35 /* OEGameAudio.m in Sources */,
 				05E6B9F824CCD46900ACFB35 /* OEMTLGameRenderer.m in Sources */,
 				0533EA6524CDFBFF0095146E /* OEUtilities.m in Sources */,
@@ -589,6 +506,7 @@
 				05E6BA0524CCD49600ACFB35 /* OECoreVideoTexture.m in Sources */,
 				05E6B9FD24CCD46900ACFB35 /* OEOpenGL2GameRenderer.m in Sources */,
 				0547FDA824E78EA6005C1FFC /* OEXPCDebugSupport.m in Sources */,
+				05D828DB24E98A8E00BB975E /* OEXPCMatchMaker.swift in Sources */,
 				05E6BA0424CCD49600ACFB35 /* OEGameHelperMetalLayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -596,34 +514,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		0547FE3224E871B0005C1FFC /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
-				EXECUTABLE_PREFIX = lib;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PUBLIC_HEADERS_FOLDER_PATH = "$(PRODUCT_NAME)Headers";
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		0547FE3324E871B0005C1FFC /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
-				EXECUTABLE_PREFIX = lib;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PUBLIC_HEADERS_FOLDER_PATH = "$(PRODUCT_NAME)Headers";
-				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
 		05E6958524CA5D4200ACFB35 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -814,15 +704,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0547FE3124E871B0005C1FFC /* Build configuration list for PBXNativeTarget "OpenEmuXPC" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				0547FE3224E871B0005C1FFC /* Debug */,
-				0547FE3324E871B0005C1FFC /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		05E6957924CA5D4200ACFB35 /* Build configuration list for PBXProject "OpenEmuKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

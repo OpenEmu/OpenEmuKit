@@ -139,11 +139,11 @@
         [_gameCoreConnection setExportedObject:self];
         [_gameCoreConnection setRemoteObjectInterface:[NSXPCInterface interfaceWithProtocol:@protocol(OEGameCoreOwner)]];
         [_gameCoreConnection setInvalidationHandler:^{
-            [self terminate];
+            exit(EXIT_SUCCESS);
         }];
 
         [_gameCoreConnection setInterruptionHandler:^{
-            [self terminate];
+            exit(EXIT_SUCCESS);
         }];
 
         [_gameCoreConnection resume];

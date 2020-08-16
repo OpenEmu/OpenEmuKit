@@ -22,5 +22,14 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import <Foundation/Foundation.h>
-#import <OpenEmuXPC/OEXPCCMatchMaker.h>
+import Foundation
+
+@objc(OEXPCMatchMaking)
+public protocol OEXPCMatchMaking
+{
+    @objc(registerListenerEndpoint:forIdentifier:completionHandler:)
+    func register(_ endpoint: NSXPCListenerEndpoint, forIdentifier identifier: String, completionHandler handler: @escaping () -> Void)
+    
+    @objc(retrieveListenerEndpointForIdentifier:completionHandler:)
+    func retrieveListenerEndpoint(forIdentifier identifier: String, completionHandler handler: @escaping (NSXPCListenerEndpoint) -> Void)
+}

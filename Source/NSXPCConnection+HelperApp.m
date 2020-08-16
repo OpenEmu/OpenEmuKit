@@ -23,7 +23,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import "NSXPCConnection+HelperApp.h"
-#import "OEXPCCMatchMaking.h"
+#import <OpenEmuKit/OpenEmuKit-Swift.h>
 #import <objc/runtime.h>
 
 NSString *kHelperIdentifierArgumentPrefix = @"--org.openemu.broker.id=";
@@ -57,11 +57,11 @@ int xpc_task_key = 0;
     }
     
     __auto_type cn = [[NSXPCConnection alloc] initWithServiceName:name];
-    cn.remoteObjectInterface = [NSXPCInterface interfaceWithProtocol:@protocol(OEXPCCMatchMaking)];
+    cn.remoteObjectInterface = [NSXPCInterface interfaceWithProtocol:@protocol(OEXPCMatchMaking)];
     [cn resume];
     
     __block NSError *proxyErr = nil;
-    id<OEXPCCMatchMaking> mm = [cn remoteObjectProxyWithErrorHandler:^(NSError * _Nonnull error) {
+    id<OEXPCMatchMaking> mm = [cn remoteObjectProxyWithErrorHandler:^(NSError * _Nonnull error) {
         proxyErr = error;
     }];
     
