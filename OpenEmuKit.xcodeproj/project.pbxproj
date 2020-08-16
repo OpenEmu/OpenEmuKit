@@ -142,7 +142,6 @@
 		05E6BA5824CCDF1200ACFB35 /* OpenEmuKit_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenEmuKit_Prefix.pch; sourceTree = "<group>"; };
 		05E6BA5A24CCDFC600ACFB35 /* OEShaderParamValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OEShaderParamValue.m; sourceTree = "<group>"; };
 		05E6BA5B24CCDFC700ACFB35 /* OEShaderParamValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEShaderParamValue.h; sourceTree = "<group>"; };
-		05E6BA6024CCE25C00ACFB35 /* OpenEmuXPCCommunicator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OpenEmuXPCCommunicator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -273,7 +272,6 @@
 			isa = PBXGroup;
 			children = (
 				0533EA6624CDFD030095146E /* XADMaster.framework */,
-				05E6BA6024CCE25C00ACFB35 /* OpenEmuXPCCommunicator.framework */,
 				05E6BA5424CCD9A000ACFB35 /* OpenEmuShaders.framework */,
 				05E6BA1224CCD56200ACFB35 /* OpenEmuSystem.framework */,
 				05E6BA0E24CCD53100ACFB35 /* OpenEmuBase.framework */,
