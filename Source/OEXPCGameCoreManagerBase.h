@@ -26,7 +26,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface OEXPCGameCoreManager : OEGameCoreManager
+@interface OEXPCGameCoreManagerBase : OEGameCoreManager
+
+// Abstract properties that must be implemented
+@property (readonly) NSString *serviceName;
+@property (readonly) NSURL    *executableURL;
 
 @end
 

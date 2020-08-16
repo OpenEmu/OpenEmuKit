@@ -53,8 +53,8 @@ extern NSString * const OEGameCoreErrorDomain;
 @property(readonly, copy) NSString                      *systemRegion;
 @property(readonly, copy) NSDictionary <NSString *, id> *displayModeInfo;
 @property(readonly, weak) OECorePlugin                  *plugin;
-@property(readonly, weak) OESystemPlugin *systemPlugin;
-@property(readonly, weak) id<OEGameCoreOwner> gameCoreOwner;
+@property(readonly, weak) OESystemPlugin                *systemPlugin;
+@property(readonly, weak) id<OEGameCoreOwner>            gameCoreOwner;
 
 #pragma mark - Abstract methods, must be overrode in subclasses
 

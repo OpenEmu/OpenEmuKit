@@ -26,19 +26,22 @@
 
 #import "OEXPCCMatchMaker.h"
 
+typedef void(^ListenerBlock)(void);
+typedef void(^ClientBlock)(NSXPCListenerEndpoint *);
+
 @interface OEXPCCMatchMakerListener : NSObject
-+ (instancetype)matchMakerListenerWithEndpoint:(NSXPCListenerEndpoint *)endpoint handler:(void(^)(void))handler;
++ (instancetype)matchMakerListenerWithEndpoint:(NSXPCListenerEndpoint *)endpoint handler:(ListenerBlock)handler;
 @property(readonly) NSXPCListenerEndpoint *endpoint;
-@property(readonly, copy) void(^handler)(void);
+@property(readonly, copy) ListenerBlock handler;
 @end
 
 @interface OEXPCCMatchMaker () <OEXPCCMatchMaking, NSXPCListenerDelegate>
 {
-    NSXPCListener       *_serviceListener;
+    NSXPCListener *_serviceListener;
     
-    dispatch_queue_t     _listenerQueue;
-    NSMutableDictionary *_pendingListeners;
-    NSMutableDictionary *_pendingClients;
+    dispatch_queue_t _listenerQueue;
+    NSMutableDictionary<NSString *, OEXPCCMatchMakerListener *> *_pendingListeners;
+    NSMutableDictionary<NSString *, ClientBlock> *_pendingClients;
 }
 
 @end
@@ -77,7 +80,7 @@
 - (void)registerListenerEndpoint:(NSXPCListenerEndpoint *)endpoint forIdentifier:(NSString *)identifier completionHandler:(void (^)(void))handler
 {
     dispatch_async(_listenerQueue, ^{
-        void (^clientBlock)(NSXPCListenerEndpoint *) = self->_pendingClients[identifier];
+        ClientBlock clientBlock = self->_pendingClients[identifier];
         
         if(clientBlock == nil)
         {
@@ -113,7 +116,7 @@
 
 @implementation OEXPCCMatchMakerListener
 
-+ (instancetype)matchMakerListenerWithEndpoint:(NSXPCListenerEndpoint *)endpoint handler:(void(^)(void))handler
++ (instancetype)matchMakerListenerWithEndpoint:(NSXPCListenerEndpoint *)endpoint handler:(ListenerBlock)handler
 {
     OEXPCCMatchMakerListener *listener = [[OEXPCCMatchMakerListener alloc] init];
     listener->_endpoint = endpoint;

@@ -23,13 +23,13 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import "OEXPCGameCoreHelper.h"
-#import "OpenEmuXPCHelperApp.h"
+#import "OpenEmuXPCHelperAppBase.h"
 #import <OpenEmuSystem/OpenEmuSystem.h>
 #import "OEShaderParamValue.h"
 #import "NSXPCListener+HelperApp.h"
 
 
-@interface OpenEmuXPCHelperApp () <NSXPCListenerDelegate, OEXPCGameCoreHelper>
+@interface OpenEmuXPCHelperAppBase () <NSXPCListenerDelegate, OEXPCGameCoreHelper>
 {
     NSXPCListener *_mainListener;
     NSXPCConnection *_gameCoreConnection;
@@ -40,12 +40,18 @@
 
 @end
 
-@implementation OpenEmuXPCHelperApp
+@implementation OpenEmuXPCHelperAppBase
+
+- (NSString *)serviceName
+{
+    [self doesNotImplementSelector:_cmd];
+    return nil;
+}
 
 - (void)launchApplication
 {
     NSError *err;
-    _mainListener = [NSXPCListener helperListenerWithServiceName:@"org.openemu.broker" error:&err];
+    _mainListener = [NSXPCListener helperListenerWithServiceName:self.serviceName error:&err];
     if (_mainListener == nil)
     {
         if (err != nil)

@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import "OEXPCGameCoreManager.h"
+#import "OEXPCGameCoreManagerBase.h"
 #import "OEXPCGameCoreHelper.h"
 #import "OECorePlugin.h"
 #import "OEGameCoreManager_Internal.h"
@@ -31,7 +31,7 @@
 #import "OEShaderParamValue.h"
 #import "NSXPCConnection+HelperApp.h"
 
-@interface OEXPCGameCoreManager ()
+@interface OEXPCGameCoreManagerBase ()
 {
     NSXPCConnection *_helperConnection;
     OEThreadProxy   *_gameCoreOwnerProxy;
@@ -40,17 +40,27 @@
 @property(nonatomic, strong) id<OEXPCGameCoreHelper> gameCoreHelper;
 @end
 
-@implementation OEXPCGameCoreManager
+@implementation OEXPCGameCoreManagerBase
 @dynamic gameCoreHelper;
+
+- (NSString *)serviceName
+{
+    [self doesNotImplementSelector:_cmd];
+    return nil;
+}
+
+- (NSURL *)executableURL
+{
+    [self doesNotImplementSelector:_cmd];
+    return nil;
+}
 
 - (void)loadROMWithCompletionHandler:(void(^)(void))completionHandler errorHandler:(void(^)(NSError *))errorHandler;
 {
-    NSURL *helperURL = [NSBundle.mainBundle URLForAuxiliaryExecutable:@"OpenEmuHelperApp"];
-    
-    _helperConnection = [NSXPCConnection connectionWithServiceName:@"org.openemu.broker" executableURL:helperURL error:nil];
+    _helperConnection = [NSXPCConnection connectionWithServiceName:self.serviceName executableURL:self.executableURL error:nil];
     if(_helperConnection == nil)
     {
-        NSLog(@"No listener endpoint for identifier: %@", helperURL);
+        NSLog(@"No listener endpoint for identifier: %@", self.executableURL);
         NSError *error = [NSError errorWithDomain:OEGameCoreErrorDomain
                                              code:OEGameCoreCouldNotLoadROMError
                                          userInfo:nil];

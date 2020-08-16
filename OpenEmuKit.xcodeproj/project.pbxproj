@@ -17,10 +17,10 @@
 		0547FDCB24E84498005C1FFC /* NSXPCConnection+HelperApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 0547FDC924E84498005C1FFC /* NSXPCConnection+HelperApp.m */; };
 		0547FDCE24E850EB005C1FFC /* NSXPCListener+HelperApp.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FDCC24E850EB005C1FFC /* NSXPCListener+HelperApp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0547FDCF24E850EB005C1FFC /* NSXPCListener+HelperApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 0547FDCD24E850EB005C1FFC /* NSXPCListener+HelperApp.m */; };
-		0547FDD224E85783005C1FFC /* OEXPCGameCoreManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FDD024E85783005C1FFC /* OEXPCGameCoreManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0547FDD324E85783005C1FFC /* OEXPCGameCoreManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0547FDD124E85783005C1FFC /* OEXPCGameCoreManager.m */; };
-		0547FDDF24E8622B005C1FFC /* OpenEmuXPCHelperApp.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FDDD24E8622B005C1FFC /* OpenEmuXPCHelperApp.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0547FDE024E8622B005C1FFC /* OpenEmuXPCHelperApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 0547FDDE24E8622B005C1FFC /* OpenEmuXPCHelperApp.m */; };
+		0547FDD224E85783005C1FFC /* OEXPCGameCoreManagerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FDD024E85783005C1FFC /* OEXPCGameCoreManagerBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0547FDD324E85783005C1FFC /* OEXPCGameCoreManagerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 0547FDD124E85783005C1FFC /* OEXPCGameCoreManagerBase.m */; };
+		0547FDDF24E8622B005C1FFC /* OpenEmuXPCHelperAppBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FDDD24E8622B005C1FFC /* OpenEmuXPCHelperAppBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0547FDE024E8622B005C1FFC /* OpenEmuXPCHelperAppBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 0547FDDE24E8622B005C1FFC /* OpenEmuXPCHelperAppBase.m */; };
 		0547FE3424E871DD005C1FFC /* OEXPCCMatchMaker.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FDA024E78EA6005C1FFC /* OEXPCCMatchMaker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0547FE3524E871E4005C1FFC /* OEXPCCMatchMaking.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FDA224E78EA6005C1FFC /* OEXPCCMatchMaking.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0547FE3624E87201005C1FFC /* OEXPCCMatchMaker.m in Sources */ = {isa = PBXBuildFile; fileRef = 0547FDA124E78EA6005C1FFC /* OEXPCCMatchMaker.m */; };
@@ -96,10 +96,10 @@
 		0547FDC924E84498005C1FFC /* NSXPCConnection+HelperApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSXPCConnection+HelperApp.m"; sourceTree = "<group>"; };
 		0547FDCC24E850EB005C1FFC /* NSXPCListener+HelperApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSXPCListener+HelperApp.h"; sourceTree = "<group>"; };
 		0547FDCD24E850EB005C1FFC /* NSXPCListener+HelperApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSXPCListener+HelperApp.m"; sourceTree = "<group>"; };
-		0547FDD024E85783005C1FFC /* OEXPCGameCoreManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OEXPCGameCoreManager.h; sourceTree = "<group>"; };
-		0547FDD124E85783005C1FFC /* OEXPCGameCoreManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OEXPCGameCoreManager.m; sourceTree = "<group>"; };
-		0547FDDD24E8622B005C1FFC /* OpenEmuXPCHelperApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenEmuXPCHelperApp.h; sourceTree = "<group>"; };
-		0547FDDE24E8622B005C1FFC /* OpenEmuXPCHelperApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OpenEmuXPCHelperApp.m; sourceTree = "<group>"; };
+		0547FDD024E85783005C1FFC /* OEXPCGameCoreManagerBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OEXPCGameCoreManagerBase.h; sourceTree = "<group>"; };
+		0547FDD124E85783005C1FFC /* OEXPCGameCoreManagerBase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OEXPCGameCoreManagerBase.m; sourceTree = "<group>"; };
+		0547FDDD24E8622B005C1FFC /* OpenEmuXPCHelperAppBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenEmuXPCHelperAppBase.h; sourceTree = "<group>"; };
+		0547FDDE24E8622B005C1FFC /* OpenEmuXPCHelperAppBase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OpenEmuXPCHelperAppBase.m; sourceTree = "<group>"; };
 		0547FE0324E86B1B005C1FFC /* OpenEmuXPC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenEmuXPC.h; sourceTree = "<group>"; };
 		0547FE2B24E871B0005C1FFC /* libOpenEmuXPC.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOpenEmuXPC.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		05E6957F24CA5D4200ACFB35 /* OpenEmuKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OpenEmuKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -252,8 +252,8 @@
 				05E6B9FF24CCD47400ACFB35 /* Video */,
 				05E6B9DB24CCD43800ACFB35 /* OpenEmuHelperApp.h */,
 				05E6B9DC24CCD43900ACFB35 /* OpenEmuHelperApp.m */,
-				0547FDDD24E8622B005C1FFC /* OpenEmuXPCHelperApp.h */,
-				0547FDDE24E8622B005C1FFC /* OpenEmuXPCHelperApp.m */,
+				0547FDDD24E8622B005C1FFC /* OpenEmuXPCHelperAppBase.h */,
+				0547FDDE24E8622B005C1FFC /* OpenEmuXPCHelperAppBase.m */,
 			);
 			name = "Helper App (Remote Layer)";
 			sourceTree = "<group>";
@@ -317,8 +317,8 @@
 				05E6BA4224CCD7D600ACFB35 /* OEGameCoreManager_Internal.h */,
 				05E6BA4524CCD7DA00ACFB35 /* OEThreadGameCoreManager.h */,
 				05E6BA4024CCD7D300ACFB35 /* OEThreadGameCoreManager.m */,
-				0547FDD024E85783005C1FFC /* OEXPCGameCoreManager.h */,
-				0547FDD124E85783005C1FFC /* OEXPCGameCoreManager.m */,
+				0547FDD024E85783005C1FFC /* OEXPCGameCoreManagerBase.h */,
+				0547FDD124E85783005C1FFC /* OEXPCGameCoreManagerBase.m */,
 			);
 			name = OpenEmuCore;
 			sourceTree = "<group>";
@@ -414,7 +414,7 @@
 				05E6BA0C24CCD50100ACFB35 /* OEXPCGameCoreHelper.h in Headers */,
 				05E6BA2124CCD71D00ACFB35 /* OEPlugin.h in Headers */,
 				0547FDCA24E84498005C1FFC /* NSXPCConnection+HelperApp.h in Headers */,
-				0547FDD224E85783005C1FFC /* OEXPCGameCoreManager.h in Headers */,
+				0547FDD224E85783005C1FFC /* OEXPCGameCoreManagerBase.h in Headers */,
 				05E6BA1F24CCD71D00ACFB35 /* OESystemPlugin.h in Headers */,
 				05E6BA0724CCD49600ACFB35 /* OEGameHelperMetalLayer.h in Headers */,
 				0547FDA424E78EA6005C1FFC /* OEXPCDebugSupport.h in Headers */,
@@ -431,7 +431,7 @@
 				05E6BA5D24CCDFC700ACFB35 /* OEShaderParamValue.h in Headers */,
 				05E6958424CA5D4200ACFB35 /* OpenEmuKit.h in Headers */,
 				05E6BA0624CCD49600ACFB35 /* OECoreVideoTexture.h in Headers */,
-				0547FDDF24E8622B005C1FFC /* OpenEmuXPCHelperApp.h in Headers */,
+				0547FDDF24E8622B005C1FFC /* OpenEmuXPCHelperAppBase.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -566,9 +566,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0547FDD324E85783005C1FFC /* OEXPCGameCoreManager.m in Sources */,
+				0547FDD324E85783005C1FFC /* OEXPCGameCoreManagerBase.m in Sources */,
 				05E6BA5C24CCDFC700ACFB35 /* OEShaderParamValue.m in Sources */,
-				0547FDE024E8622B005C1FFC /* OpenEmuXPCHelperApp.m in Sources */,
+				0547FDE024E8622B005C1FFC /* OpenEmuXPCHelperAppBase.m in Sources */,
 				05E6BA4B24CCD7DB00ACFB35 /* OEGameCoreManager.m in Sources */,
 				05E6BA2824CCD75900ACFB35 /* OEGameAudio.m in Sources */,
 				05E6B9F824CCD46900ACFB35 /* OEMTLGameRenderer.m in Sources */,
