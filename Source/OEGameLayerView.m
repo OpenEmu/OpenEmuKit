@@ -123,29 +123,6 @@
     }
 }
 
-- (NSSize)correctScreenSize:(OEIntSize)screenSize forAspectSize:(OEIntSize)aspectSize returnVertices:(BOOL)flag
-{
-    // calculate aspect ratio
-    CGFloat wr = (CGFloat) aspectSize.width / screenSize.width;
-    CGFloat hr = (CGFloat) aspectSize.height / screenSize.height;
-    CGFloat ratio = MAX(hr, wr);
-    NSSize scaled = NSMakeSize((wr / ratio), (hr / ratio));
-    
-    CGFloat halfw = scaled.width;
-    CGFloat halfh = scaled.height;
-    
-    NSSize corrected;
-    
-    if(flag)
-        corrected = NSMakeSize(halfw, halfh);
-    else
-        corrected = _gameScreenSize.width <= aspectSize.width ?
-        NSMakeSize(screenSize.width / halfh, screenSize.height / halfw) :
-        NSMakeSize(screenSize.width * halfw, screenSize.height * halfh);
-    
-    return corrected;
-}
-
 #pragma mark - NSResponder
 
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
@@ -182,19 +159,13 @@
     [self addTrackingArea:_trackingArea];
 }
 
-- (void)setAspectSize:(OEIntSize)newAspectSize
-{
-    DLog(@"Set aspectsize to: %@", NSStringFromOEIntSize(newAspectSize));
-    _gameAspectSize = newAspectSize;
-}
-
 - (OEEvent *)OE_mouseEventWithEvent:(NSEvent *)anEvent;
 {
     CGRect  frame    = [self frame];
     CGPoint location = [anEvent locationInWindow];
     location = [self convertPoint:location fromView:nil];
     location.y = frame.size.height - location.y;
-    NSSize screenSize = [self correctScreenSize:_gameScreenSize forAspectSize:_gameAspectSize returnVertices:NO];
+    NSSize screenSize = OECorrectScreenSizeForAspectSize(_gameScreenSize, _gameAspectSize);
     
     CGRect screenRect = { .size.width = screenSize.width, .size.height = screenSize.height };
     

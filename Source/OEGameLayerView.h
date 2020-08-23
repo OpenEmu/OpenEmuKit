@@ -46,6 +46,5 @@ typedef uint32_t CAContextID;
 @property (nonatomic) CAContextID remoteContextID;
 
 - (void)setScreenSize:(OEIntSize)newScreenSize aspectSize:(OEIntSize)newAspectSize;
-- (NSSize)correctScreenSize:(OEIntSize)screenSize forAspectSize:(OEIntSize)aspectSize returnVertices:(BOOL)flag;
 
 @end
