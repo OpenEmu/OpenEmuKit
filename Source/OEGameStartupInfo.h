@@ -24,26 +24,22 @@
 
 #import <Foundation/Foundation.h>
 
-//! Project version number for OpenEmuKit.
-FOUNDATION_EXPORT double OpenEmuKitVersionNumber;
+NS_ASSUME_NONNULL_BEGIN
 
-//! Project version string for OpenEmuKit.
-FOUNDATION_EXPORT const unsigned char OpenEmuKitVersionString[];
+@interface OEGameStartupInfo : NSObject<NSSecureCoding>
 
-// In this header, you should import all the public headers of your framework using statements like #import <OpenEmuKit/PublicHeader.h>
+@property(nonatomic) NSString                      *romPath;
+@property(nonatomic) NSString                      *romCRC32;
+@property(nonatomic) NSString                      *romMD5;
+@property(nonatomic) NSString                      *romHeader;
+@property(nonatomic) NSString                      *romSerial;
+@property(nonatomic) NSString                      *systemRegion;
+@property(nonatomic) NSDictionary <NSString *, id> *displayModeInfo;
+@property(nonatomic) NSString                      *corePluginPath;
+@property(nonatomic) NSString                      *systemPluginPath;
 
-#import <OpenEmuKit/OEPlugin.h>
-#import <OpenEmuKit/OECorePlugin.h>
-#import <OpenEmuKit/OESystemPlugin.h>
-#import <OpenEmuKit/OEShaderParamValue.h>
-#import <OpenEmuKit/OEGameCoreHelper.h>
-#import <OpenEmuKit/OpenEmuHelperApp.h>
-#import <OpenEmuKit/OpenEmuXPCHelperAppBase.h>
-#import <OpenEmuKit/OEGameCoreManager.h>
-#import <OpenEmuKit/OEThreadGameCoreManager.h>
-#import <OpenEmuKit/OEXPCGameCoreManagerBase.h>
-#import <OpenEmuKit/OEGameLayerView.h>
-#import <OpenEmuKit/NSXPCConnection+HelperApp.h>
-#import <OpenEmuKit/NSXPCListener+HelperApp.h>
-#import <OpenEmuKit/OEXPCDebugSupport.h>
-#import <OpenEmuKit/OEGameStartupInfo.h>
+- (instancetype)initWithROMPath:(NSString *)romPath romCRC32:(NSString *)romCRC32 romMD5:(NSString *)romMD5 romHeader:(NSString *)romHeader romSerial:(NSString *)romSerial systemRegion:(NSString *)systemRegion displayModeInfo:(NSDictionary <NSString *, id> * _Nullable)displayModeInfo corePluginPath:(NSString *)pluginPath systemPluginPath:(NSString *)systemPluginPath;
+
+@end
+
+NS_ASSUME_NONNULL_END

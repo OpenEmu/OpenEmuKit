@@ -27,7 +27,7 @@
 #import <OpenEmuSystem/OpenEmuSystem.h>
 #import "OEShaderParamValue.h"
 #import "NSXPCListener+HelperApp.h"
-
+#import "OEGameStartupInfo.h"
 
 @interface OpenEmuXPCHelperAppBase () <NSXPCListenerDelegate, OEXPCGameCoreHelper>
 {
@@ -133,7 +133,14 @@
 
         NSXPCInterface *intf = [NSXPCInterface interfaceWithProtocol:@protocol(OEXPCGameCoreHelper)];
         NSSet *set = [NSSet setWithObjects:OEShaderParamValue.class, NSArray.class, OEShaderParamGroupValue.class, nil];
+        // shader parameters
         [intf setClasses:set forSelector:@selector(shaderParamGroupsWithCompletionHandler:) argumentIndex:0 ofReply:YES];
+        
+        // load ROM
+        [intf setClasses:[NSSet setWithObject:OEGameStartupInfo.class]
+             forSelector:@selector(loadWithStartupInfo:completionHandler:)
+           argumentIndex:0
+                 ofReply:NO];
         _gameCoreConnection = newConnection;
         [_gameCoreConnection setExportedInterface:intf];
         [_gameCoreConnection setExportedObject:self];
@@ -158,12 +165,11 @@
     return NO;
 }
 
-- (void)loadROMAtPath:(NSString *)romPath romCRC32:(NSString *)romCRC32 romMD5:(NSString *)romMD5 romHeader:(NSString *)romHeader romSerial:(NSString *)romSerial systemRegion:(NSString *)systemRegion displayModeInfo:(NSDictionary <NSString *, id> *)displayModeInfo usingCorePluginAtPath:(NSString *)pluginPath systemPluginPath:(NSString *)systemPluginPath completionHandler:(void (^)(NSError *))completionHandler
+// NOTE: OEGameStartupInfo will evenually be replaced with a more generic container
+- (void)loadWithStartupInfo:(OEGameStartupInfo *)info completionHandler:(void(^)(NSError *error))completionHandler
 {
     NSError *error;
-
-    [self loadROMAtPath:romPath romCRC32:romCRC32 romMD5:romMD5 romHeader:romHeader romSerial:romSerial systemRegion:systemRegion displayModeInfo:displayModeInfo withCorePluginAtPath:pluginPath systemPluginPath:systemPluginPath error:&error];
-
+    [self loadWithStartupInfo:info error:&error];
     completionHandler(error);
 }
 

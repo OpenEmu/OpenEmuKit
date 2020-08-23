@@ -30,6 +30,7 @@
 #import "OEThreadProxy.h"
 #import "OEShaderParamValue.h"
 #import "NSXPCConnection+HelperApp.h"
+#import "OEGameStartupInfo.h"
 
 @interface OEXPCGameCoreManagerBase ()
 {
@@ -78,8 +79,16 @@
     [_helperConnection setExportedObject:_gameCoreOwnerProxy];
 
     NSXPCInterface *intf = [NSXPCInterface interfaceWithProtocol:@protocol(OEXPCGameCoreHelper)];
+    
+    // shader parameters
     NSSet *set = [NSSet setWithObjects:OEShaderParamValue.class, NSArray.class, OEShaderParamGroupValue.class, nil];
     [intf setClasses:set forSelector:@selector(shaderParamGroupsWithCompletionHandler:) argumentIndex:0 ofReply:YES];
+    
+    // startup
+    [intf setClasses:[NSSet setWithObject:OEGameStartupInfo.class]
+         forSelector:@selector(loadWithStartupInfo:completionHandler:)
+       argumentIndex:0
+             ofReply:NO];
    
     [_helperConnection setRemoteObjectInterface:intf];
     [_helperConnection resume];
@@ -100,7 +109,7 @@
 
     if(gameCoreHelper == nil) return;
 
-    [gameCoreHelper loadROMAtPath:[self ROMPath] romCRC32:[self ROMCRC32] romMD5:[self ROMMD5] romHeader:[self ROMHeader] romSerial:[self ROMSerial] systemRegion:[self systemRegion] displayModeInfo:[self displayModeInfo] usingCorePluginAtPath:[[self plugin] path] systemPluginPath:[[self systemPlugin] path] completionHandler:
+    [gameCoreHelper loadWithStartupInfo:self.startupInfo completionHandler:
      ^(NSError *error)
      {
          if(error != nil)

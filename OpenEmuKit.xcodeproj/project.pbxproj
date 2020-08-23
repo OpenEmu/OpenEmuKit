@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0518D6E424F2BA4B0037101D /* OEGameStartupInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 0518D6E224F2BA4B0037101D /* OEGameStartupInfo.m */; };
+		0518D6E524F2BA4B0037101D /* OEGameStartupInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 0518D6E324F2BA4B0037101D /* OEGameStartupInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0533EA6424CDFBFF0095146E /* OEUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 0533EA6224CDFBFF0095146E /* OEUtilities.h */; };
 		0533EA6524CDFBFF0095146E /* OEUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 0533EA6324CDFBFF0095146E /* OEUtilities.m */; };
 		0533EA6724CDFD030095146E /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0533EA6624CDFD030095146E /* XADMaster.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -81,6 +83,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0518D6E224F2BA4B0037101D /* OEGameStartupInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OEGameStartupInfo.m; sourceTree = "<group>"; };
+		0518D6E324F2BA4B0037101D /* OEGameStartupInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEGameStartupInfo.h; sourceTree = "<group>"; };
 		0533EA6224CDFBFF0095146E /* OEUtilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OEUtilities.h; sourceTree = "<group>"; };
 		0533EA6324CDFBFF0095146E /* OEUtilities.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OEUtilities.m; sourceTree = "<group>"; };
 		0533EA6624CDFD030095146E /* XADMaster.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XADMaster.framework; path = ../OpenEmu/XADMaster.framework; sourceTree = "<group>"; };
@@ -289,6 +293,8 @@
 				05E6BA3324CCD78300ACFB35 /* Utilities */,
 				05E6BA4324CCD7D700ACFB35 /* OEGameCoreManager.h */,
 				05E6BA4424CCD7D800ACFB35 /* OEGameCoreManager.m */,
+				0518D6E324F2BA4B0037101D /* OEGameStartupInfo.h */,
+				0518D6E224F2BA4B0037101D /* OEGameStartupInfo.m */,
 				05E6BA4224CCD7D600ACFB35 /* OEGameCoreManager_Internal.h */,
 				05E6BA4524CCD7DA00ACFB35 /* OEThreadGameCoreManager.h */,
 				05E6BA4024CCD7D300ACFB35 /* OEThreadGameCoreManager.m */,
@@ -375,6 +381,7 @@
 				05E6B9FB24CCD46900ACFB35 /* OEGameRenderer.h in Headers */,
 				05E6BA3F24CCD79600ACFB35 /* OELogging.h in Headers */,
 				05E6BA2B24CCD75900ACFB35 /* OEGameAudio.h in Headers */,
+				0518D6E524F2BA4B0037101D /* OEGameStartupInfo.h in Headers */,
 				05E6B9F924CCD46900ACFB35 /* OEOpenGL2GameRenderer.h in Headers */,
 				05E6BA0C24CCD50100ACFB35 /* OEXPCGameCoreHelper.h in Headers */,
 				05E6BA2124CCD71D00ACFB35 /* OEPlugin.h in Headers */,
@@ -484,6 +491,7 @@
 				05E6BA5C24CCDFC700ACFB35 /* OEShaderParamValue.m in Sources */,
 				0547FDE024E8622B005C1FFC /* OpenEmuXPCHelperAppBase.m in Sources */,
 				05E6BA4B24CCD7DB00ACFB35 /* OEGameCoreManager.m in Sources */,
+				0518D6E424F2BA4B0037101D /* OEGameStartupInfo.m in Sources */,
 				05D828D524E9881E00BB975E /* OEXPCMatchMaking.swift in Sources */,
 				05E6BA2824CCD75900ACFB35 /* OEGameAudio.m in Sources */,
 				05E6B9F824CCD46900ACFB35 /* OEMTLGameRenderer.m in Sources */,

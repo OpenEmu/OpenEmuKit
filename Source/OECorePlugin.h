@@ -42,7 +42,7 @@
 
 + (OECorePlugin *)corePluginWithBundleAtPath:(NSString *)bundlePath;
 + (OECorePlugin *)corePluginWithBundleIdentifier:(NSString *)identifier;
-+ (NSArray *)corePluginsForSystemIdentifier:(NSString *)systemIdentifier;
++ (NSArray<OECorePlugin *> *)corePluginsForSystemIdentifier:(NSString *)systemIdentifier;
 + (NSArray *)requiredFiles;
 
 @end

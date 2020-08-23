@@ -40,6 +40,8 @@ enum _OEHelperAppErrorCodes
     OEHelperIncorrectFileError           = -2,
 };
 
+@class OEGameStartupInfo;
+
 OE_EXPORTED_CLASS
 @interface OpenEmuHelperApp : NSResponder <NSApplicationDelegate, OEGameCoreHelper, OERenderDelegate, OEAudioDelegate>
 
@@ -51,6 +53,6 @@ OE_EXPORTED_CLASS
 
 - (void)launchApplication;
 
-- (BOOL)loadROMAtPath:(NSString *)aPath romCRC32:(NSString *)romCRC32 romMD5:(NSString *)romMD5 romHeader:(NSString *)romHeader romSerial:(NSString *)romSerial systemRegion:(NSString *)systemRegion displayModeInfo:(NSDictionary <NSString *, id> *)displayModeInfo withCorePluginAtPath:(NSString *)pluginPath systemPluginPath:(NSString *)systemPluginPath error:(NSError **)error;
+- (BOOL)loadWithStartupInfo:(OEGameStartupInfo *)info error:(NSError **)error;
 
 @end

@@ -30,33 +30,30 @@
 #import "OECorePlugin.h"
 #import "OEGameCoreManager_Internal.h"
 #import "OESystemPlugin.h"
+#import "OEGameStartupInfo.h"
 
 NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
 
 @implementation OEGameCoreManager
 
-- (instancetype)initWithROMPath:(NSString *)romPath romCRC32:(NSString *)romCRC32 romMD5:(NSString *)romMD5 romHeader:(NSString *)romHeader romSerial:(NSString *)romSerial systemRegion:(NSString *)systemRegion displayModeInfo:(NSDictionary <NSString *, id> *)displayModeInfo corePlugin:(OECorePlugin *)plugin systemPlugin:(OESystemPlugin *)systemPlugin gameCoreOwner:(id<OEGameCoreOwner>)gameCoreOwner
+- (instancetype)initWithStartupInfo:(OEGameStartupInfo *)startupInfo
+                         corePlugin:(OECorePlugin *)plugin
+                       systemPlugin:(OESystemPlugin *)systemPlugin
+                      gameCoreOwner:(id<OEGameCoreOwner>)gameCoreOwner
 {
-    if((self = [super init]))
+    if (self = [super init])
     {
-        _ROMPath           = romPath;
-        _ROMCRC32          = romCRC32;
-        _ROMMD5            = romMD5;
-        _ROMHeader         = romHeader;
-        _ROMSerial         = romSerial;
-        _systemRegion      = systemRegion;
-        _displayModeInfo   = displayModeInfo;
-        _plugin            = plugin;
-        _systemPlugin      = systemPlugin;
-        _gameCoreOwner     = gameCoreOwner;
+        _startupInfo    = startupInfo;
+        _plugin         = plugin;
+        _systemPlugin   = systemPlugin;
+        _gameCoreOwner  = gameCoreOwner;
     }
-    
     return self;
 }
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@ %p, ROM: %@, System: %@, Core: %@, Display Helper: %@>", [self class], self, _ROMPath, [_plugin bundleIdentifier], [_systemPlugin systemIdentifier], _gameCoreOwner];
+    return [NSString stringWithFormat:@"<%@ %p, ROM: %@, System: %@, Core: %@, Display Helper: %@>", [self class], self, _startupInfo, [_plugin bundleIdentifier], [_systemPlugin systemIdentifier], _gameCoreOwner];
 }
 
 - (void)stop

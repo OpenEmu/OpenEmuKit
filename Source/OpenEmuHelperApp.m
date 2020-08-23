@@ -41,6 +41,7 @@
 #import "OECoreVideoTexture.h"
 #import "OEShaderParamValue.h"
 #import "OEUtilities.h"
+#import "OEGameStartupInfo.h"
 #import <OpenEmuKit/OpenEmuKit-Swift.h>
 
 /// Only send 1 frame at once to the GPU.
@@ -412,6 +413,19 @@ extern NSString * const kCAContextCIFilterBehavior;
         [[NSFileManager defaultManager] removeItemAtPath:aPath error:NULL];
     
     return NO;
+}
+
+- (BOOL)loadWithStartupInfo:(OEGameStartupInfo *)info error:(NSError **)error
+{
+    return [self loadROMAtPath:info.romPath
+                      romCRC32:info.romCRC32
+                        romMD5:info.romMD5
+                     romHeader:info.romHeader
+                     romSerial:info.romSerial
+                  systemRegion:info.systemRegion
+               displayModeInfo:info.displayModeInfo
+          withCorePluginAtPath:info.corePluginPath
+              systemPluginPath:info.systemPluginPath error:error];
 }
 
 - (OEIntSize)aspectSize
