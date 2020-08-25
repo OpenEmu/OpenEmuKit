@@ -39,6 +39,8 @@ enum _OEGameCoreManagerErrorCodes
     OENilRootProxyObjectError      = -6,
 };
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString * const OEGameCoreErrorDomain;
 
 @interface OEGameCoreManager : NSObject <OEGameCoreHelper>
@@ -58,3 +60,5 @@ extern NSString * const OEGameCoreErrorDomain;
 - (void)loadROMWithCompletionHandler:(void(^)(void))completionHandler errorHandler:(void(^)(NSError *))errorHandler;
 
 @end
+
+NS_ASSUME_NONNULL_END

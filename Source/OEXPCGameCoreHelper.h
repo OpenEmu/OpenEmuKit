@@ -29,8 +29,12 @@
 
 @class OEGameStartupInfo;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol OEXPCGameCoreHelper <OEGameCoreHelper, NSObject>
 
-- (void)loadWithStartupInfo:(OEGameStartupInfo *)info completionHandler:(void(^)(NSError *error))completionHandler;
+- (void)loadWithStartupInfo:(OEGameStartupInfo *)info completionHandler:(void(^)(NSError * _Nullable error))completionHandler;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -31,6 +31,8 @@
 @class OEEvent;
 @class OEShaderParamGroupValue;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol OEGameCoreHelper <NSObject>
 
 - (void)setVolume:(CGFloat)value;
@@ -40,7 +42,7 @@
 - (void)setBackingScaleFactor:(CGFloat)newBackingScaleFactor;
 
 #pragma mark - Shader management
-- (void)setShaderURL:(NSURL *)url completionHandler:(void (^)(BOOL success, NSError *error))block;
+- (void)setShaderURL:(NSURL *)url completionHandler:(void (^)(BOOL success, NSError * _Nullable error))block;
 /*! fetch a list of shader parameters */
 - (void)shaderParamGroupsWithCompletionHandler:(void(^)(NSArray<OEShaderParamGroupValue *> *groups))handler;
 - (void)setShaderParameterValue:(CGFloat)value atIndex:(NSUInteger)index atGroupIndex:(NSUInteger)group;
@@ -50,14 +52,14 @@
 - (void)resetEmulationWithCompletionHandler:(void(^)(void))handler;
 - (void)stopEmulationWithCompletionHandler:(void(^)(void))handler;
 
-- (void)saveStateToFileAtPath:(NSString *)fileName completionHandler:(void (^)(BOOL success, NSError *error))block;
-- (void)loadStateFromFileAtPath:(NSString *)fileName completionHandler:(void (^)(BOOL success, NSError *error))block;
+- (void)saveStateToFileAtPath:(NSString *)fileName completionHandler:(void (^)(BOOL success, NSError * _Nullable error))block;
+- (void)loadStateFromFileAtPath:(NSString *)fileName completionHandler:(void (^)(BOOL success, NSError * _Nullable error))block;
 
 - (void)setCheat:(NSString *)cheatCode withType:(NSString *)type enabled:(BOOL)enabled;
 - (void)setDisc:(NSUInteger)discNumber;
 - (void)changeDisplayWithMode:(NSString *)displayMode;
 
-- (void)insertFileAtURL:(NSURL *)url completionHandler:(void (^)(BOOL success, NSError *error))block;
+- (void)insertFileAtURL:(NSURL *)url completionHandler:(void (^)(BOOL success, NSError * _Nullable error))block;
 
 - (void)handleMouseEvent:(OEEvent *)event;
 
@@ -100,3 +102,5 @@
 - (void)setRemoteContextID:(NSUInteger)contextID;
 
 @end
+
+NS_ASSUME_NONNULL_END

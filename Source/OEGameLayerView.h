@@ -32,8 +32,10 @@ typedef uint32_t CAContextID;
 @class OEGameLayerView;
 @class OEEvent;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol OEGameViewDelegate <NSObject>
-- (NSString *)systemIdentifier;
+@property (readonly) NSString *systemIdentifier;
 - (void)gameView:(OEGameLayerView *)gameView didReceiveMouseEvent:(OEEvent *)event;
 - (void)gameView:(OEGameLayerView *)gameView updateBounds:(CGRect)newBounds;
 - (void)gameView:(OEGameLayerView *)gameView updateBackingScaleFactor:(CGFloat)newScaleFactor;
@@ -48,3 +50,5 @@ typedef uint32_t CAContextID;
 - (void)setScreenSize:(OEIntSize)newScreenSize aspectSize:(OEIntSize)newAspectSize;
 
 @end
+
+NS_ASSUME_NONNULL_END
