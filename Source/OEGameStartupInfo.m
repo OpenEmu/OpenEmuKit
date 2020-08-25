@@ -26,11 +26,10 @@
 
 @implementation OEGameStartupInfo
 
-- (instancetype)initWithROMPath:(NSString *)romPath romCRC32:(NSString *)romCRC32 romMD5:(NSString *)romMD5 romHeader:(NSString *)romHeader romSerial:(NSString *)romSerial systemRegion:(NSString *)systemRegion displayModeInfo:(NSDictionary <NSString *, id> *)displayModeInfo corePluginPath:(NSString *)pluginPath systemPluginPath:(NSString *)systemPluginPath
+- (instancetype)initWithROMPath:(NSString *)romPath romMD5:(NSString *)romMD5 romHeader:(NSString *)romHeader romSerial:(NSString *)romSerial systemRegion:(NSString *)systemRegion displayModeInfo:(NSDictionary <NSString *, id> *)displayModeInfo corePluginPath:(NSString *)pluginPath systemPluginPath:(NSString *)systemPluginPath
 {
     if (self = [super init]) {
         _romPath            = romPath;
-        _romCRC32           = romCRC32;
         _romMD5             = romMD5;
         _romHeader          = romHeader;
         _romSerial          = romSerial;
@@ -53,7 +52,6 @@
 {
     if (self = [super init]) {
         _romPath            = [coder decodeObjectOfClass:NSString.class forKey:@"romPath"];
-        _romCRC32           = [coder decodeObjectOfClass:NSString.class forKey:@"romCRC32"];
         _romMD5             = [coder decodeObjectOfClass:NSString.class forKey:@"romMD5"];
         _romHeader          = [coder decodeObjectOfClass:NSString.class forKey:@"romHeader"];
         _romSerial          = [coder decodeObjectOfClass:NSString.class forKey:@"romSerial"];
@@ -73,7 +71,6 @@
 - (void)encodeWithCoder:(NSCoder *)coder
 {
     [coder encodeObject:_romPath forKey:@"romPath"];
-    [coder encodeObject:_romCRC32 forKey:@"romCRC32"];
     [coder encodeObject:_romMD5 forKey:@"romMD5"];
     [coder encodeObject:_romHeader forKey:@"romHeader"];
     [coder encodeObject:_romSerial forKey:@"romSerial"];

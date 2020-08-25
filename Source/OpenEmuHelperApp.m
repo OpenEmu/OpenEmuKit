@@ -331,7 +331,7 @@ extern NSString * const kCAContextCIFilterBehavior;
 
 #pragma mark - Game Core methods
 
-- (BOOL)loadROMAtPath:(NSString *)aPath romCRC32:(NSString *)romCRC32 romMD5:(NSString *)romMD5 romHeader:(NSString *)romHeader romSerial:(NSString *)romSerial systemRegion:(NSString *)systemRegion displayModeInfo:(NSDictionary <NSString *, id> *)displayModeInfo withCorePluginAtPath:(NSString *)pluginPath systemPluginPath:(NSString *)systemPluginPath error:(NSError **)error
+- (BOOL)loadROMAtPath:(NSString *)aPath romMD5:(NSString *)romMD5 romHeader:(NSString *)romHeader romSerial:(NSString *)romSerial systemRegion:(NSString *)systemRegion displayModeInfo:(NSDictionary <NSString *, id> *)displayModeInfo withCorePluginAtPath:(NSString *)pluginPath systemPluginPath:(NSString *)systemPluginPath error:(NSError **)error
 {
     if(self.loadedRom) return NO;
     
@@ -356,7 +356,6 @@ extern NSString * const kCAContextCIFilterBehavior;
     [_gameCore setSystemIdentifier:systemIdentifier];
     [_gameCore setSystemRegion:systemRegion];
     [_gameCore setDisplayModeInfo:displayModeInfo ?: @{}];
-    [_gameCore setROMCRC32:romCRC32];
     [_gameCore setROMMD5:romMD5];
     [_gameCore setROMHeader:romHeader];
     [_gameCore setROMSerial:romSerial];
@@ -418,7 +417,6 @@ extern NSString * const kCAContextCIFilterBehavior;
 - (BOOL)loadWithStartupInfo:(OEGameStartupInfo *)info error:(NSError **)error
 {
     return [self loadROMAtPath:info.romPath
-                      romCRC32:info.romCRC32
                         romMD5:info.romMD5
                      romHeader:info.romHeader
                      romSerial:info.romSerial

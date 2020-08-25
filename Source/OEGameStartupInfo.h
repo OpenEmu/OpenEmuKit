@@ -29,7 +29,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface OEGameStartupInfo : NSObject<NSSecureCoding>
 
 @property(nonatomic) NSString                      *romPath;
-@property(nonatomic) NSString                      *romCRC32;
 @property(nonatomic) NSString                      *romMD5;
 @property(nonatomic) NSString                      *romHeader;
 @property(nonatomic) NSString                      *romSerial;
@@ -38,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic) NSString                      *corePluginPath;
 @property(nonatomic) NSString                      *systemPluginPath;
 
-- (instancetype)initWithROMPath:(NSString *)romPath romCRC32:(NSString *)romCRC32 romMD5:(NSString *)romMD5 romHeader:(NSString *)romHeader romSerial:(NSString *)romSerial systemRegion:(NSString *)systemRegion displayModeInfo:(NSDictionary <NSString *, id> * _Nullable)displayModeInfo corePluginPath:(NSString *)pluginPath systemPluginPath:(NSString *)systemPluginPath;
+- (instancetype)initWithROMPath:(NSString *)romPath romMD5:(NSString *)romMD5 romHeader:(NSString *)romHeader romSerial:(NSString *)romSerial systemRegion:(NSString *)systemRegion displayModeInfo:(NSDictionary <NSString *, id> * _Nullable)displayModeInfo corePluginPath:(NSString *)pluginPath systemPluginPath:(NSString *)systemPluginPath;
 
 @end
 
