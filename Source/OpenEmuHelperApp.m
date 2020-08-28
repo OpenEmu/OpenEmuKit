@@ -43,30 +43,14 @@
 #import "OEGameStartupInfo.h"
 #import <OpenEmuKit/OpenEmuKit-Swift.h>
 
+#import "OpenEmuKitPrivate/OpenEmuKitPrivate.h"
+
 /// Only send 1 frame at once to the GPU.
 /// Since we aren't synced to the display, even one more
 /// is enough to block in nextDrawable for more than a frame
 /// and cause audio skipping.
 /// TODO(sgc): implement triple buffering
 #define MAX_INFLIGHT 1
-
-// SPI: Stolen from Chrome
-typedef uint32_t CGSConnectionID;
-CGSConnectionID CGSMainConnectionID(void);
-
-typedef uint32_t CAContextID;
-
-@interface CAContext : NSObject
-{
-}
-+ (id)contextWithCGSConnection:(CAContextID)contextId options:(NSDictionary*)optionsDict;
-@property(readonly) CAContextID contextId;
-@property(retain) CALayer *layer;
-@end
-
-extern NSString * const kCAContextCIFilterBehavior;
-
-// End SPI
 
 @interface OpenEmuHelperApp () <OEGameCoreDelegate, OEGlobalEventsHandler>
 @property (nonatomic) BOOL loadedRom;

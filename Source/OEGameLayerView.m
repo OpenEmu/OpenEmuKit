@@ -40,14 +40,14 @@
 @property CAContextID contextId;
 @end
 
-@interface OEGameLayerView () <CALayerDelegate>
+@interface OEGameLayerView () <CALayerDelegate, NSViewLayerContentScaleDelegate>
 @end
 
 /// View which hosts and resizes the helper app's game rendering.
 /// TODO: If this was tvOS, we'd set a preferred frame rate here. Can we do that?
 @implementation OEGameLayerView
 {
-    CALayerHost *_remoteLayer;
+    CALayerHost       *_remoteLayer;
     NSTrackingArea    *_trackingArea;
     OEIntSize          _gameScreenSize;
     OEIntSize          _gameAspectSize;
@@ -140,6 +140,11 @@
     }
     
     return [super acceptsFirstMouse:theEvent];
+}
+
+- (BOOL)acceptsFirstResponder
+{
+    return YES;
 }
 
 - (void)keyDown:(NSEvent *)event

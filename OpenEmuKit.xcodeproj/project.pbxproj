@@ -81,6 +81,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		050A9A0924F9B26C00321847 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		050A9A0B24F9B2B800321847 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		050A9A0C24F9B2E900321847 /* QuartzCoreSPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QuartzCoreSPI.h; sourceTree = "<group>"; };
+		050A9A0F24F9B38000321847 /* OpenEmuKit.private.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = OpenEmuKit.private.modulemap; sourceTree = "<group>"; };
+		050A9A1024F9C35B00321847 /* OpenEmuKitPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenEmuKitPrivate.h; sourceTree = "<group>"; };
 		0518D6E224F2BA4B0037101D /* OEGameStartupInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OEGameStartupInfo.m; sourceTree = "<group>"; };
 		0518D6E324F2BA4B0037101D /* OEGameStartupInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEGameStartupInfo.h; sourceTree = "<group>"; };
 		0518D6E724F32DD10037101D /* NSEvent+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSEvent+Combine.swift"; sourceTree = "<group>"; };
@@ -159,6 +164,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		050A9A0A24F9B29300321847 /* OpenEmuKitPrivate */ = {
+			isa = PBXGroup;
+			children = (
+				050A9A0B24F9B2B800321847 /* module.modulemap */,
+				050A9A1024F9C35B00321847 /* OpenEmuKitPrivate.h */,
+				050A9A0C24F9B2E900321847 /* QuartzCoreSPI.h */,
+			);
+			path = OpenEmuKitPrivate;
+			sourceTree = "<group>";
+		};
+		050A9A0E24F9B36400321847 /* Module */ = {
+			isa = PBXGroup;
+			children = (
+				050A9A0F24F9B38000321847 /* OpenEmuKit.private.modulemap */,
+			);
+			name = Module;
+			sourceTree = "<group>";
+		};
 		0518D6E624F32DB40037101D /* Combine */ = {
 			isa = PBXGroup;
 			children = (
@@ -185,6 +208,7 @@
 		05E6957524CA5D4200ACFB35 = {
 			isa = PBXGroup;
 			children = (
+				050A9A0924F9B26C00321847 /* Config.xcconfig */,
 				05E6959324CA5E1100ACFB35 /* Source */,
 				05E6958124CA5D4200ACFB35 /* OpenEmuKit */,
 				05E6958024CA5D4200ACFB35 /* Products */,
@@ -212,6 +236,8 @@
 		05E6959324CA5E1100ACFB35 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				050A9A0E24F9B36400321847 /* Module */,
+				050A9A0A24F9B29300321847 /* OpenEmuKitPrivate */,
 				05E695C924CCD32900ACFB35 /* Classes */,
 				05E6BA5724CCDEEE00ACFB35 /* Other Sources */,
 			);
@@ -653,6 +679,7 @@
 		};
 		05E6958824CA5D4200ACFB35 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 050A9A0924F9B26C00321847 /* Config.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -683,6 +710,7 @@
 		};
 		05E6958924CA5D4200ACFB35 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 050A9A0924F9B26C00321847 /* Config.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
