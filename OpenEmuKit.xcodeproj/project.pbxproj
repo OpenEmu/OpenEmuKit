@@ -9,9 +9,6 @@
 /* Begin PBXBuildFile section */
 		0518D6E424F2BA4B0037101D /* OEGameStartupInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 0518D6E224F2BA4B0037101D /* OEGameStartupInfo.m */; };
 		0518D6E524F2BA4B0037101D /* OEGameStartupInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 0518D6E324F2BA4B0037101D /* OEGameStartupInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0533EA6424CDFBFF0095146E /* OEUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 0533EA6224CDFBFF0095146E /* OEUtilities.h */; };
-		0533EA6524CDFBFF0095146E /* OEUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 0533EA6324CDFBFF0095146E /* OEUtilities.m */; };
-		0533EA6724CDFD030095146E /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0533EA6624CDFD030095146E /* XADMaster.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		0547FD9824E7717E005C1FFC /* OEShadersModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547FD9724E7717E005C1FFC /* OEShadersModel.swift */; };
 		0547FDA424E78EA6005C1FFC /* OEXPCDebugSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FD9F24E78EA6005C1FFC /* OEXPCDebugSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0547FDA824E78EA6005C1FFC /* OEXPCDebugSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 0547FDA324E78EA6005C1FFC /* OEXPCDebugSupport.m */; };
@@ -85,8 +82,6 @@
 /* Begin PBXFileReference section */
 		0518D6E224F2BA4B0037101D /* OEGameStartupInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OEGameStartupInfo.m; sourceTree = "<group>"; };
 		0518D6E324F2BA4B0037101D /* OEGameStartupInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEGameStartupInfo.h; sourceTree = "<group>"; };
-		0533EA6224CDFBFF0095146E /* OEUtilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OEUtilities.h; sourceTree = "<group>"; };
-		0533EA6324CDFBFF0095146E /* OEUtilities.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OEUtilities.m; sourceTree = "<group>"; };
 		0533EA6624CDFD030095146E /* XADMaster.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XADMaster.framework; path = ../OpenEmu/XADMaster.framework; sourceTree = "<group>"; };
 		0547FD9724E7717E005C1FFC /* OEShadersModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OEShadersModel.swift; sourceTree = "<group>"; };
 		0547FD9F24E78EA6005C1FFC /* OEXPCDebugSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEXPCDebugSupport.h; sourceTree = "<group>"; };
@@ -153,7 +148,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0533EA6724CDFD030095146E /* XADMaster.framework in Frameworks */,
 				05E6BA5524CCD9A000ACFB35 /* OpenEmuShaders.framework in Frameworks */,
 				05E6BA0F24CCD53100ACFB35 /* OpenEmuBase.framework in Frameworks */,
 				05E6BA1324CCD56200ACFB35 /* OpenEmuSystem.framework in Frameworks */,
@@ -344,8 +338,6 @@
 				05E6BA3724CCD79300ACFB35 /* OELogging.m */,
 				05E6BA3624CCD79200ACFB35 /* OEThreadProxy.h */,
 				05E6BA3824CCD79500ACFB35 /* OEThreadProxy.m */,
-				0533EA6224CDFBFF0095146E /* OEUtilities.h */,
-				0533EA6324CDFBFF0095146E /* OEUtilities.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -391,7 +383,6 @@
 				05E6BA0724CCD49600ACFB35 /* OEGameHelperMetalLayer.h in Headers */,
 				0547FDA424E78EA6005C1FFC /* OEXPCDebugSupport.h in Headers */,
 				0547FDCE24E850EB005C1FFC /* NSXPCListener+HelperApp.h in Headers */,
-				0533EA6424CDFBFF0095146E /* OEUtilities.h in Headers */,
 				05E6BA2924CCD75900ACFB35 /* OEAudioUnit.h in Headers */,
 				05E6BA3C24CCD79600ACFB35 /* OEThreadProxy.h in Headers */,
 				05E6BA4A24CCD7DB00ACFB35 /* OEGameCoreManager.h in Headers */,
@@ -495,7 +486,6 @@
 				05D828D524E9881E00BB975E /* OEXPCMatchMaking.swift in Sources */,
 				05E6BA2824CCD75900ACFB35 /* OEGameAudio.m in Sources */,
 				05E6B9F824CCD46900ACFB35 /* OEMTLGameRenderer.m in Sources */,
-				0533EA6524CDFBFF0095146E /* OEUtilities.m in Sources */,
 				05E6BA2A24CCD75900ACFB35 /* OEAudioUnit.mm in Sources */,
 				05E6BA3E24CCD79600ACFB35 /* OEThreadProxy.m in Sources */,
 				05E6BA3D24CCD79600ACFB35 /* OELogging.m in Sources */,
