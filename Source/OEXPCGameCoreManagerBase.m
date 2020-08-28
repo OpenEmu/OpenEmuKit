@@ -65,7 +65,9 @@
         NSError *error = [NSError errorWithDomain:OEGameCoreErrorDomain
                                              code:OEGameCoreCouldNotLoadROMError
                                          userInfo:nil];
-        errorHandler(error);
+        dispatch_async(self.queue, ^{
+            errorHandler(error);
+        });
         
         // There's no listener endpoint, so don't bother trying to create an NSXPCConnection.
         // Returning now since calling initWithListenerEndpoint: and passing it nil results in a memory leak.
@@ -99,7 +101,7 @@
      ^(NSError *error)
      {
          NSLog(@"Helper Connection (%p) failed with error: %@", gameCoreHelperPointer, error);
-         dispatch_async(dispatch_get_main_queue(), ^{
+         dispatch_async(self.queue, ^{
              errorHandler(error);
              [self stop];
          });
@@ -114,7 +116,7 @@
      {
          if(error != nil)
          {
-             dispatch_async(dispatch_get_main_queue(), ^{
+             dispatch_async(self.queue, ^{
                  errorHandler(error);
                  [self stop];
              });
@@ -125,7 +127,7 @@
          }
 
          [self setGameCoreHelper:gameCoreHelper];
-         dispatch_async(dispatch_get_main_queue(), ^{
+         dispatch_async(self.queue, ^{
              completionHandler();
          });
      }];

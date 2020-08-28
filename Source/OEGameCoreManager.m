@@ -40,6 +40,7 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
                          corePlugin:(OECorePlugin *)plugin
                        systemPlugin:(OESystemPlugin *)systemPlugin
                       gameCoreOwner:(id<OEGameCoreOwner>)gameCoreOwner
+                              queue:(dispatch_queue_t _Nullable)queue
 {
     if (self = [super init])
     {
@@ -47,6 +48,7 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
         _plugin         = plugin;
         _systemPlugin   = systemPlugin;
         _gameCoreOwner  = gameCoreOwner;
+        _queue          = queue ?: dispatch_get_main_queue();
     }
     return self;
 }
@@ -96,7 +98,7 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
     [[self gameCoreHelper] insertFileAtURL:url completionHandler:
      ^(BOOL success, NSError *error)
      {
-         dispatch_async(dispatch_get_main_queue(), ^{
+         dispatch_async(self->_queue, ^{
              block(success, error);
          });
      }];
@@ -120,7 +122,7 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
 - (void)setShaderURL:(NSURL *)url completionHandler:(void (^)(BOOL success, NSError *error))block
 {
     [[self gameCoreHelper] setShaderURL:url completionHandler:^(BOOL success, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(self->_queue, ^{
             block(success, error);
         });
     }];
@@ -129,7 +131,7 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
 - (void)shaderParamGroupsWithCompletionHandler:(void (^)(NSArray<OEShaderParamGroupValue *> *))handler
 {
     [self.gameCoreHelper shaderParamGroupsWithCompletionHandler:^(NSArray<OEShaderParamGroupValue *> *groups) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(self->_queue, ^{
             handler(groups);
         });
     }];
@@ -143,7 +145,7 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
 - (void)setupEmulationWithCompletionHandler:(void(^)(OEIntSize screenSize, OEIntSize aspectSize))handler;
 {
     [[self gameCoreHelper] setupEmulationWithCompletionHandler:^(OEIntSize screenSize, OEIntSize aspectSize) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(self->_queue, ^{
             handler(screenSize, aspectSize);
         });
     }];
@@ -153,7 +155,7 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
 {
     [[self gameCoreHelper] startEmulationWithCompletionHandler:
      ^{
-         dispatch_async(dispatch_get_main_queue(), ^{
+         dispatch_async(self->_queue, ^{
              handler();
          });
      }];
@@ -163,7 +165,7 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
 {
     [[self gameCoreHelper] resetEmulationWithCompletionHandler:
      ^{
-         dispatch_async(dispatch_get_main_queue(), ^{
+         dispatch_async(self->_queue, ^{
              handler();
          });
      }];
@@ -173,7 +175,7 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
 {
     [[self gameCoreHelper] stopEmulationWithCompletionHandler:
      ^{
-         dispatch_async(dispatch_get_main_queue(), ^{
+         dispatch_async(self->_queue, ^{
              handler();
              [self stop];
          });
@@ -185,7 +187,7 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
     [[self gameCoreHelper] saveStateToFileAtPath:fileName completionHandler:
      ^(BOOL success, NSError *error)
      {
-         dispatch_async(dispatch_get_main_queue(), ^{
+         dispatch_async(self->_queue, ^{
              block(success, error);
          });
      }];
@@ -196,7 +198,7 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
     [[self gameCoreHelper] loadStateFromFileAtPath:fileName completionHandler:
      ^(BOOL success, NSError *error)
      {
-         dispatch_async(dispatch_get_main_queue(), ^{
+         dispatch_async(self->_queue, ^{
              block(success, error);
          });
      }];

@@ -82,7 +82,7 @@
             {
                 __block typeof(_errorHandler) errorHandler = _errorHandler;
                 _errorHandler = nil;
-                dispatch_async(dispatch_get_main_queue(), ^{
+                dispatch_async(self.queue, ^{
                     errorHandler(error);
                 });
             }
@@ -90,7 +90,7 @@
         }
 
         if (_completionHandler) {
-            dispatch_async(dispatch_get_main_queue(), _completionHandler);
+            dispatch_async(self.queue, _completionHandler);
             _completionHandler = nil;
         }
 
@@ -100,7 +100,7 @@
 
         if(_stopHandler)
         {
-            dispatch_async(dispatch_get_main_queue(), _stopHandler);
+            dispatch_async(self.queue, _stopHandler);
             _stopHandler = nil;
         }
     }

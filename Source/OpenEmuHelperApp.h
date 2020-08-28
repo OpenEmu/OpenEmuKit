@@ -40,6 +40,8 @@ enum _OEHelperAppErrorCodes
     OEHelperIncorrectFileError           = -2,
 };
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class OEGameStartupInfo;
 
 OE_EXPORTED_CLASS
@@ -56,3 +58,5 @@ OE_EXPORTED_CLASS
 - (BOOL)loadWithStartupInfo:(OEGameStartupInfo *)info error:(NSError **)error;
 
 @end
+
+NS_ASSUME_NONNULL_END
