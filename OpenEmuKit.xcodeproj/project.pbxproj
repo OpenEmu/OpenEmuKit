@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0518D6E424F2BA4B0037101D /* OEGameStartupInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 0518D6E224F2BA4B0037101D /* OEGameStartupInfo.m */; };
 		0518D6E524F2BA4B0037101D /* OEGameStartupInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 0518D6E324F2BA4B0037101D /* OEGameStartupInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0518D6E824F32DD10037101D /* NSEvent+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0518D6E724F32DD10037101D /* NSEvent+Combine.swift */; };
 		0547FD9824E7717E005C1FFC /* OEShadersModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547FD9724E7717E005C1FFC /* OEShadersModel.swift */; };
 		0547FDA424E78EA6005C1FFC /* OEXPCDebugSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FD9F24E78EA6005C1FFC /* OEXPCDebugSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0547FDA824E78EA6005C1FFC /* OEXPCDebugSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 0547FDA324E78EA6005C1FFC /* OEXPCDebugSupport.m */; };
@@ -82,6 +83,7 @@
 /* Begin PBXFileReference section */
 		0518D6E224F2BA4B0037101D /* OEGameStartupInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OEGameStartupInfo.m; sourceTree = "<group>"; };
 		0518D6E324F2BA4B0037101D /* OEGameStartupInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEGameStartupInfo.h; sourceTree = "<group>"; };
+		0518D6E724F32DD10037101D /* NSEvent+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSEvent+Combine.swift"; sourceTree = "<group>"; };
 		0533EA6624CDFD030095146E /* XADMaster.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XADMaster.framework; path = ../OpenEmu/XADMaster.framework; sourceTree = "<group>"; };
 		0547FD9724E7717E005C1FFC /* OEShadersModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OEShadersModel.swift; sourceTree = "<group>"; };
 		0547FD9F24E78EA6005C1FFC /* OEXPCDebugSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEXPCDebugSupport.h; sourceTree = "<group>"; };
@@ -157,6 +159,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0518D6E624F32DB40037101D /* Combine */ = {
+			isa = PBXGroup;
+			children = (
+				0518D6E724F32DD10037101D /* NSEvent+Combine.swift */,
+			);
+			name = Combine;
+			sourceTree = "<group>";
+		};
 		0547FD9E24E78E92005C1FFC /* XPC */ = {
 			isa = PBXGroup;
 			children = (
@@ -280,6 +290,7 @@
 		05E6BA1524CCD6B600ACFB35 /* OpenEmuCore */ = {
 			isa = PBXGroup;
 			children = (
+				0518D6E624F32DB40037101D /* Combine */,
 				05E6BA5924CCDFB200ACFB35 /* Shaders */,
 				05E6BA1624CCD6E500ACFB35 /* Plugins */,
 				05E6BA2324CCD73E00ACFB35 /* Audio */,
@@ -426,6 +437,7 @@
 		05E6957624CA5D4200ACFB35 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1200;
 				LastUpgradeCheck = 1200;
 				TargetAttributes = {
 					05E6957E24CA5D4200ACFB35 = {
@@ -504,6 +516,7 @@
 				0547FDA824E78EA6005C1FFC /* OEXPCDebugSupport.m in Sources */,
 				05D828DB24E98A8E00BB975E /* OEXPCMatchMaker.swift in Sources */,
 				05E6BA0424CCD49600ACFB35 /* OEGameHelperMetalLayer.m in Sources */,
+				0518D6E824F32DD10037101D /* NSEvent+Combine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
