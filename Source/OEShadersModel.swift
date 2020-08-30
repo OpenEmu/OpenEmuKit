@@ -78,7 +78,7 @@ public class OEShadersModel : NSObject {
         }
         return _systemShaderNames!
     }
-
+    
     private var _customShaderNames: [String]?
     
     @objc
@@ -88,7 +88,7 @@ public class OEShadersModel : NSObject {
         }
         return _customShaderNames!
     }
-
+    
     private var _allShaderNames: [String]?
     
     @objc
@@ -103,7 +103,7 @@ public class OEShadersModel : NSObject {
     public var defaultShader: OEShaderModel {
         get {
             if let name = UserDefaults.oe_application.string(forKey: Preferences.global.key),
-                let shader = self[name] {
+               let shader = self[name] {
                 return shader
             }
             
@@ -149,32 +149,22 @@ public class OEShadersModel : NSObject {
     }
     
     private static func loadCustomShaders() -> [OEShaderModel] {
-        var shaders = [OEShaderModel]()
-        
-        let paths = NSSearchPathForDirectoriesInDomains(.applicationSupportDirectory, .userDomainMask, true)
-        for path in paths {
-            let subpath = URL(fileURLWithPath: path, isDirectory: true).appendingPathComponent("OpenEmu").appendingPathComponent("Shaders")
-            let urls    = urlsForShaders(at: subpath)
-            if urls.count > 0 {
-                shaders.append(contentsOf: urls.map(OEShaderModel.init(url:)))
-            }
-        }
-        
-        return shaders
+        guard let path = userShadersPath else { return [] }
+        return urlsForShaders(at: path).map(OEShaderModel.init(url:))
     }
-
+    
     static func urlsForShaders(at url: URL) -> [URL] {
         var res = [URL]()
         
         guard
             let urls = try? FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: [.isDirectoryKey], options: .skipsSubdirectoryDescendants)
-            else { return [] }
+        else { return [] }
         
         let dirs = urls.filter({ (try? $0.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false })
         for dir in dirs {
             guard
                 let files = try? FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants])
-                else { continue }
+            else { continue }
             if let slangp = files.first(where: { $0.pathExtension == "slangp" }) {
                 // we have a file!
                 res.append(slangp)
@@ -184,41 +174,30 @@ public class OEShadersModel : NSObject {
         return res
     }
     
-    @objc
-    public lazy var userShadersPath: URL? = {
-        guard let path = try? FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else { return nil }
-        return path.appendingPathComponent("OpenEmu", isDirectory: true).appendingPathComponent("Shaders", isDirectory: true)
-    }()
-    
-    @objc
-    public lazy var shadersCachePath: URL? = {
-        guard let path = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else { return nil }
-        return path.appendingPathComponent("OpenEmu", isDirectory: true).appendingPathComponent("Shaders", isDirectory: true)
-    }()
-
-    private static func loadShaders() -> [OEShaderModel] {
-        var shaders = [OEShaderModel]()
-        
-        if let path = Bundle.main.resourcePath {
-            let url = URL(fileURLWithPath: path, isDirectory: true).appendingPathComponent("Shaders", isDirectory: true)
-            let urls = Self.urlsForShaders(at: url)
-            shaders = urls.map(OEShaderModel.init(url:))
-        }
-        
-        let paths = NSSearchPathForDirectoriesInDomains(.applicationSupportDirectory, .userDomainMask, true)
-        for path in paths {
-            let subpath = URL(fileURLWithPath: path, isDirectory: true).appendingPathComponent("OpenEmu").appendingPathComponent("Shaders")
-            let urls    = Self.urlsForShaders(at: subpath)
-            if urls.count > 0 {
-                shaders.append(contentsOf: urls.map(OEShaderModel.init(url:)))
-            }
-        }
-        
-        return shaders
+    static var applicationName: String {
+        Bundle.main.infoDictionary?[kCFBundleNameKey as String] as? String ?? "OpenEmuKit"
     }
     
+    @objc
+    public static var userShadersPath: URL? = {
+        guard
+            let path = try? FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        else { return nil }
+        
+        return path.appendingPathComponent(applicationName, isDirectory: true).appendingPathComponent("Shaders", isDirectory: true)
+    }()
+    
+    @objc
+    public static var shadersCachePath: URL? = {
+        guard
+            let path = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        else { return nil }
+        
+        return path.appendingPathComponent(applicationName, isDirectory: true).appendingPathComponent("Shaders", isDirectory: true)
+    }()
+    
     // MARK: - Shader Model
-
+    
     @objc(OEShaderModel)
     @objcMembers
     public class OEShaderModel : NSObject {

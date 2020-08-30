@@ -34,10 +34,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic) NSString                      *romSerial;
 @property(nonatomic) NSString                      *systemRegion;
 @property(nonatomic) NSDictionary <NSString *, id> *displayModeInfo;
+@property(nonatomic) NSURL                         *shader;
 @property(nonatomic) NSString                      *corePluginPath;
 @property(nonatomic) NSString                      *systemPluginPath;
 
-- (instancetype)initWithROMPath:(NSString *)romPath romMD5:(NSString *)romMD5 romHeader:(NSString *)romHeader romSerial:(NSString *)romSerial systemRegion:(NSString *)systemRegion displayModeInfo:(NSDictionary <NSString *, id> * _Nullable)displayModeInfo corePluginPath:(NSString *)pluginPath systemPluginPath:(NSString *)systemPluginPath;
+- (instancetype)initWithROMPath:(NSString *)romPath romMD5:(NSString *)romMD5 romHeader:(NSString *)romHeader romSerial:(NSString *)romSerial systemRegion:(NSString *)systemRegion displayModeInfo:(NSDictionary <NSString *, id> * _Nullable)displayModeInfo shader:(NSURL *)shader corePluginPath:(NSString *)pluginPath systemPluginPath:(NSString *)systemPluginPath;
 
 @end
 

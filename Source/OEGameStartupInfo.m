@@ -26,13 +26,14 @@
 
 @implementation OEGameStartupInfo
 
-- (instancetype)initWithROMPath:(NSString *)romPath romMD5:(NSString *)romMD5 romHeader:(NSString *)romHeader romSerial:(NSString *)romSerial systemRegion:(NSString *)systemRegion displayModeInfo:(NSDictionary <NSString *, id> *)displayModeInfo corePluginPath:(NSString *)pluginPath systemPluginPath:(NSString *)systemPluginPath
+- (instancetype)initWithROMPath:(NSString *)romPath romMD5:(NSString *)romMD5 romHeader:(NSString *)romHeader romSerial:(NSString *)romSerial systemRegion:(NSString *)systemRegion displayModeInfo:(NSDictionary <NSString *, id> *)displayModeInfo shader:(NSURL *)shader corePluginPath:(NSString *)pluginPath systemPluginPath:(NSString *)systemPluginPath
 {
     if (self = [super init]) {
         _romPath            = romPath;
         _romMD5             = romMD5;
         _romHeader          = romHeader;
         _romSerial          = romSerial;
+        _shader             = shader;
         _systemRegion       = systemRegion;
         _displayModeInfo    = displayModeInfo;
         _corePluginPath     = pluginPath;
@@ -55,6 +56,7 @@
         _romMD5             = [coder decodeObjectOfClass:NSString.class forKey:@"romMD5"];
         _romHeader          = [coder decodeObjectOfClass:NSString.class forKey:@"romHeader"];
         _romSerial          = [coder decodeObjectOfClass:NSString.class forKey:@"romSerial"];
+        _shader             = [coder decodeObjectOfClass:NSURL.class forKey:@"shader"];
         _systemRegion       = [coder decodeObjectOfClass:NSString.class forKey:@"systemRegion"];
         _displayModeInfo    = [coder decodePropertyListForKey:@"displayModeInfo"];
         _corePluginPath     = [coder decodeObjectOfClass:NSString.class forKey:@"pluginPath"];
@@ -74,6 +76,7 @@
     [coder encodeObject:_romMD5 forKey:@"romMD5"];
     [coder encodeObject:_romHeader forKey:@"romHeader"];
     [coder encodeObject:_romSerial forKey:@"romSerial"];
+    [coder encodeObject:_shader forKey:@"shader"];
     [coder encodeObject:_systemRegion forKey:@"systemRegion"];
     [coder encodeObject:_displayModeInfo forKey:@"displayModeInfo"];
     [coder encodeObject:_corePluginPath forKey:@"pluginPath"];

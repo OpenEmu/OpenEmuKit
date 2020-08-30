@@ -73,6 +73,7 @@
     OESystemController   *_systemController;
     OESystemResponder    *_systemResponder;
     OEGameAudio          *_gameAudio;
+    NSURL                *_shader; // initial shader
     
     NSMutableDictionary<OEDeviceHandlerPlaceholder *, NSMutableArray<void(^)(void)> *> *_pendingDeviceHandlerBindings;
     
@@ -136,22 +137,8 @@
     [self updateGameRenderer];
     [self setupCVBuffer];
     [self setupRemoteLayer];
-    
-    NSURL *shaderURL  = nil;
-    
-    // Option to override shader with absolute path
-    NSString *shaderPath = [NSUserDefaults.oe_applicationUserDefaults stringForKey:@"shaderPath"];
-    if (shaderPath != nil && [NSFileManager.defaultManager fileExistsAtPath:shaderPath]) {
-        shaderURL = [NSURL fileURLWithPath:shaderPath];
-    } else {
-        OEShaderModel *shader = [OEShadersModel.shared shaderForSystem:_gameCore.systemIdentifier];
-        if (shader != nil) {
-            shaderURL = shader.url;
-        }
-    }
-
-    if (shaderURL != nil) {
-        [self setShaderURL:shaderURL error:nil];
+    if (_shader) {
+        [self setShaderURL:_shader error:nil];
     }
 }
 
@@ -314,19 +301,20 @@
 
 #pragma mark - Game Core methods
 
-- (BOOL)loadROMAtPath:(NSString *)aPath romMD5:(NSString *)romMD5 romHeader:(NSString *)romHeader romSerial:(NSString *)romSerial systemRegion:(NSString *)systemRegion displayModeInfo:(NSDictionary <NSString *, id> *)displayModeInfo withCorePluginAtPath:(NSString *)pluginPath systemPluginPath:(NSString *)systemPluginPath error:(NSError **)error
+- (BOOL)loadWithStartupInfo:(OEGameStartupInfo *)info error:(NSError **)error
 {
     if(self.loadedRom) return NO;
     
-    aPath = [aPath stringByStandardizingPath];
+    NSString *aPath = [info.romPath stringByStandardizingPath];
     
     DLog(@"New ROM path is: %@", aPath);
     self.loadedRom = NO;
     
-    _systemController = [[OESystemPlugin systemPluginWithBundleAtPath:systemPluginPath] controller];
+    _shader = info.shader;
+    _systemController = [[OESystemPlugin systemPluginWithBundleAtPath:info.systemPluginPath] controller];
     _systemResponder = [_systemController newGameSystemResponder];
     
-    _gameController = [[OECorePlugin corePluginWithBundleAtPath:pluginPath] controller];
+    _gameController = [[OECorePlugin corePluginWithBundleAtPath:info.corePluginPath] controller];
     _gameCore = [_gameController newGameCore];
     
     NSString *systemIdentifier = [_systemController systemIdentifier];
@@ -337,11 +325,11 @@
     [_gameCore setAudioDelegate:self];
     
     [_gameCore setSystemIdentifier:systemIdentifier];
-    [_gameCore setSystemRegion:systemRegion];
-    [_gameCore setDisplayModeInfo:displayModeInfo ?: @{}];
-    [_gameCore setROMMD5:romMD5];
-    [_gameCore setROMHeader:romHeader];
-    [_gameCore setROMSerial:romSerial];
+    [_gameCore setSystemRegion:info.systemRegion];
+    [_gameCore setDisplayModeInfo:info.displayModeInfo ?: @{}];
+    [_gameCore setROMMD5:info.romMD5];
+    [_gameCore setROMHeader:info.romHeader];
+    [_gameCore setROMSerial:info.romSerial];
     
     _systemResponder.client = _gameCore;
     _systemResponder.globalEventsHandler = self;
@@ -384,18 +372,6 @@
     _gameCore = nil;
     
     return NO;
-}
-
-- (BOOL)loadWithStartupInfo:(OEGameStartupInfo *)info error:(NSError **)error
-{
-    return [self loadROMAtPath:info.romPath
-                        romMD5:info.romMD5
-                     romHeader:info.romHeader
-                     romSerial:info.romSerial
-                  systemRegion:info.systemRegion
-               displayModeInfo:info.displayModeInfo
-          withCorePluginAtPath:info.corePluginPath
-              systemPluginPath:info.systemPluginPath error:error];
 }
 
 - (OEIntSize)aspectSize
