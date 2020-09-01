@@ -58,7 +58,7 @@
         {
             NSLog(@"Unable to retrieve helperListener: %@", err);
         }
-        exit(EXIT_FAILURE);
+        _Exit(EXIT_FAILURE);
     }
     
     [_mainListener setDelegate:self];
@@ -67,6 +67,7 @@
     [self setup];
     
     CFRunLoopRun();
+    _Exit(EXIT_SUCCESS);
 }
 
 - (void)setup
@@ -146,11 +147,11 @@
         [_gameCoreConnection setExportedObject:self];
         [_gameCoreConnection setRemoteObjectInterface:[NSXPCInterface interfaceWithProtocol:@protocol(OEGameCoreOwner)]];
         [_gameCoreConnection setInvalidationHandler:^{
-            exit(EXIT_SUCCESS);
+            _Exit(EXIT_SUCCESS);
         }];
-
+        
         [_gameCoreConnection setInterruptionHandler:^{
-            exit(EXIT_SUCCESS);
+            _Exit(EXIT_SUCCESS);
         }];
 
         [_gameCoreConnection resume];
