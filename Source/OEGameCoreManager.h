@@ -45,9 +45,9 @@ extern NSString * const OEGameCoreErrorDomain;
 
 @interface OEGameCoreManager : NSObject <OEGameCoreHelper>
 
-/*! @brief Initializes an OEGameCoreManager object with the specified parameters.
+/*! @brief Initializes an @c OEGameCoreManager object with the specified parameters.
  * @details
- * The OEGameCoreManager is responsible for brokering communication between the
+ * The @c OEGameCoreManager is responsible for brokering communication between the
  * host and the game core.
  * @param queue The queue to execute completion handlers. If nil, handlers will be executed on the main queue.
  */
