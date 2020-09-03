@@ -65,6 +65,7 @@
 		05E6BA5524CCD9A000ACFB35 /* OpenEmuShaders.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E6BA5424CCD9A000ACFB35 /* OpenEmuShaders.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		05E6BA5C24CCDFC700ACFB35 /* OEShaderParamValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 05E6BA5A24CCDFC600ACFB35 /* OEShaderParamValue.m */; };
 		05E6BA5D24CCDFC700ACFB35 /* OEShaderParamValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E6BA5B24CCDFC700ACFB35 /* OEShaderParamValue.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		05EA2F2224FFD16B00569EBA /* OEIntegralWindowResizingDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05EA2F2124FFD16B00569EBA /* OEIntegralWindowResizingDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -148,6 +149,7 @@
 		05E6BA5824CCDF1200ACFB35 /* OpenEmuKit_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenEmuKit_Prefix.pch; sourceTree = "<group>"; };
 		05E6BA5A24CCDFC600ACFB35 /* OEShaderParamValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OEShaderParamValue.m; sourceTree = "<group>"; };
 		05E6BA5B24CCDFC700ACFB35 /* OEShaderParamValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEShaderParamValue.h; sourceTree = "<group>"; };
+		05EA2F2124FFD16B00569EBA /* OEIntegralWindowResizingDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OEIntegralWindowResizingDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -316,6 +318,7 @@
 		05E6BA1524CCD6B600ACFB35 /* OpenEmuCore */ = {
 			isa = PBXGroup;
 			children = (
+				05EA2F2024FFD14300569EBA /* UI */,
 				0518D6E624F32DB40037101D /* Combine */,
 				05E6BA5924CCDFB200ACFB35 /* Shaders */,
 				05E6BA1624CCD6E500ACFB35 /* Plugins */,
@@ -395,6 +398,14 @@
 				0547FD9724E7717E005C1FFC /* OEShadersModel.swift */,
 			);
 			name = Shaders;
+			sourceTree = "<group>";
+		};
+		05EA2F2024FFD14300569EBA /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				05EA2F2124FFD16B00569EBA /* OEIntegralWindowResizingDelegate.swift */,
+			);
+			name = UI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -530,6 +541,7 @@
 				0547FD9824E7717E005C1FFC /* OEShadersModel.swift in Sources */,
 				05E6BA1D24CCD71D00ACFB35 /* OESystemPlugin.m in Sources */,
 				0547FDCF24E850EB005C1FFC /* NSXPCListener+HelperApp.m in Sources */,
+				05EA2F2224FFD16B00569EBA /* OEIntegralWindowResizingDelegate.swift in Sources */,
 				05E6B9FA24CCD46900ACFB35 /* OEOpenGL3GameRenderer.m in Sources */,
 				05E6BA4724CCD7DB00ACFB35 /* OEThreadGameCoreManager.m in Sources */,
 				05E6BA3024CCD77600ACFB35 /* OEGameLayerView.m in Sources */,
