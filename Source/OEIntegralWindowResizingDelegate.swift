@@ -24,56 +24,50 @@
 
 import Cocoa
 
-@objc public class OEIntegralWindowResizingDelegate: NSObject, NSWindowDelegate {
-    var tracking: Bool = false
-    var initialSize: NSSize = .zero
-    
-    @objc public var screenSize: NSSize = .zero
-    @objc public var currentScale: Int = 1
-    var maximumIntegralScale: Int = 1
-    
-    @objc static public func maximumIntegralScale(forWindow window: NSWindow, withScreenSize size: NSSize) -> Int {
-        guard let screen = window.screen ?? NSScreen.main else { return 1 }
-        
-        let maxContentSize = window.contentRect(forFrameRect: screen.visibleFrame).size
-        let maxScale = max(min(floor(maxContentSize.height / size.height),
-                               floor(maxContentSize.width / size.width)),
+@objc extension NSWindow {
+    final public func maximumIntegralScale(forSize size: NSSize) -> Int {
+        guard let screen = self.screen ?? NSScreen.main else { return 1 }
+        let maxContentSize = self.contentRect(forFrameRect: screen.visibleFrame).size
+        return OEIntegralWindowResizing.maximumIntegralScale(forContentSize: maxContentSize, withScreenSize: size)
+    }
+}
+
+@objc final public class OEIntegralWindowResizing: NSObject {
+    @objc public static func maximumIntegralScale(forContentSize contentSize: NSSize, withScreenSize size: NSSize) -> Int {
+        let maxScale = max(min(floor(contentSize.height / size.height),
+                               floor(contentSize.width / size.width)),
                            1)
         
         return Int(maxScale)
-        
     }
     
-    @objc public func windowWillStartLiveResize(_ notification: Notification) {
+    @objc public static func integralScaleForSize(_ size: CGSize, withScreenSize screenSize: CGSize) -> NSNumber? {
+        guard size.width.remainder(dividingBy: screenSize.width) == 0,
+              size.height.remainder(dividingBy: screenSize.height) == 0
+        else { return nil }
+        
         guard
-            !screenSize.equalTo(.zero),
-            let window = notification.object as? NSWindow
-        else { return }
+            let scaleWidth  = Int(exactly: size.width /  screenSize.width),
+            let scaleHeight = Int(exactly: size.height / screenSize.height)
+        else { return nil }
         
-        tracking = true
-        initialSize = window.frame.size
-        maximumIntegralScale = Self.maximumIntegralScale(forWindow: window, withScreenSize: screenSize)
+        return scaleWidth == scaleHeight ? NSNumber(value: scaleWidth) : nil
     }
     
-    @objc public func windowWillResize(_ sender: NSWindow, to frameSize: NSSize) -> NSSize {
-        guard tracking else { return frameSize }
-        
-        let existing = sender.frame.size
-        if let proposedScale = integralScale(existing: existing, proposed: frameSize),
-           proposedScale != currentScale && proposedScale <= maximumIntegralScale
-        {
-            currentScale = proposedScale
-            return self.frameSize(for: sender, integralScale: currentScale)
+    /// Calculate the integral scale of the `proposed` size with respect to the `existing` size, using `screenSize` as the basis
+    /// - Parameters:
+    ///   - existing: <#existing description#>
+    ///   - proposed: <#proposed description#>
+    ///   - screenSize: <#screenSize description#>
+    /// - Returns: The integral scale or -1 if the `proposed` and `existing` sizes are almost equal
+    @objc public static func integralScale(existing: CGSize, proposed: CGSize, screenSize: CGSize) -> Int {
+        if let size = integralScale(existing: existing, proposed: proposed, screenSize: screenSize) {
+            return size
         }
-        return existing
+        return -1
     }
     
-    @objc public func windowDidEndLiveResize(_ notification: Notification) {
-        tracking = false
-    }
-    
-    func integralScale(existing: CGSize, proposed: CGSize) -> Int?
-    {
+    static func integralScale(existing: CGSize, proposed: CGSize, screenSize: CGSize) -> Int? {
         // determine if a single axis is being resized
         let deltaX = abs(existing.width - proposed.width)
         let deltaY = abs(existing.height - proposed.height)
@@ -98,12 +92,20 @@ import Cocoa
         
         return max(Int(scale), 1)
     }
+}
+
+@objc final public class OEIntegralWindowResizingDelegate: NSObject {
+    var tracking: Bool = false
+    var initialSize: NSSize = .zero
+    
+    @objc public var screenSize: NSSize = .zero
+    @objc public var currentScale: Int = 1
+    var maximumIntegralScale: Int = 1
     
     @objc public func windowContentSize(forIntegralScale scale: Int) -> NSSize {
         let scale = CGFloat(scale)
         return screenSize.applying(CGAffineTransform(scaleX: scale, y: scale))
     }
-    
     
     /// Returns the window frame size derived from `screenSize` for the specified `integralScale`.
     ///
@@ -117,5 +119,35 @@ import Cocoa
         let contentSize = windowContentSize(forIntegralScale: scale)
         let windowFrame = window.frameRect(forContentRect: NSRect(origin: .zero, size: contentSize))
         return windowFrame.size
+    }
+}
+
+@objc extension OEIntegralWindowResizingDelegate: NSWindowDelegate {
+    @objc public func windowWillStartLiveResize(_ notification: Notification) {
+        guard
+            !screenSize.equalTo(.zero),
+            let window = notification.object as? NSWindow
+        else { return }
+        
+        tracking = true
+        initialSize = window.frame.size
+        maximumIntegralScale = window.maximumIntegralScale(forSize: screenSize)
+    }
+    
+    @objc public func windowWillResize(_ sender: NSWindow, to frameSize: NSSize) -> NSSize {
+        guard tracking else { return frameSize }
+        
+        let existing = sender.frame.size
+        if let proposedScale = OEIntegralWindowResizing.integralScale(existing: existing, proposed: frameSize, screenSize: screenSize),
+           proposedScale != currentScale && proposedScale <= maximumIntegralScale
+        {
+            currentScale = proposedScale
+            return self.frameSize(for: sender, integralScale: currentScale)
+        }
+        return existing
+    }
+    
+    @objc public func windowDidEndLiveResize(_ notification: Notification) {
+        tracking = false
     }
 }

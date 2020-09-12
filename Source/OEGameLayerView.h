@@ -47,6 +47,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) NSColor *backgroundColor;
 @property (nonatomic) CAContextID remoteContextID;
 
+#pragma mark - View Scaling
+
+@property (nonatomic, readonly) NSSize aspectCorrectedScreenSize;
+
 - (void)setScreenSize:(OEIntSize)newScreenSize aspectSize:(OEIntSize)newAspectSize;
 
 @end

@@ -104,11 +104,11 @@
 {
     _gameScreenSize = newScreenSize;
     _gameAspectSize = newAspectSize;
+    OEIntSize correct = OECorrectScreenSizeForAspectSize(_gameScreenSize, _gameAspectSize);
+    _aspectCorrectedScreenSize = NSMakeSize(correct.width, correct.height);
 }
 
-- (void)viewWillMoveToWindow:(NSWindow *)newWindow {
-    [super viewWillMoveToWindow:newWindow];
-}
+#pragma mark - View Scaling
 
 #pragma mark - APIs
 
@@ -170,9 +170,8 @@
     CGPoint location = [anEvent locationInWindow];
     location = [self convertPoint:location fromView:nil];
     location.y = frame.size.height - location.y;
-    NSSize screenSize = OECorrectScreenSizeForAspectSize(_gameScreenSize, _gameAspectSize);
     
-    CGRect screenRect = { .size.width = screenSize.width, .size.height = screenSize.height };
+    CGRect screenRect = { .size = _aspectCorrectedScreenSize };
     
     CGFloat scale = MIN(CGRectGetWidth(frame)  / CGRectGetWidth(screenRect),
                         CGRectGetHeight(frame) / CGRectGetHeight(screenRect));
@@ -186,8 +185,8 @@
     location.y -= screenRect.origin.y;
     
     OEIntPoint point = {
-        .x = MAX(0, MIN(round(location.x * screenSize.width  / CGRectGetWidth(screenRect)) , screenSize.width )),
-        .y = MAX(0, MIN(round(location.y * screenSize.height / CGRectGetHeight(screenRect)), screenSize.height))
+        .x = MAX(0, MIN(round(location.x * _aspectCorrectedScreenSize.width  / CGRectGetWidth(screenRect)) , _aspectCorrectedScreenSize.width )),
+        .y = MAX(0, MIN(round(location.y * _aspectCorrectedScreenSize.height / CGRectGetHeight(screenRect)), _aspectCorrectedScreenSize.height))
     };
     
     return (id)[OEEvent eventWithMouseEvent:anEvent withLocationInGameView:point];
