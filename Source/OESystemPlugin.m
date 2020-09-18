@@ -135,9 +135,9 @@ static NSArray *_cachedSupportedSystemTypes = nil;
     return [[self controller] fileTypes];
 }
 
-- (BOOL)supportsDiscs
+- (BOOL)supportsDiscsWithDescriptorFile
 {
-    return [[self controller] supportsDiscs];
+    return [[self controller] supportsDiscsWithDescriptorFile];
 }
 
 - (CGFloat)coverAspectRatio

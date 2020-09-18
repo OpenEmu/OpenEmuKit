@@ -37,7 +37,7 @@
 @property(strong, readonly) NSString *systemName;
 @property(strong, readonly) NSString *systemType;
 @property(strong, readonly) NSImage  *systemIcon;
-@property(readonly)         BOOL     supportsDiscs;
+@property(readonly)         BOOL     supportsDiscsWithDescriptorFile;
 @property(readonly)         CGFloat  coverAspectRatio;
 @property(strong, readonly) NSImage  *bundleIcon;
 
