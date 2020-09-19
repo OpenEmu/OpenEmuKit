@@ -34,6 +34,7 @@
 static NSMutableDictionary *_pluginsBySystemIdentifiers = nil;
 static NSArray *_cachedSupportedTypeExtensions = nil;
 static NSArray *_cachedSupportedSystemTypes = nil;
+static NSArray *_cachedSupportedSystemMedia = nil;
 
 NSNotificationName const OESystemPluginDidRegisterNotification = @"OESystemPluginDidRegisterNotification";
 
@@ -58,7 +59,8 @@ NSNotificationName const OESystemPluginDidRegisterNotification = @"OESystemPlugi
     // Invalidate supported type extenesions cache
     _cachedSupportedTypeExtensions = nil;
     _cachedSupportedSystemTypes = nil;
-    
+    _cachedSupportedSystemMedia = nil;
+
     [[NSNotificationCenter defaultCenter] postNotificationName:OESystemPluginDidRegisterNotification object:plugin];
 }
 
@@ -88,6 +90,20 @@ NSNotificationName const OESystemPluginDidRegisterNotification = @"OESystemPlugi
     }
 
     return _cachedSupportedSystemTypes;
+}
+
++ (NSArray *)supportedSystemMedia;
+{
+    if(_cachedSupportedSystemMedia == nil)
+    {
+        NSMutableSet *extensions = [NSMutableSet set];
+        for(OESystemPlugin *plugin in [OEPlugin pluginsForType:self])
+            [extensions addObjectsFromArray:plugin.systemMedia];
+
+        _cachedSupportedSystemMedia = extensions.allObjects;
+    }
+
+    return _cachedSupportedSystemMedia;
 }
 
 + (OESystemPlugin *)systemPluginWithBundleAtPath:(NSString *)bundlePath;
@@ -129,6 +145,11 @@ NSNotificationName const OESystemPluginDidRegisterNotification = @"OESystemPlugi
     return [[self controller] systemType];
 }
 
+- (NSArray *)systemMedia
+{
+    return [[self controller] systemMedia];
+}
+
 - (NSImage *)systemIcon
 {
     return [[self controller] systemIcon];
@@ -159,7 +180,7 @@ NSNotificationName const OESystemPluginDidRegisterNotification = @"OESystemPlugi
     systemsDirectory = [systemsDirectory URLByAppendingPathComponent:@"OpenEmu/Systems"];
     if ([systemsDirectory.path isEqual:bundlePath.path])
         return YES;
-        
+
     return NO;
 }
 
