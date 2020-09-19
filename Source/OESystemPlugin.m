@@ -35,6 +35,8 @@ static NSMutableDictionary *_pluginsBySystemIdentifiers = nil;
 static NSArray *_cachedSupportedTypeExtensions = nil;
 static NSArray *_cachedSupportedSystemTypes = nil;
 
+NSNotificationName const OESystemPluginDidRegisterNotification = @"OESystemPluginDidRegisterNotification";
+
 + (void)initialize
 {
     if(self == [OESystemPlugin class])
@@ -52,6 +54,8 @@ static NSArray *_cachedSupportedSystemTypes = nil;
 + (void)registerGameSystemPlugin:(OESystemPlugin *)plugin forIdentifier:(NSString *)gameSystemIdentifier;
 {
     [_pluginsBySystemIdentifiers setObject:plugin forKey:gameSystemIdentifier];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:OESystemPluginDidRegisterNotification object:plugin];
 
     // Invalidate supported type extenesions cache
     _cachedSupportedTypeExtensions = nil;

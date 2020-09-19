@@ -29,6 +29,8 @@
 
 @class OESystemController;
 
+extern NSNotificationName const OESystemPluginDidRegisterNotification;
+
 @interface OESystemPlugin : OEPlugin
 
 @property(weak, readonly) OESystemController *controller;
