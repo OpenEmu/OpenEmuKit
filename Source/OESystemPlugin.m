@@ -55,11 +55,11 @@ NSNotificationName const OESystemPluginDidRegisterNotification = @"OESystemPlugi
 {
     [_pluginsBySystemIdentifiers setObject:plugin forKey:gameSystemIdentifier];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:OESystemPluginDidRegisterNotification object:plugin];
-
     // Invalidate supported type extenesions cache
     _cachedSupportedTypeExtensions = nil;
     _cachedSupportedSystemTypes = nil;
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:OESystemPluginDidRegisterNotification object:plugin];
 }
 
 + (NSArray *)supportedTypeExtensions;
