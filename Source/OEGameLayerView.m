@@ -29,16 +29,7 @@
 @import OpenEmuSystem;
 
 #import "OEGameLayerView.h"
-
-@interface CAContext : NSObject
-+ (id)contextWithCGSConnection:(CAContextID)contextId options:(NSDictionary*)optionsDict;
-@property(readonly) CAContextID contextId;
-@property(retain) CALayer *layer;
-@end
-
-@interface CALayerHost : CALayer
-@property CAContextID contextId;
-@end
+#import "QuartzCoreSPI.h"
 
 @interface OEGameLayerView () <CALayerDelegate, NSViewLayerContentScaleDelegate>
 @end

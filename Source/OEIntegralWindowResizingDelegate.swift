@@ -26,8 +26,8 @@ import Cocoa
 
 @objc extension NSWindow {
     final public func maximumIntegralScale(forSize size: NSSize) -> Int {
-        guard let screen = self.screen ?? NSScreen.main else { return 1 }
-        let maxContentSize = self.contentRect(forFrameRect: screen.visibleFrame).size
+        guard let screen = screen ?? NSScreen.main else { return 1 }
+        let maxContentSize = contentRect(forFrameRect: screen.visibleFrame).size
         return OEIntegralWindowResizing.maximumIntegralScale(forContentSize: maxContentSize, withScreenSize: size)
     }
 }
