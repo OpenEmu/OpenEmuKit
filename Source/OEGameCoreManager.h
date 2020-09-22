@@ -31,17 +31,17 @@
 @protocol OEGameCoreOwner;
 @class OECorePlugin, OEGameCoreController, OESystemPlugin, OEGameStartupInfo;
 
-enum _OEGameCoreManagerErrorCodes
+NS_ASSUME_NONNULL_BEGIN
+
+extern NSString * const OEGameCoreErrorDomain;
+
+typedef NS_ERROR_ENUM(OEGameCoreErrorDomain, OEGameCoreManagerErrorCodes)
 {
     OEHelperAppNotRunningError     = -3,
     OEConnectionTimedOutError      = -4,
     OEInvalidHelperConnectionError = -5,
     OENilRootProxyObjectError      = -6,
 };
-
-NS_ASSUME_NONNULL_BEGIN
-
-extern NSString * const OEGameCoreErrorDomain;
 
 @interface OEGameCoreManager : NSObject <OEGameCoreHelper>
 
