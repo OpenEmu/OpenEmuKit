@@ -174,6 +174,7 @@ static NSArray *_cachedRequiredFiles = nil;
     /* plugins deprecated 2017-11-04 */
     NSString *bundleName = [[[self bundle] bundleURL] lastPathComponent];
     NSArray *deprecatedPlugins = @[
+        @"Dolphin-Core.oecoreplugin",
         @"NeoPop.oecoreplugin",
         @"TwoMbit.oecoreplugin",
         @"VisualBoyAdvance.oecoreplugin",
