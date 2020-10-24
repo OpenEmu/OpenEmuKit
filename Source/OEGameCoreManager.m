@@ -243,4 +243,19 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
     [self.gameCoreHelper systemBindingsDidUnsetEvent:event forBinding:bindingDescription playerNumber:playerNumber];
 }
 
+- (void)_notifyGameCoreDidTerminate
+{
+    __weak OEGameCoreManager *weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        OEGameCoreManager *strongSelf = weakSelf;
+        if (!strongSelf)
+            return;
+        id<OEGameCoreOwner> strongCoreOwner = strongSelf.gameCoreOwner;
+        if (!strongCoreOwner)
+            return;
+        if ([strongCoreOwner respondsToSelector:@selector(gameCoreDidTerminate)])
+            [strongCoreOwner gameCoreDidTerminate];
+    });
+}
+
 @end

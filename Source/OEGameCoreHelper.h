@@ -101,6 +101,16 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setDisplayModes:(NSArray <NSDictionary <NSString *, id> *> *)displayModes;
 - (void)setRemoteContextID:(NSUInteger)contextID;
 
+@optional
+
+/** Invoked when the game core execution has terminated, either because it
+ *  was asked to stop, or because it terminated spontaneously (for example
+ *  in case of a helper application crash).
+ *  @warning This message may not be sent in certain situations (for example
+ *    when the core manager is deallocated right after the game core is
+ *    stopped). */
+- (void)gameCoreDidTerminate;
+
 @end
 
 NS_ASSUME_NONNULL_END

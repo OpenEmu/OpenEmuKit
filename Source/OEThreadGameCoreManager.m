@@ -104,6 +104,8 @@
             _stopHandler = nil;
         }
     }
+    
+    [self _notifyGameCoreDidTerminate];
 }
 
 - (void)_stopHelperThread:(id)object

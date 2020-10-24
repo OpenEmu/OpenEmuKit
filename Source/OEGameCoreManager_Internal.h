@@ -31,4 +31,9 @@
 @interface OEGameCoreManager ()
 @property(nonatomic, strong) id<OEGameCoreHelper> gameCoreHelper;
 - (void)stop;
+
+/** Asynchronously sends the -gameCoreDidTerminate message to the
+ *  gameCoreOwner. */
+- (void)_notifyGameCoreDidTerminate;
+
 @end

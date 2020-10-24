@@ -75,6 +75,13 @@
         return;
     }
     
+    __weak OEXPCGameCoreManagerBase *weakSelf = self;
+    [_helperConnection setInvalidationHandler:^{
+        OEXPCGameCoreManagerBase *strongSelf = weakSelf;
+        if (strongSelf)
+            [strongSelf _notifyGameCoreDidTerminate];
+    }];
+    
     _gameCoreOwnerProxy = [OEThreadProxy threadProxyWithTarget:[self gameCoreOwner] thread:[NSThread mainThread]];
     
     [_helperConnection setExportedInterface:[NSXPCInterface interfaceWithProtocol:@protocol(OEGameCoreOwner)]];
