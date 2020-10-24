@@ -218,7 +218,9 @@
 				05E6958024CA5D4200ACFB35 /* Products */,
 				05E6BA0D24CCD53100ACFB35 /* Frameworks */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
+			tabWidth = 4;
 		};
 		05E6958024CA5D4200ACFB35 /* Products */ = {
 			isa = PBXGroup;
