@@ -228,24 +228,20 @@
 
 - (void)setOutputBounds:(NSRect)rect
 {
-    OEIntSize newBufferSize = OEIntSizeMake(ceil(rect.size.width), ceil(rect.size.height));
-    if (OEIntSizeEqualToSize(_gameRenderer.surfaceSize, newBufferSize))
-    {
-        return;
-    }
+    DLog(@"Output bounds changed to: %@", NSStringFromRect(rect));
     
-    DLog(@"Output size change to: %@", NSStringFromOEIntSize(newBufferSize));
-    
-    [CATransaction begin];
-    [CATransaction setDisableActions:YES];
-    if (_videoLayer) {
+    if (_videoLayer && !NSEqualRects(_videoLayer.bounds, rect)) {
+        [CATransaction begin];
+        [CATransaction setDisableActions:YES];
         _videoLayer.bounds = rect;
+        [_filterChain setDrawableSize:_videoLayer.drawableSize];
+        [CATransaction commit];
     }
-    [_filterChain setDrawableSize:_videoLayer.drawableSize];
-    [CATransaction commit];
 
     // Game will try to render at the window size on its next frame.
     if ([_gameRenderer canChangeBufferSize] == NO) return;
+    
+    OEIntSize newBufferSize = OEIntSizeMake(ceil(rect.size.width), ceil(rect.size.height));
     if ([_gameCore tryToResizeVideoTo:newBufferSize] == NO) return;
 }
 
