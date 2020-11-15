@@ -26,6 +26,7 @@
 
 #import "OEPlugin.h"
 #import <objc/runtime.h>
+#import "OELogging.h"
 
 @implementation NSObject (OEPlugin)
 + (BOOL)isPluginClass
@@ -194,11 +195,12 @@ static NSMutableDictionary *_pluginsForNamesByTypes  = nil;
             [self OE_setupWithBundleAtPath:aPath];
             if (self.outOfSupport) {
                 /* plugin must be removed */
-                NSLog(@"Removing out-of-support plugin %@", _path);
+                os_log(OE_LOG_DEFAULT, "Removing out-of-support plugin %{public}@", _path);
                 NSFileManager *fm = [NSFileManager defaultManager];
                 NSError *error;
-                if (![fm removeItemAtPath:_path error:&error])
-                    NSLog(@"Error when removing out-of-support plugin: %@", error);
+                if (![fm removeItemAtPath:_path error:&error]) {
+                    os_log_error(OE_LOG_DEFAULT, "Error when removing out-of-support plugin: %{public}@", error);
+                }
                 if (outError) *outError = [NSError errorWithDomain:OEGameCoreErrorDomain code:OEGameCorePluginOutOfSupportError userInfo:nil];
                 return nil;
             }

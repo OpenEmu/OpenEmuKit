@@ -96,6 +96,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)nextDisplayMode;
 - (void)lastDisplayMode;
 
+/// Notify the host application the the screen and aspect sizes have changed for the core.
+///
+/// @details
+/// The host application would use this to adjust the size of the display window.
 - (void)setScreenSize:(OEIntSize)newScreenSize aspectSize:(OEIntSize)newAspectSize;
 - (void)setDiscCount:(NSUInteger)discCount;
 - (void)setDisplayModes:(NSArray <NSDictionary <NSString *, id> *> *)displayModes;

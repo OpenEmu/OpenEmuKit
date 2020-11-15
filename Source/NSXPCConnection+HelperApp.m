@@ -25,6 +25,7 @@
 #import "NSXPCConnection+HelperApp.h"
 #import <OpenEmuKit/OpenEmuKit-Swift.h>
 #import <objc/runtime.h>
+#import "OELogging.h"
 
 NSString *kHelperIdentifierArgumentPrefix = @"--org.openemu.broker.id=";
 int xpc_task_key = 0;
@@ -40,7 +41,7 @@ int xpc_task_key = 0;
     task.executableURL = url;
     task.arguments = @[[@[kHelperIdentifierArgumentPrefix, identifier] componentsJoinedByString:@""]];
     [task setTerminationHandler:^(NSTask * _){
-        NSLog(@"Helper task %@ terminated unexpectedly", identifier);
+        os_log_error(OE_LOG_HELPER, "Helper task %{public}@ terminated unexpectedly", identifier);
         dispatch_semaphore_signal(sem);
     }];
     task.standardError = NSFileHandle.fileHandleWithStandardError;
@@ -92,7 +93,7 @@ int xpc_task_key = 0;
 
     __weak __typeof(newCn) weakCn = newCn;
     [task setTerminationHandler:^(NSTask *task) {
-        NSLog(@"Helper %@ terminating", identifier);
+        os_log_debug(OE_LOG_HELPER, "Helper %{public}@ terminating", identifier);
         __strong __typeof(weakCn) strongCn = weakCn;
         [strongCn invalidate];
     }];

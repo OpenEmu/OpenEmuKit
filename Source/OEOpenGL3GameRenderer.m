@@ -11,6 +11,7 @@
 #import <OpenGL/gl3ext.h>
 #import <stdatomic.h>
 #import "OECoreVideoTexture.h"
+#import "OELogging.h"
 
 @implementation OEOpenGL3GameRenderer
 {
@@ -88,7 +89,7 @@
 
 - (void)setupVideo
 {
-    NSLog(@"Setting up OpenGL3.x Core Profile renderer");
+    os_log_debug(OE_LOG_RENDERER, "Setting up OpenGL3.x Core Profile renderer");
 
     NSAssert(_gameCore.gameCoreRendering != OEGameCoreRendering2DVideo, @"GL3 renderer doesn't do 2D video");
 
@@ -119,14 +120,14 @@
     err = CGLChoosePixelFormat(attributes, &_glPixelFormat, &numPixelFormats);
     if(err != kCGLNoError)
     {
-        NSLog(@"Error choosing pixel format %s", CGLErrorString(err));
+        os_log_error(OE_LOG_RENDERER, "Error choosing pixel format %{public}s", CGLErrorString(err));
         [[NSApplication sharedApplication] terminate:nil];
     }
 
     err = CGLCreateContext(_glPixelFormat, NULL, &_glContext);
     if(err != kCGLNoError)
     {
-        NSLog(@"Error creating context %s", CGLErrorString(err));
+        os_log_error(OE_LOG_RENDERER, "Error creating context %{public}s", CGLErrorString(err));
         [[NSApplication sharedApplication] terminate:nil];
     }
     CGLEnable(_glContext, kCGLCECrashOnRemovedFunctions);
@@ -145,7 +146,7 @@
     status = glGetError();
     if(status != 0)
     {
-        NSLog(@"setup: create interop texture FBO 1, OpenGL error %04X", status);
+        os_log_error(OE_LOG_RENDERER, "Setup failed: Create interop texture FBO 1, OpenGL error %04X", status);
     }
 
     // Complete the FBO
@@ -156,13 +157,13 @@
     status = glGetError();
     if(status != 0)
     {
-        NSLog(@"setup: create ioSurface FBO 2, OpenGL error %04X", status);
+        os_log_error(OE_LOG_RENDERER, "Setup failed: Create ioSurface FBO 2, OpenGL error %04X", status);
     }
 
     status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if(status != GL_FRAMEBUFFER_COMPLETE)
     {
-        NSLog(@"Cannot create FBO, OpenGL error %04X", status);
+        os_log_error(OE_LOG_RENDERER, "Setup failed: Cannot create FBO, OpenGL error %04X", status);
     }
 
     glViewport(0, 0, _texture.size.width, _texture.size.height);
@@ -192,8 +193,7 @@
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if(status != GL_FRAMEBUFFER_COMPLETE)
     {
-        NSLog(@"Cannot create temp FBO");
-        NSLog(@"OpenGL error %04X", status);
+        os_log_error(OE_LOG_RENDERER, "Cannot create temp FBO. OpenGL error %04X", status);
 
         glDeleteFramebuffers(1, &_alternateFBO);
     }
@@ -234,13 +234,13 @@
     GLenum status = glGetError();
     if(status)
     {
-        NSLog(@"draw: bind FBO: OpenGL error %04X", status);
+        os_log_error(OE_LOG_RENDERER, "glBindFramebuffer: OpenGL error %04X", status);
     }
 
     status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if(status != GL_FRAMEBUFFER_COMPLETE)
     {
-        NSLog(@"OpenGL error %04X in draw, check FBO", status);
+        os_log_error(OE_LOG_RENDERER, "glCheckFramebufferStatus: OpenGL error %04X in draw, check FBO", status);
     }
 }
 

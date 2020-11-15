@@ -42,6 +42,7 @@
 #import "OEShaderParamValue.h"
 #import "OEGameStartupInfo.h"
 #import <OpenEmuKit/OpenEmuKit-Swift.h>
+#import "OELogging.h"
 
 #import "OpenEmuKitPrivate/OpenEmuKitPrivate.h"
 
@@ -90,6 +91,18 @@
     
     id   _unhandledEventsMonitor;
     BOOL _hasStartedAudio;
+}
+
+/// Log messages related to display.
+static os_log_t LOG_DISPLAY;
+
++ (void)initialize
+{
+    if (self != OpenEmuHelperApp.class) return;
+    
+    os_log_debug(OE_LOG_DEFAULT, "Initializing %{public}@ loggers", NSStringFromClass(self));
+    
+    LOG_DISPLAY = os_log_create(OE_LOG_NAME, "display");
 }
 
 - (instancetype)init
@@ -197,15 +210,23 @@
 
     if (_gameCore.gameCoreRendering != OEGameCoreRendering2DVideo) {
         _surface.size = size;
-        DLog(@"Updated surface size to %@", NSStringFromOEIntSize(surfaceSize));
+        os_log_debug(LOG_DISPLAY, "Updated GL render surface size to %{public}@", NSStringFromOEIntSize(surfaceSize));
         _filterChain.sourceTexture          = _surface.metalTexture;
         _filterChain.sourceTextureIsFlipped = _surface.metalTextureIsFlipped;
+    }
+    else
+    {
+        os_log_debug(LOG_DISPLAY, "Set 2D buffer size to %{public}@", NSStringFromOEIntSize(surfaceSize));
     }
 
     [_gameRenderer updateRenderer];
     OEIntRect rect = _gameCore.screenRect;
     CGRect sourceRect = {.origin = {.x = rect.origin.x, .y = rect.origin.y}, .size = {.width = rect.size.width, .height = rect.size.height}};
     CGSize aspectSize = {.width = _gameCore.aspectSize.width, .height = _gameCore.aspectSize.height};
+    
+    os_log_debug(LOG_DISPLAY, "Set FilterChain sourceRect to %{public}@, aspectSize to %{public}@",
+                 NSStringFromRect(sourceRect),
+                 NSStringFromSize(aspectSize));
     [_filterChain setSourceRect:sourceRect aspect:aspectSize];
 }
 
@@ -228,7 +249,7 @@
 
 - (void)setOutputBounds:(NSRect)rect
 {
-    DLog(@"Output bounds changed to: %@", NSStringFromRect(rect));
+    os_log_debug(LOG_DISPLAY, "Output bounds changed to %{public}@", NSStringFromRect(rect));
     
     if (_videoLayer && !NSEqualRects(_videoLayer.bounds, rect)) {
         [CATransaction begin];
@@ -303,7 +324,7 @@
     
     NSString *aPath = [info.romPath stringByStandardizingPath];
     
-    DLog(@"New ROM path is: %@", aPath);
+    os_log_info(OE_LOG_HELPER, "Load ROM at path %{public}@", aPath);
     self.loadedRom = NO;
     
     _shader = info.shader;
@@ -345,11 +366,12 @@
         [strongSelf->_systemResponder handleHIDEvent:event];
     }];
     
-    DLog(@"Loaded bundle. About to load rom...");
+    os_log_debug(OE_LOG_HELPER, "Loaded bundle.");
     
     if([_gameCore loadFileAtPath:aPath error:error])
     {
-        DLog(@"Loaded new Rom: %@", aPath);
+        os_log_debug(OE_LOG_HELPER, "Loaded new ROM: %{public}@", aPath);
+
         [_gameCoreOwner setDiscCount:[_gameCore discCount]];
         [_gameCoreOwner setDisplayModes:[_gameCore displayModes]];
 
@@ -359,12 +381,15 @@
     }
     
     if (error && !*error) {
-        *error = [NSError errorWithDomain:OEGameCoreErrorDomain code:OEGameCoreCouldNotLoadROMError userInfo:@{
-                                                                                                               NSLocalizedDescriptionKey: NSLocalizedString(@"The emulator could not load ROM.", @"Error when loading a ROM."),
-                                                                                                               }];
+        *error = [NSError errorWithDomain:OEGameCoreErrorDomain
+                                     code:OEGameCoreCouldNotLoadROMError
+                                 userInfo:@{
+                                     NSLocalizedDescriptionKey: NSLocalizedString(@"The emulator could not load ROM.", @"Error when loading a ROM."),
+                                 }];
     }
     
-    NSLog(@"ROM did not load.");
+    os_log_error(OE_LOG_HELPER, "Failed to load ROM.");
+
     _gameCore = nil;
     
     return NO;
@@ -399,7 +424,8 @@
 
 - (void)setAudioOutputDeviceID:(AudioDeviceID)deviceID
 {
-    DLog(@"Audio output device: %lu", (unsigned long)deviceID);
+    os_log_debug(OE_LOG_HELPER, "Set audio output to device number %lu", (unsigned long)deviceID);
+
     [_gameCore performBlock:^{
         [self->_gameAudio setOutputDeviceID:deviceID];
     }];
@@ -563,6 +589,9 @@
 
 - (void)updateScreenSize:(OEIntSize)newScreenSize aspectSize:(OEIntSize)newAspectSize
 {
+    os_log_debug(LOG_DISPLAY, "Notify OEGameCoreOwner of display size update: screenSize = %{public}@, aspectSize = %{public}@",
+                 NSStringFromOEIntSize(newScreenSize), NSStringFromOEIntSize(newAspectSize));
+    
     [_gameCoreOwner setScreenSize:newScreenSize aspectSize:newAspectSize];
 }
 
@@ -575,7 +604,7 @@
 
 - (void)gameCoreDidFinishFrameRefreshThread:(OEGameCore *)gameCore
 {
-    DLog(@"Finishing separate thread, stopping");
+    os_log_debug(OE_LOG_HELPER, "Finishing separate thread, stopping");
     CFRunLoopStop(CFRunLoopGetCurrent());
 }
 
@@ -607,7 +636,9 @@
     [CATransaction setDisableActions:YES];
 
     if (!OEIntSizeEqualToSize(previousBufferSize, bufferSize)) {
-        DLog(@"Recreating IOSurface because of game size change to %@", NSStringFromOEIntSize(bufferSize));
+        os_log_debug(LOG_DISPLAY, "Game core buffer size change: %{public}@ → %{public}@",
+                     NSStringFromOEIntSize(previousBufferSize),
+                     NSStringFromOEIntSize(bufferSize));
         NSAssert(_gameRenderer.canChangeBufferSize == YES, @"Game tried changing IOSurface in a state we don't support");
         
         [self setupCVBuffer];
@@ -617,18 +648,22 @@
             NSAssert((screenRect.origin.x + screenRect.size.width) <= bufferSize.width, @"screen rect must not be larger than buffer size");
             NSAssert((screenRect.origin.y + screenRect.size.height) <= bufferSize.height, @"screen rect must not be larger than buffer size");
             
-            DLog(@"Sending did change screen rect to %@", NSStringFromOEIntRect(screenRect));
-            [self updateScreenSize];
+            os_log_debug(LOG_DISPLAY, "Game core screen rect change: %{public}@ → %{public}@",
+                         NSStringFromOEIntRect(previousScreenRect),
+                         NSStringFromOEIntRect(screenRect));
             mustUpdate = YES;
         }
         
         if(!OEIntSizeEqualToSize(aspectSize, previousAspectSize))
         {
-            DLog(@"Sending did change aspect to %@", NSStringFromOEIntSize(aspectSize));
+            os_log_debug(LOG_DISPLAY, "Game core aspect size change: %{public}@ → %{public}@",
+                         NSStringFromOEIntSize(previousAspectSize),
+                         NSStringFromOEIntSize(aspectSize));
             mustUpdate = YES;
         }
         
         if (mustUpdate) {
+            [self updateScreenSize];
             [self updateScreenSize:_previousScreenRect.size aspectSize:_previousAspectSize];
             [self setupCVBuffer];
         }

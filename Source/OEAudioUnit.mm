@@ -147,7 +147,7 @@ static OSStatus audioConverterComplexInputDataProc(AudioConverterRef inAudioConv
     
     OSStatus status = AudioConverterNew(srcDesc, dstDesc, &_conv);
     if (status != noErr) {
-        NSLog(@"unable to create audio converter: %d", status);
+        os_log_error(OE_LOG_AUDIO, "Unable to create audio converter: %d", status);
         return NO;
     }
     /* 64 bytes of padding above self.maximumFramesToRender because
@@ -157,7 +157,7 @@ static OSStatus audioConverterComplexInputDataProc(AudioConverterRef inAudioConv
     _convInputBytePerFrame = (UInt32)srcDesc->mBytesPerFrame;
     UInt32 bufferSize = _convInputFrameCount * _convInputBytePerFrame;
     _convBuffer     = malloc(_convInputFrameCount * _convInputBytePerFrame);
-    os_log_error(OE_LOG_AUDIO, "audio converter buffer size = %{public}u bytes", bufferSize);
+    os_log_info(OE_LOG_AUDIO, "Audio converter buffer size = %{public}u bytes", bufferSize);
     
     return YES;
 }

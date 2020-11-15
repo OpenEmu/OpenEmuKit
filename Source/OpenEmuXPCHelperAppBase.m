@@ -28,6 +28,7 @@
 #import "OEShaderParamValue.h"
 #import "NSXPCListener+HelperApp.h"
 #import "OEGameStartupInfo.h"
+#import "OELogging.h"
 
 @interface OpenEmuXPCHelperAppBase () <NSXPCListenerDelegate, OEXPCGameCoreHelper>
 {
@@ -56,7 +57,7 @@
     {
         if (err != nil)
         {
-            NSLog(@"Unable to retrieve helperListener: %@", err);
+            os_log_error(OE_LOG_HELPER, "Unable to retrieve helperListener: %@", err);
         }
         _Exit(EXIT_FAILURE);
     }
@@ -76,7 +77,7 @@
     [_parentApplication addObserver:self forKeyPath:@"terminated" options:NSKeyValueObservingOptionNew context:nil];
     if(_parentApplication != nil)
     {
-        NSLog(@"Parent application is: %@", [_parentApplication localizedName]);
+        os_log_debug(OE_LOG_HELPER, "Parent application is: %@", [_parentApplication localizedName]);
         [self setupProcessPollingTimer];
     }
     
@@ -86,7 +87,7 @@
         if (dm.accessType != OEDeviceAccessTypeGranted)
         {
             [dm requestAccess];
-            NSLog(@"Input Monitoring: Access Denied");
+            os_log(OE_LOG_HELPER, "Input monitoring failed: Access Denied");
         }
     }
 }
@@ -119,7 +120,7 @@
 
 - (void)terminate
 {
-    NSLog(@"Terminating helper");
+    os_log_debug(OE_LOG_HELPER, "Terminating helper");
     
     [_pollingTimer invalidate];
     CFRunLoopStop(CFRunLoopGetMain());

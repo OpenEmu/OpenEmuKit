@@ -31,6 +31,7 @@
 #import "OEShaderParamValue.h"
 #import "NSXPCConnection+HelperApp.h"
 #import "OEGameStartupInfo.h"
+#import "OELogging.h"
 
 @interface OEXPCGameCoreManagerBase ()
 {
@@ -61,7 +62,8 @@
     _helperConnection = [NSXPCConnection connectionWithServiceName:self.serviceName executableURL:self.executableURL error:nil];
     if(_helperConnection == nil)
     {
-        NSLog(@"No listener endpoint for identifier: %@", self.executableURL);
+        os_log_error(OE_LOG_HELPER, "No listener endpoint for identifier: %@", self.executableURL);
+
         NSError *error = [NSError errorWithDomain:OEGameCoreErrorDomain
                                              code:OEGameCoreCouldNotLoadROMError
                                          userInfo:nil];
@@ -107,12 +109,14 @@
     [_helperConnection remoteObjectProxyWithErrorHandler:
      ^(NSError *error)
      {
-         NSLog(@"Helper Connection (%p) failed with error: %@", gameCoreHelperPointer, error);
-         dispatch_async(self.queue, ^{
-             errorHandler(error);
-             [self stop];
-         });
-     }];
+        os_log_error(OE_LOG_HELPER, "Helper Connection (%p) failed with error: %@",
+                     gameCoreHelperPointer, error);
+        
+        dispatch_async(self.queue, ^{
+            errorHandler(error);
+            [self stop];
+        });
+    }];
 
     gameCoreHelperPointer = (__bridge void *)gameCoreHelper;
 

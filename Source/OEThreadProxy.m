@@ -25,6 +25,7 @@
  */
 
 #import "OEThreadProxy.h"
+#import "OELogging.h"
 
 @implementation OEProxy
 {
@@ -72,7 +73,7 @@
 {
     if(_cachedMethodSignatures == NULL)
     {
-        NSLog(@"Attempting to use _cachedMethodSignatures after deallocation with selector: %@", NSStringFromSelector(sel));
+        os_log_fault(OE_LOG_DEFAULT, "Attempting to use _cachedMethodSignatures after deallocation with selector: %{public}@", NSStringFromSelector(sel));
         return nil;
     }
 
@@ -105,7 +106,7 @@
 
 - (id)forwardingTargetForSelector:(SEL)aSelector
 {
-    DLog(@"Calling %@ on %@", NSStringFromSelector(aSelector), _target);
+    os_log_debug(OE_LOG_DEFAULT, "Calling %{public}@ on %{public}@", NSStringFromSelector(aSelector), _target);
     return _target;
 }
 
@@ -276,7 +277,7 @@
 
 + (void)OE_cleanUpThreadProxyTarget:(id)target
 {
-    DLog(@"Clean up target: %@", target);
+    os_log_debug(OE_LOG_DEFAULT, "Clean up target: %{public}@", target);
 }
 
 @end
