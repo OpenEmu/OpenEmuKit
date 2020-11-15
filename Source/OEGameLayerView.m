@@ -169,8 +169,8 @@
     
     screenRect.size.width  *= scale;
     screenRect.size.height *= scale;
-    screenRect.origin.x     = CGRectGetMidX(frame) - CGRectGetWidth(screenRect)  / 2;
-    screenRect.origin.y     = CGRectGetMidY(frame) - CGRectGetHeight(screenRect) / 2;
+    screenRect.origin.x     = CGRectGetMidX(frame) - frame.origin.x - CGRectGetWidth(screenRect)  / 2;
+    screenRect.origin.y     = CGRectGetMidY(frame) - frame.origin.y - CGRectGetHeight(screenRect) / 2;
     
     location.x -= screenRect.origin.x;
     location.y -= screenRect.origin.y;
