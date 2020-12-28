@@ -26,6 +26,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSString *const OEXPCErrorDomain;
+
+typedef NS_ERROR_ENUM(OEXPCErrorDomain, OEXPCError) {
+    OEXPCErrorUnknown,
+    OEXPCErrorHelperAppLaunch,
+    OEXPCErrorBrokerProxy,
+    OEXPCErrorBrokerConnectionTimeout,
+};
+
 @interface NSXPCConnection (HelperApp)
 
 + (nullable instancetype)connectionWithServiceName:(NSString *)name executableURL:(NSURL *)url error:(NSError **)error;

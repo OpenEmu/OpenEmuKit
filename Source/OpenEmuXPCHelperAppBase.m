@@ -57,7 +57,11 @@
     {
         if (err != nil)
         {
-            os_log_error(OE_LOG_HELPER, "Unable to retrieve helperListener: %@", err);
+            os_log_error(OE_LOG_HELPER, "Unable to retrieve helper listener. { error = %{public}@ }", err);
+        }
+        else
+        {
+            os_log_error(OE_LOG_HELPER, "Unable to retrieve helper listener.");
         }
         _Exit(EXIT_FAILURE);
     }
@@ -77,7 +81,7 @@
     [_parentApplication addObserver:self forKeyPath:@"terminated" options:NSKeyValueObservingOptionNew context:nil];
     if(_parentApplication != nil)
     {
-        os_log_debug(OE_LOG_HELPER, "Parent application is: %@", [_parentApplication localizedName]);
+        os_log_debug(OE_LOG_HELPER, "Parent application is %{public}@", [_parentApplication localizedName]);
         [self setupProcessPollingTimer];
     }
     

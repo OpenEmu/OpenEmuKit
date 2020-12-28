@@ -24,6 +24,7 @@
 
 #import "NSXPCListener+HelperApp.h"
 #import <OpenEmuKit/OpenEmuKit-Swift.h>
+#import "OELogging.h"
 
 extern NSString *kHelperIdentifierArgumentPrefix;
 
@@ -42,25 +43,45 @@ extern NSString *kHelperIdentifierArgumentPrefix;
 {
     NSString *identifier = self.helperIdentifierFromArguments;
     
+    os_log_info(OE_LOG_HELPER, "Registering helper listener endpoint with broker. { id = %{public}@ }", identifier);
+    
     __auto_type cn = [[NSXPCConnection alloc] initWithServiceName:name];
+    [cn setInvalidationHandler:^{
+        os_log_error(OE_LOG_HELPER, "Broker connection was unexpectedely invalidated.");
+    }];
+    
     cn.remoteObjectInterface = [NSXPCInterface interfaceWithProtocol:@protocol(OEXPCMatchMaking)];
     [cn resume];
     
-    __block NSError *proxyErr = nil;
-    id<OEXPCMatchMaking> mm = [cn remoteObjectProxyWithErrorHandler:^(NSError * _Nonnull err) {
-        proxyErr = err;
+    id<OEXPCMatchMaking> mm = [cn remoteObjectProxyWithErrorHandler:^(NSError * _Nonnull error) {
+        os_log_error(OE_LOG_HELPER, "Error waiting for reply from OEXPCMatchMaking. { error = %{public}@ }", error);
     }];
     
-    if (mm == nil || proxyErr != nil) {
-        if (error != nil && proxyErr != nil)
-        {
-            *error = proxyErr;
-        }
+    if (mm == nil) {
+        os_log_error(OE_LOG_HELPER, "Unexpected nil for OEXPCMatchMaking proxy.");
         return nil;
     }
     
+    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+    
     __auto_type listener = [NSXPCListener anonymousListener];
-    [mm registerListenerEndpoint:listener.endpoint forIdentifier:identifier completionHandler:^{}];
+    [mm registerListenerEndpoint:listener.endpoint forIdentifier:identifier completionHandler:^{
+        os_log_info(OE_LOG_HELPER, "Successfully connected helper to host. { id = '%{public}@' }", identifier);
+        dispatch_semaphore_signal(sem);
+    }];
+    
+    dispatch_time_t waitTime = dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC * 2);
+    if (dispatch_semaphore_wait(sem, waitTime) != 0)
+    {
+        // mediation of connection between host and helper via broker timed out
+        os_log_error(OE_LOG_HELPER, "Timeout waiting for host connection.");
+        [listener invalidate];
+        listener = nil;
+    }
+    
+    [cn setInvalidationHandler:nil];
+    [cn invalidate];
+    
     return listener;
 }
 

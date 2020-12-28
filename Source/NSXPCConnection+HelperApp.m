@@ -27,6 +27,7 @@
 #import <objc/runtime.h>
 #import "OELogging.h"
 
+NSString * const OEXPCErrorDomain          = @"org.openemu.openemukit.xpc";
 NSString *kHelperIdentifierArgumentPrefix = @"--org.openemu.broker.id=";
 int xpc_task_key = 0;
 
@@ -34,15 +35,16 @@ int xpc_task_key = 0;
 
 + (nullable instancetype)connectionWithServiceName:(NSString *)name executableURL:(NSURL *)url error:(NSError **)error
 {
-    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
     NSString *identifier = NSUUID.UUID.UUIDString;
     
+    /// 1. Launch Helper App
+    /// This results in the helper app establishing a connection to the broker and registering its
+    /// `identifier` 
     NSTask *task = [NSTask new];
     task.executableURL = url;
     task.arguments = @[[@[kHelperIdentifierArgumentPrefix, identifier] componentsJoinedByString:@""]];
-    [task setTerminationHandler:^(NSTask * _){
-        os_log_error(OE_LOG_HELPER, "Helper task %{public}@ terminated unexpectedly", identifier);
-        dispatch_semaphore_signal(sem);
+    [task setTerminationHandler:^(NSTask * task) {
+        os_log_error(OE_LOG_HELPER, "Helper terminated unexpectedly. { id = %{public}@, reason = %ld, exit = %d }", identifier, task.terminationReason, task.terminationStatus);
     }];
     task.standardError = NSFileHandle.fileHandleWithStandardError;
     task.standardOutput = NSFileHandle.fileHandleWithStandardOutput;
@@ -50,57 +52,103 @@ int xpc_task_key = 0;
         [task launch];
     } @catch (NSException *ex) {
         if (error != nil) {
-            *error = [NSError errorWithDomain:ex.name code:0 userInfo:@{
+            *error = [NSError errorWithDomain:OEXPCErrorDomain code:OEXPCErrorHelperAppLaunch userInfo:@{
+                NSLocalizedDescriptionKey: NSLocalizedString(@"Failed to launch helper app" , ""),
                 NSLocalizedFailureReasonErrorKey: ex.reason ?: @"???",
             }];
         }
         return nil;
     }
     
-    __auto_type cn = [[NSXPCConnection alloc] initWithServiceName:name];
-    cn.remoteObjectInterface = [NSXPCInterface interfaceWithProtocol:@protocol(OEXPCMatchMaking)];
-    [cn resume];
+    __block NSError * err = nil;
     
-    __block NSError *proxyErr = nil;
-    id<OEXPCMatchMaking> mm = [cn remoteObjectProxyWithErrorHandler:^(NSError * _Nonnull error) {
-        proxyErr = error;
-    }];
-    
-    if (mm == nil || proxyErr != nil) {
-        if (error != nil && proxyErr != nil)
+    /// 2. Launch a connection to the broker
+    @try {
+        __auto_type cn = [[NSXPCConnection alloc] initWithServiceName:name];
+        [cn setInvalidationHandler:^{
+            os_log_error(OE_LOG_HELPER, "Broker connection was unexpectedely invalidated.");
+        }];
+        
+        cn.remoteObjectInterface = [NSXPCInterface interfaceWithProtocol:@protocol(OEXPCMatchMaking)];
+        [cn resume];
+        
+        id<OEXPCMatchMaking> mm = [cn remoteObjectProxyWithErrorHandler:^(NSError * _Nonnull error) {
+            os_log_error(OE_LOG_HELPER, "Error waiting for reply from OEXPCMatchMaking. { error = %{public}@ }", error);
+        }];
+        
+        if (mm == nil)
         {
-            *error = proxyErr;
+            os_log_error(OE_LOG_HELPER, "Unexpected nil for OEXPCMatchMaking proxy.");
+            err = [NSError errorWithDomain:OEXPCErrorDomain code:OEXPCErrorBrokerProxy userInfo:@{
+                NSLocalizedDescriptionKey: NSLocalizedString(@"Failed to launch helper app" , ""),
+                NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"OEXPCMatchMaking proxy was nil", ""),
+            }];
+            return nil;
         }
-        return nil;
+        
+        dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+        __block NSXPCListenerEndpoint *endpoint = nil;
+        [mm retrieveListenerEndpointForIdentifier:identifier completionHandler:^(NSXPCListenerEndpoint *ep) {
+            endpoint = ep;
+            dispatch_semaphore_signal(sem);
+        }];
+        
+        dispatch_time_t waitTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(NSEC_PER_SEC * 2));
+        if (dispatch_semaphore_wait(sem, waitTime) != 0)
+        {
+            // mediation of connection between host and helper via broker timed out
+            os_log_error(OE_LOG_HELPER, "Timeout waiting for listener endpoint from broker.");
+            
+            if (err == nil)
+            {
+                err = [NSError errorWithDomain:OEXPCErrorDomain code:OEXPCErrorBrokerConnectionTimeout userInfo:@{
+                    NSLocalizedDescriptionKey: NSLocalizedString(@"Timeout waiting for connection from helper app" , ""),
+                }];
+            }
+        }
+        
+        [cn setInvalidationHandler:nil];
+        [cn invalidate];
+        
+        if (endpoint == nil)
+        {
+            return nil;
+        }
+        
+        if (!task.isRunning)
+        {
+            return nil;
+        }
+        
+        NSXPCConnection *newCn = [[NSXPCConnection alloc] initWithListenerEndpoint:endpoint];
+        
+        __weak __typeof(newCn) weakCn = newCn;
+        [task setTerminationHandler:^(NSTask *task) {
+            os_log_debug(OE_LOG_HELPER, "Helper terminated. { id = %{public}@, exit = %d }.", identifier, task.terminationStatus);
+            __strong __typeof(weakCn) strongCn = weakCn;
+            [strongCn invalidate];
+        }];
+        
+        objc_setAssociatedObject(newCn, &xpc_task_key, task, OBJC_ASSOCIATION_RETAIN);
+        task = nil;
+        
+        return newCn;
+    } @finally {
+        
+        // cleanup when broker connection fails
+        if (task)
+        {
+            os_log_error(OE_LOG_HELPER, "Terminating helper; failed to complete handshake. { id = %{public}@ }", identifier);
+            [task setTerminationHandler:nil];
+            [task terminate];
+        }
+        
+        // return error
+        if (err != nil && error != nil)
+        {
+            *error = err;
+        }
     }
-    
-    __block NSXPCListenerEndpoint *endpoint = nil;
-    [mm retrieveListenerEndpointForIdentifier:identifier completionHandler:^(NSXPCListenerEndpoint *ep) {
-        endpoint = ep;
-        dispatch_semaphore_signal(sem);
-    }];
-    
-    dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-    
-    [cn invalidate];
-    
-    if (endpoint == nil || !task.isRunning)
-    {
-        return nil;
-    }
-    
-    NSXPCConnection *newCn = [[NSXPCConnection alloc] initWithListenerEndpoint:endpoint];
-
-    __weak __typeof(newCn) weakCn = newCn;
-    [task setTerminationHandler:^(NSTask *task) {
-        os_log_debug(OE_LOG_HELPER, "Helper %{public}@ terminating", identifier);
-        __strong __typeof(weakCn) strongCn = weakCn;
-        [strongCn invalidate];
-    }];
-    
-    objc_setAssociatedObject(newCn, &xpc_task_key, task, OBJC_ASSOCIATION_RETAIN);
-    
-    return newCn;
 }
 
 @end

@@ -59,14 +59,19 @@
 
 - (void)loadROMWithCompletionHandler:(void(^)(void))completionHandler errorHandler:(void(^)(NSError *))errorHandler;
 {
-    _helperConnection = [NSXPCConnection connectionWithServiceName:self.serviceName executableURL:self.executableURL error:nil];
+    NSError *error = nil;
+    _helperConnection = [NSXPCConnection connectionWithServiceName:self.serviceName executableURL:self.executableURL error:&error];
     if(_helperConnection == nil)
     {
         os_log_error(OE_LOG_HELPER, "No listener endpoint for identifier: %@", self.executableURL);
 
-        NSError *error = [NSError errorWithDomain:OEGameCoreErrorDomain
-                                             code:OEGameCoreCouldNotLoadROMError
-                                         userInfo:nil];
+        if (error == nil)
+        {
+            error = [NSError errorWithDomain:OEGameCoreErrorDomain
+                                        code:OEGameCoreCouldNotLoadROMError
+                                    userInfo:nil];
+        }
+        
         dispatch_async(self.queue, ^{
             errorHandler(error);
         });
@@ -109,7 +114,7 @@
     [_helperConnection remoteObjectProxyWithErrorHandler:
      ^(NSError *error)
      {
-        os_log_error(OE_LOG_HELPER, "Helper Connection (%p) failed with error: %@",
+        os_log_error(OE_LOG_HELPER, "Helper Connection (%p) failed with error: %{public}@",
                      gameCoreHelperPointer, error);
         
         dispatch_async(self.queue, ^{
