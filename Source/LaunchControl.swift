@@ -47,10 +47,7 @@ public struct LaunchControl {
         let p = Process()
         p.executableURL = URL(fileURLWithPath: "/bin/launchctl")
         p.arguments = [cmd] + args
-        try OEExceptionCatcher.try {
-            // raises an error if executableURL is inaccessible
-            p.launch()
-        }
+        try p.run()
         p.waitUntilExit()
         if p.terminationStatus == 0 {
             return
