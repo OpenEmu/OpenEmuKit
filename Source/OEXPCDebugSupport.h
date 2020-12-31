@@ -28,16 +28,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface OEXPCCDebugSupport: NSObject
 
-/*! used to query whether a debugger is currently attached to the process */
+/*! Returns a boolean to indicate whether a debugger is currently attached to the process.
+ */
 @property (class, nonatomic, readonly) BOOL debuggerAttached;
 
-/*! wait up to a specified number of nanoseconds for a debugger to attach
+/*! Wait up to a specified number of nanoseconds for a debugger to attach.
  
  @returns YES if a debugger attached
  */
 + (BOOL)waitForDebuggerUntil:(NSUInteger)nanoseconds;
 
-/*! wait indefinitely until a debugger is attached */
+/*! Wait indefinitely until a debugger is attached
+ */
 + (void)waitForDebugger;
 
 @end

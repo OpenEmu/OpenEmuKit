@@ -22,29 +22,24 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import <Foundation/Foundation.h>
+#import "OEExceptionCatcher.h"
 
-//! Project version number for OpenEmuKit.
-FOUNDATION_EXPORT double OpenEmuKitVersionNumber;
+@implementation OEExceptionCatcher
 
-//! Project version string for OpenEmuKit.
-FOUNDATION_EXPORT const unsigned char OpenEmuKitVersionString[];
++ (BOOL)tryBlock:(__attribute__((noescape)) void(^)(void))block error:(NSError **)error
+{
+    @try {
+        block();
+        return YES;
+    } @catch (NSException *exception) {
+        *error = [[NSError alloc] initWithDomain:exception.name code:0 userInfo:@{
+            NSUnderlyingErrorKey: exception,
+            NSLocalizedDescriptionKey: exception.reason,
+            @"CallStackSymbols": exception.callStackSymbols
+        }];
+        
+        return NO;
+    }
+}
 
-// In this header, you should import all the public headers of your framework using statements like #import <OpenEmuKit/PublicHeader.h>
-
-#import <OpenEmuKit/OEPlugin.h>
-#import <OpenEmuKit/OECorePlugin.h>
-#import <OpenEmuKit/OESystemPlugin.h>
-#import <OpenEmuKit/OEShaderParamValue.h>
-#import <OpenEmuKit/OEGameCoreHelper.h>
-#import <OpenEmuKit/OpenEmuHelperApp.h>
-#import <OpenEmuKit/OpenEmuXPCHelperAppBase.h>
-#import <OpenEmuKit/OEGameCoreManager.h>
-#import <OpenEmuKit/OEThreadGameCoreManager.h>
-#import <OpenEmuKit/OEXPCGameCoreManagerBase.h>
-#import <OpenEmuKit/OEGameLayerView.h>
-#import <OpenEmuKit/NSXPCConnection+HelperApp.h>
-#import <OpenEmuKit/NSXPCListener+HelperApp.h>
-#import <OpenEmuKit/OEXPCDebugSupport.h>
-#import <OpenEmuKit/OEGameStartupInfo.h>
-#import <OpenEmuKit/NSFileManager+ExtendedAttributes.h>
+@end

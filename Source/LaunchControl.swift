@@ -22,29 +22,44 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import <Foundation/Foundation.h>
+import Foundation
+import OpenEmuKitPrivate
 
-//! Project version number for OpenEmuKit.
-FOUNDATION_EXPORT double OpenEmuKitVersionNumber;
 
-//! Project version string for OpenEmuKit.
-FOUNDATION_EXPORT const unsigned char OpenEmuKitVersionString[];
-
-// In this header, you should import all the public headers of your framework using statements like #import <OpenEmuKit/PublicHeader.h>
-
-#import <OpenEmuKit/OEPlugin.h>
-#import <OpenEmuKit/OECorePlugin.h>
-#import <OpenEmuKit/OESystemPlugin.h>
-#import <OpenEmuKit/OEShaderParamValue.h>
-#import <OpenEmuKit/OEGameCoreHelper.h>
-#import <OpenEmuKit/OpenEmuHelperApp.h>
-#import <OpenEmuKit/OpenEmuXPCHelperAppBase.h>
-#import <OpenEmuKit/OEGameCoreManager.h>
-#import <OpenEmuKit/OEThreadGameCoreManager.h>
-#import <OpenEmuKit/OEXPCGameCoreManagerBase.h>
-#import <OpenEmuKit/OEGameLayerView.h>
-#import <OpenEmuKit/NSXPCConnection+HelperApp.h>
-#import <OpenEmuKit/NSXPCListener+HelperApp.h>
-#import <OpenEmuKit/OEXPCDebugSupport.h>
-#import <OpenEmuKit/OEGameStartupInfo.h>
-#import <OpenEmuKit/NSFileManager+ExtendedAttributes.h>
+/// `LaunchControl` provides programmatic access to `launchctl` commands.
+public struct LaunchControl {
+    
+    /// Unloads the specified service name from launchd.
+    /// - Remark:
+    /// A use case is to remove application-specific xpc services at exit of an application. This
+    /// allows the application bundle to be moved around and the xpc service will be automatically
+    /// registered with `launchd` each time the application is opened.
+    /// 
+    /// - Parameter name: The name of the service.
+    /// - Throws:
+    ///   - `POSIXError` if the command fails.
+    ///   - `NSError` if the `launchctl` command is inaccessible.
+    public static func remove(service name: String) throws {
+        try run("remove", args: name)
+    }
+    
+    private static func run(_ cmd: String, args: String...) throws {
+        let p = Process()
+        p.executableURL = URL(fileURLWithPath: "/bin/launchctl")
+        p.arguments = [cmd] + args
+        try OEExceptionCatcher.try {
+            // raises an error if executableURL is inaccessible
+            p.launch()
+        }
+        p.waitUntilExit()
+        if p.terminationStatus == 0 {
+            return
+        }
+        
+        if let code = POSIXErrorCode(rawValue: p.terminationStatus) {
+            throw POSIXError(code)
+        }
+        
+        // TODO: Should throw a generic error
+    }
+}
