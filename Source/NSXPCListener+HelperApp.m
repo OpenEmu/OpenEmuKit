@@ -69,7 +69,10 @@ extern NSString *kHelperIdentifierArgumentPrefix;
         os_log_info(OE_LOG_HELPER, "Successfully connected helper to host. { id = '%{public}@' }", identifier);
         dispatch_semaphore_signal(sem);
     }];
-    
+
+#ifdef DEBUG_PRINT
+    dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+#else
     dispatch_time_t waitTime = dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC * 2);
     if (dispatch_semaphore_wait(sem, waitTime) != 0)
     {
@@ -78,6 +81,7 @@ extern NSString *kHelperIdentifierArgumentPrefix;
         [listener invalidate];
         listener = nil;
     }
+#endif
     
     [cn setInvalidationHandler:nil];
     [cn invalidate];
