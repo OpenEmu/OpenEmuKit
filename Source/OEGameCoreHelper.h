@@ -42,10 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setBackingScaleFactor:(CGFloat)newBackingScaleFactor;
 
 #pragma mark - Shader management
-- (void)setShaderURL:(NSURL *)url completionHandler:(void (^)(BOOL success, NSError * _Nullable error))block;
-/*! fetch a list of shader parameters */
-- (void)shaderParamGroupsWithCompletionHandler:(void(^)(NSArray<OEShaderParamGroupValue *> *groups))handler;
-- (void)setShaderParameterValue:(CGFloat)value atIndex:(NSUInteger)index atGroupIndex:(NSUInteger)group;
+- (void)setShaderURL:(NSURL *)url parameters:(NSDictionary<NSString *, NSNumber *> *)parameters completionHandler:(void (^)(BOOL success, NSError * _Nullable error))block;
+- (void)setShaderParameterValue:(CGFloat)value forKey:(NSString *)key;
 
 - (void)setupEmulationWithCompletionHandler:(void(^)(OEIntSize screenSize, OEIntSize aspectSize))handler;
 - (void)startEmulationWithCompletionHandler:(void(^)(void))handler;

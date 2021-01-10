@@ -138,9 +138,6 @@
             return NO;
 
         NSXPCInterface *intf = [NSXPCInterface interfaceWithProtocol:@protocol(OEXPCGameCoreHelper)];
-        NSSet *set = [NSSet setWithObjects:OEShaderParamValue.class, NSArray.class, OEShaderParamGroupValue.class, nil];
-        // shader parameters
-        [intf setClasses:set forSelector:@selector(shaderParamGroupsWithCompletionHandler:) argumentIndex:0 ofReply:YES];
         
         // load ROM
         [intf setClasses:[NSSet setWithObject:OEGameStartupInfo.class]

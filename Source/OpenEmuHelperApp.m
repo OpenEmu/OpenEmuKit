@@ -74,7 +74,10 @@
     OESystemController   *_systemController;
     OESystemResponder    *_systemResponder;
     OEGameAudio          *_gameAudio;
-    NSURL                *_shader; // initial shader
+    
+    // initial shader and parameters
+    NSURL                                   *_shader;
+    NSDictionary<NSString *, NSNumber *>    *_shaderParameters;
     
     NSMutableDictionary<OEDeviceHandlerPlaceholder *, NSMutableArray<void(^)(void)> *> *_pendingDeviceHandlerBindings;
     
@@ -151,7 +154,9 @@ static os_log_t LOG_DISPLAY;
     [self setupCVBuffer];
     [self setupRemoteLayer];
     if (_shader) {
-        [self setShaderURL:_shader error:nil];
+        [self setShaderURL:_shader parameters:_shaderParameters error:nil];
+        _shader = nil;
+        _shaderParameters = nil;
     }
 }
 
@@ -275,46 +280,33 @@ static os_log_t LOG_DISPLAY;
     [CATransaction commit];
 }
 
-- (void)setShaderURL:(NSURL *)url completionHandler:(void (^)(BOOL success, NSError *error))block {
+- (void)setShaderURL:(NSURL *)url parameters:(NSDictionary<NSString *, NSNumber *> *)parameters completionHandler:(void (^)(BOOL success, NSError * _Nullable error))block
+{
     [_gameCore performBlock:^{
         NSError *err = nil;
-        BOOL success = [self setShaderURL:url error:&err];
+        BOOL success = [self setShaderURL:url parameters:parameters error:&err];
         block(success, err);
     }];
 }
 
-- (BOOL)setShaderURL:(NSURL *)url error:(NSError **)error
+- (BOOL)setShaderURL:(NSURL *)url parameters:(NSDictionary<NSString *, NSNumber *> *)parameters error:(NSError **)error
 {
     BOOL success = [_filterChain setShaderFromURL:url error:error];
     if (success)
     {
-        // apply user overrides for parameters
-        OEShaderModel *shader = [OEShadersModel.shared shaderForURL:url];
-        NSDictionary<NSString *, NSNumber *> *params = [shader parametersForIdentifier:_gameCore.systemIdentifier];
-        
-        for (NSString *key in params.allKeys) {
-            for (OEShaderParameter *p in _filterChain.shader.parameters) {
-                if ([p.name isEqualToString:key]) {
-                    p.value = params[key].doubleValue;
-                    break;
-                }
-            }
-        }
+        __block __auto_type shader = _filterChain.shader;
+        [parameters enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSNumber *obj, BOOL *stop) {
+            [shader setValue:obj.doubleValue forParameter:key];
+        }];
     }
     
     return success;
 }
 
-- (void)shaderParamGroupsWithCompletionHandler:(void (^)(NSArray<OEShaderParamGroupValue *> *))handler
+- (void)setShaderParameterValue:(CGFloat)value forKey:(NSString *)key
 {
-    handler([OEShaderParamGroupValue fromGroups:_filterChain.shader.parameterGroups]);
+    [_filterChain.shader setValue:value forParameter:key];
 }
-
-- (void)setShaderParameterValue:(CGFloat)value atIndex:(NSUInteger)index atGroupIndex:(NSUInteger)group
-{
-    _filterChain.shader.parameterGroups[group].parameters[index].value = value;
-}
-
 
 #pragma mark - Game Core methods
 
@@ -328,6 +320,7 @@ static os_log_t LOG_DISPLAY;
     self.loadedRom = NO;
     
     _shader = info.shader;
+    _shaderParameters = info.shaderParameters;
     _systemController = [[OESystemPlugin systemPluginWithBundleAtPath:info.systemPluginPath] controller];
     _systemResponder = [_systemController newGameSystemResponder];
     

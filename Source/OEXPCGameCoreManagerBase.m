@@ -96,10 +96,6 @@
 
     NSXPCInterface *intf = [NSXPCInterface interfaceWithProtocol:@protocol(OEXPCGameCoreHelper)];
     
-    // shader parameters
-    NSSet *set = [NSSet setWithObjects:OEShaderParamValue.class, NSArray.class, OEShaderParamGroupValue.class, nil];
-    [intf setClasses:set forSelector:@selector(shaderParamGroupsWithCompletionHandler:) argumentIndex:0 ofReply:YES];
-    
     // startup
     [intf setClasses:[NSSet setWithObject:OEGameStartupInfo.class]
          forSelector:@selector(loadWithStartupInfo:completionHandler:)

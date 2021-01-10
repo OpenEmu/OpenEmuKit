@@ -26,6 +26,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NSDictionary<NSString *, NSNumber *> *ShaderParameters;
+
 @interface OEGameStartupInfo : NSObject<NSSecureCoding>
 
 @property(nonatomic) NSString                      *romPath;
@@ -35,10 +37,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic) NSString                      *systemRegion;
 @property(nonatomic) NSDictionary <NSString *, id> *displayModeInfo;
 @property(nonatomic) NSURL                         *shader;
+@property(nonatomic) ShaderParameters               shaderParameters;
 @property(nonatomic) NSString                      *corePluginPath;
 @property(nonatomic) NSString                      *systemPluginPath;
 
-- (instancetype)initWithROMPath:(NSString *)romPath romMD5:(NSString *)romMD5 romHeader:(NSString *)romHeader romSerial:(NSString *)romSerial systemRegion:(NSString *)systemRegion displayModeInfo:(NSDictionary <NSString *, id> * _Nullable)displayModeInfo shader:(NSURL *)shader corePluginPath:(NSString *)pluginPath systemPluginPath:(NSString *)systemPluginPath;
+- (instancetype)initWithROMPath:(NSString *)romPath romMD5:(NSString *)romMD5 romHeader:(NSString *)romHeader romSerial:(NSString *)romSerial systemRegion:(NSString *)systemRegion displayModeInfo:(NSDictionary <NSString *, id> * _Nullable)displayModeInfo shader:(NSURL *)shader shaderParameters:(ShaderParameters)parameters corePluginPath:(NSString *)pluginPath systemPluginPath:(NSString *)systemPluginPath;
 
 @end
 
