@@ -24,6 +24,7 @@
 
 import Foundation
 import OpenEmuBase
+import OpenEmuShaders
 
 @objc
 public class OEShadersModel : NSObject {
@@ -47,23 +48,33 @@ public class OEShadersModel : NSObject {
         }
     }
     
-    @objc
-    public static var shared : OEShadersModel = {
-        OEShadersModel()
-    }()
+    private let store: UserDefaults
+    private let userPathName: String
+    private let bundle: Bundle
     
-    private var systemShaders: [OEShaderModel]
-    private var customShaders: [OEShaderModel]
+    private var systemShaders = [OEShaderModel]()
+    private var customShaders = [OEShaderModel]()
     
-    override init() {
-        systemShaders = OEShadersModel.loadSystemShaders()
-        customShaders = OEShadersModel.loadCustomShaders()
+    
+    /// Creates a shader model used for accessing shaders and their user state.
+    /// - Parameters:
+    ///   - store: The user defaults store to read and write to.
+    ///   - bundle: The main bundle used to locate shaders.
+    ///   - name: The name of the path used to read and write user-specified shaders,
+    ///     from within the application support directory. A `nil`
+    ///     value will use the `kCFBundleNameKey` from the main bundle; otherwise, `OpenEmuKit` will be used.
+    @objc public init(store: UserDefaults, bundle: Bundle = .main, userPathName name: String? = nil) {
+        self.store          = store
+        self.bundle         = bundle
+        self.userPathName   = name ?? bundle.infoDictionary?[kCFBundleNameKey as String] as? String ?? "OpenEmuKit"
         super.init()
+        
+        self.systemShaders  = loadSystemShaders()
+        self.customShaders  = loadCustomShaders()
     }
     
-    @objc
-    public func reload() {
-        customShaders       = OEShadersModel.loadCustomShaders()
+    @objc public func reload() {
+        customShaders       = loadCustomShaders()
         _allShaderNames     = nil
         _customShaderNames  = nil
         NotificationCenter.default.post(name: Self.shaderModelCustomShadersDidChange, object: nil)
@@ -71,38 +82,34 @@ public class OEShadersModel : NSObject {
     
     private var _systemShaderNames: [String]?
     
-    @objc
-    public var systemShaderNames: [String] {
+    @objc public var systemShaderNames: [String] {
         if _systemShaderNames == nil {
-            _systemShaderNames = systemShaders.map { $0.name }
+            _systemShaderNames = systemShaders.map(\.name)
         }
         return _systemShaderNames!
     }
     
     private var _customShaderNames: [String]?
     
-    @objc
-    public var customShaderNames: [String] {
+    @objc public var customShaderNames: [String] {
         if _customShaderNames == nil {
-            _customShaderNames = customShaders.map { $0.name }
+            _customShaderNames = customShaders.map(\.name)
         }
         return _customShaderNames!
     }
     
     private var _allShaderNames: [String]?
     
-    @objc
-    public var allShaderNames: [String] {
+    @objc public var allShaderNames: [String] {
         if _allShaderNames == nil {
             
         }
         return _allShaderNames!
     }
     
-    @objc
-    public var defaultShader: OEShaderModel {
+    @objc public var defaultShader: OEShaderModel {
         get {
-            if let name = UserDefaults.oe_application.string(forKey: Preferences.global.key),
+            if let name = store.string(forKey: Preferences.global.key),
                let shader = self[name] {
                 return shader
             }
@@ -111,26 +118,23 @@ public class OEShadersModel : NSObject {
         }
         
         set {
-            UserDefaults.oe_application.set(newValue.name, forKey: Preferences.global.key)
+            store.set(newValue.name, forKey: Preferences.global.key)
         }
     }
     
-    @objc
-    public func shader(withName name: String) -> OEShaderModel? {
+    @objc public func shader(withName name: String) -> OEShaderModel? {
         return self[name]
     }
     
-    @objc
-    public func shader(forSystem identifier: String) -> OEShaderModel? {
-        guard let name = UserDefaults.oe_application.string(forKey: Preferences.system(identifier).key) else {
+    @objc public func shader(forSystem identifier: String) -> OEShaderModel? {
+        guard let name = store.string(forKey: Preferences.system(identifier).key) else {
             return defaultShader
         }
         return self[name]
     }
     
-    @objc
-    public func shader(forURL url: URL) -> OEShaderModel? {
-        return OEShaderModel(url: url)
+    @objc public func shader(forURL url: URL) -> OEShaderModel? {
+        return OEShaderModel(url: url, store: store)
     }
     
     subscript(name: String) -> OEShaderModel? {
@@ -139,31 +143,33 @@ public class OEShadersModel : NSObject {
     
     // MARK: - helpers
     
-    private static func loadSystemShaders() -> [OEShaderModel] {
-        if let path = Bundle.main.resourcePath {
+    private func loadSystemShaders() -> [OEShaderModel] {
+        if let path = bundle.resourcePath {
             let url = URL(fileURLWithPath: path, isDirectory: true).appendingPathComponent("Shaders", isDirectory: true)
-            let urls = urlsForShaders(at: url)
-            return urls.map(OEShaderModel.init(url:))
+            let urls = Self.urlsForShaders(at: url)
+            return urls.map { OEShaderModel(url: $0, store: store) }
         }
         return []
     }
     
-    private static func loadCustomShaders() -> [OEShaderModel] {
+    private func loadCustomShaders() -> [OEShaderModel] {
         guard let path = userShadersPath else { return [] }
-        return urlsForShaders(at: path).map(OEShaderModel.init(url:))
+        return Self.urlsForShaders(at: path).map { OEShaderModel(url: $0, store: store) }
     }
     
-    static func urlsForShaders(at url: URL) -> [URL] {
+    private static func urlsForShaders(at url: URL) -> [URL] {
         var res = [URL]()
         
+        let fm = FileManager.default
+        
         guard
-            let urls = try? FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: [.isDirectoryKey], options: .skipsSubdirectoryDescendants)
+            let urls = try? fm.contentsOfDirectory(at: url, includingPropertiesForKeys: [.isDirectoryKey], options: .skipsSubdirectoryDescendants)
         else { return [] }
         
         let dirs = urls.filter({ (try? $0.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false })
         for dir in dirs {
             guard
-                let files = try? FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants])
+                let files = try? fm.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants])
             else { continue }
             if let slangp = files.first(where: { $0.pathExtension == "slangp" }) {
                 // we have a file!
@@ -174,33 +180,27 @@ public class OEShadersModel : NSObject {
         return res
     }
     
-    static var applicationName: String {
-        Bundle.main.infoDictionary?[kCFBundleNameKey as String] as? String ?? "OpenEmuKit"
-    }
-    
-    @objc
-    public static var userShadersPath: URL? = {
+    @objc public var userShadersPath: URL? {
         guard
             let path = try? FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
         else { return nil }
         
-        return path.appendingPathComponent(applicationName, isDirectory: true).appendingPathComponent("Shaders", isDirectory: true)
-    }()
+        return path.appendingPathComponent(userPathName, isDirectory: true).appendingPathComponent("Shaders", isDirectory: true)
+    }
     
-    @objc
-    public static var shadersCachePath: URL? = {
+    @objc public var shadersCachePath: URL? {
         guard
             let path = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
         else { return nil }
         
-        return path.appendingPathComponent(applicationName, isDirectory: true).appendingPathComponent("Shaders", isDirectory: true)
-    }()
+        return path.appendingPathComponent(userPathName, isDirectory: true).appendingPathComponent("Shaders", isDirectory: true)
+    }
     
     // MARK: - Shader Model
     
     @objc(OEShaderModel)
     @objcMembers
-    public class OEShaderModel : NSObject {
+    public class OEShaderModel: NSObject {
         public enum Params {
             case global(String)
             case system(String, String)
@@ -217,17 +217,19 @@ public class OEShadersModel : NSObject {
             }
         }
         
+        private let store: UserDefaults
         public var name: String
         public var url: URL
         
-        init(url: URL) {
-            self.name = url.deletingLastPathComponent().lastPathComponent
-            self.url  = url
+        init(url: URL, store: UserDefaults) {
+            self.store  = store
+            self.name   = url.deletingLastPathComponent().lastPathComponent
+            self.url    = url
         }
         
         @objc
         public func parameters(forIdentifier identifier: String) -> [String: Double]? {
-            if let state = UserDefaults.oe_application.string(forKey: Params.system(self.name, identifier).key) {
+            if let state = store.string(forKey: Params.system(self.name, identifier).key) {
                 var res = [String:Double]()
                 for param in state.split(separator: ";") {
                     let vals = param.split(separator: "=")
@@ -241,6 +243,20 @@ public class OEShadersModel : NSObject {
             return nil
         }
         
+        @objc
+        public func write(parameters params: [OEShaderParamValue], identifier: String) {
+            var state = [String]()
+            
+            for p in params.filter({ !$0.isInitial }) {
+                state.append("\(p.name)=\(p.value)")
+            }
+            if state.isEmpty {
+                store.removeObject(forKey: Params.system(self.name, identifier).key)
+            } else {
+                store.set(state.joined(separator: ";"), forKey: Params.system(self.name, identifier).key)
+            }
+        }
+        
         override public var description: String {
             return self.name
         }
@@ -248,5 +264,58 @@ public class OEShadersModel : NSObject {
         public override var debugDescription: String {
             return "\(name) \(url.absoluteString)"
         }
+    }
+}
+
+extension OEShadersModel.OEShaderModel {
+    public func readGroups() -> [OEShaderParamGroupValue] {
+        guard let ss = try? SlangShader(fromURL: url) else { return [] }
+        
+        if let groups = readGroupsModel() {
+            var all = ss.parameters
+            var dg: OEShaderParamGroupValue?
+            
+            let res: [OEShaderParamGroupValue] = groups.enumerated().map { (i, g) in
+                let gv = OEShaderParamGroupValue()
+                gv.index = i
+                gv.name = g.name
+                gv.desc = g.desc
+                gv.hidden = g.hidden
+                
+                if g.name == "default" {
+                    dg = gv
+                }
+                
+                // return a list of parameters from SlangShader in same order as g.parameters
+                let p = g.parameters.compactMap { name in
+                    all.first { $0.name == name }
+                }
+                all.removeAll { p.contains($0) }
+                
+                gv.parameters = OEShaderParamValue.withParameters(p)
+                return gv
+            }
+            
+            if let dg = dg, !all.isEmpty {
+                dg.parameters = OEShaderParamValue.withParameters(all)
+            }
+            
+            return res
+        }
+        
+        let gv = OEShaderParamGroupValue()
+        gv.index = 0
+        gv.name = "default"
+        gv.desc = "Default"
+        gv.parameters = OEShaderParamValue.withParameters(ss.parameters)
+        return [gv]
+    }
+    
+    func readGroupsModel() -> [ShaderParameterGroupModel]? {
+        let groupsURL = url.deletingLastPathComponent().appendingPathComponent("parameterGroups.plist")
+        guard let data = try? Data(contentsOf: groupsURL) else { return nil }
+        
+        let dec = PropertyListDecoder()
+        return try? dec.decode([ShaderParameterGroupModel].self, from: data)
     }
 }

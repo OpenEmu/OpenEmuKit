@@ -1,4 +1,4 @@
-// Copyright (c) 2019, OpenEmu Team
+// Copyright (c) 2021, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -22,42 +22,11 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import <Foundation/Foundation.h>
+import Foundation
 
-NS_ASSUME_NONNULL_BEGIN
-
-@class OEShaderParameter, OEShaderParamValue, OEShaderParamGroupValue;
-
-typedef NSArray<OEShaderParamGroupValue *> *    OEShaderParamGroups;
-typedef NSArray<OEShaderParamValue *> *         OEShaderParamValues;
-
-@interface OEShaderParamGroupValue : NSObject<NSSecureCoding>
-
-@property (nonatomic)          NSInteger index;
-@property (nonatomic, nonnull) NSString  *name;
-@property (nonatomic, nonnull) NSString  *desc;
-@property (nonatomic)          BOOL      hidden;
-@property (nonatomic, nonnull) OEShaderParamValues parameters;
-
-@end
-
-@interface OEShaderParamValue : NSObject<NSSecureCoding>
-
-@property (nonatomic)           NSInteger index;
-@property (nonatomic)           NSInteger groupIndex;
-@property (nonatomic, nonnull)  NSString  *name;
-@property (nonatomic, nonnull)  NSString  *desc;
-@property (nonatomic, nullable) NSString  *group;
-@property (nonatomic, nonnull)  NSNumber  *value;
-@property (nonatomic, nonnull)  NSNumber  *initial;
-@property (nonatomic, nonnull)  NSNumber  *minimum;
-@property (nonatomic, nonnull)  NSNumber  *maximum;
-@property (nonatomic, nonnull)  NSNumber  *step;
-@property (nonatomic)           BOOL      isInitial;
-
-+ (nonnull instancetype)groupWithName:(NSString *)name;
-+ (OEShaderParamValues)withParameters:(NSArray<OEShaderParameter *> *)params;
-
-@end
-
-NS_ASSUME_NONNULL_END
+struct ShaderParameterGroupModel: Codable {
+    public var name: String
+    public var desc: String
+    public var hidden: Bool
+    public var parameters: [String]
+}

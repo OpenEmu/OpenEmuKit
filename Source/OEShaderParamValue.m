@@ -37,7 +37,6 @@
     p.groupIndex = groupIndex;
     p.name       = param.name;
     p.desc       = param.desc;
-    p.group      = param.group;
     p.value      = @(param.value);
     p.initial    = @(param.initial);
     p.minimum    = @(param.minimum);
@@ -150,29 +149,6 @@ static float newPrecision(double n, double i)
 #pragma mark -
 
 @implementation OEShaderParamGroupValue
-
-+ (OEShaderParamGroupValue *)fromGroup:(OEShaderParamGroup *)group atIndex:(NSUInteger)index
-{
-    OEShaderParamGroupValue *g = [OEShaderParamGroupValue new];
-    g.index      = index;
-    g.name       = group.name;
-    g.desc       = group.desc;
-    g.hidden     = group.hidden;
-    g.parameters = [OEShaderParamValue fromParameters:group.parameters atGroupIndex:index];
-    
-    return g;
-}
-
-+ (OEShaderParamGroups)fromGroups:(NSArray<OEShaderParamGroup *> *)groups
-{
-    __block NSMutableArray<OEShaderParamGroupValue *> *res = [[NSMutableArray alloc] initWithCapacity:groups.count];
-
-    [groups enumerateObjectsUsingBlock:^(OEShaderParamGroup * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [res addObject:[OEShaderParamGroupValue fromGroup:obj atIndex:idx]];
-    }];
-    
-    return res;
-}
 
 #pragma mark - NSSecureCoding
 
