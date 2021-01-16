@@ -70,32 +70,32 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
 
 - (void)setVolume:(CGFloat)value;
 {
-    [[self gameCoreHelper] setVolume:value];
+    [_gameCoreHelper setVolume:value];
 }
 
 - (void)setPauseEmulation:(BOOL)pauseEmulation;
 {
-    [[self gameCoreHelper] setPauseEmulation:pauseEmulation];
+    [_gameCoreHelper setPauseEmulation:pauseEmulation];
 }
 
 - (void)setAudioOutputDeviceID:(AudioDeviceID)deviceID;
 {
-    [[self gameCoreHelper] setAudioOutputDeviceID:deviceID];
+    [_gameCoreHelper setAudioOutputDeviceID:deviceID];
 }
 
 - (void)setCheat:(NSString *)cheatCode withType:(NSString *)type enabled:(BOOL)enabled
 {
-    [[self gameCoreHelper] setCheat:cheatCode withType:type enabled:enabled];
+    [_gameCoreHelper setCheat:cheatCode withType:type enabled:enabled];
 }
 
 - (void)setDisc:(NSUInteger)discNumber
 {
-    [[self gameCoreHelper] setDisc:discNumber];
+    [_gameCoreHelper setDisc:discNumber];
 }
 
 - (void)insertFileAtURL:(NSURL *)url completionHandler:(void (^)(BOOL success, NSError *error))block
 {
-    [[self gameCoreHelper] insertFileAtURL:url completionHandler:
+    [_gameCoreHelper insertFileAtURL:url completionHandler:
      ^(BOOL success, NSError *error)
      {
          dispatch_async(self->_queue, ^{
@@ -106,23 +106,23 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
 
 - (void)changeDisplayWithMode:(NSString *)displayMode
 {
-    [[self gameCoreHelper] changeDisplayWithMode:displayMode];
+    [_gameCoreHelper changeDisplayWithMode:displayMode];
 }
 
 - (void)setOutputBounds:(NSRect)rect
 {
-    [[self gameCoreHelper] setOutputBounds:rect];
+    [_gameCoreHelper setOutputBounds:rect];
 }
 
 - (void)setBackingScaleFactor:(CGFloat)newScaleFactor
 {
-    [[self gameCoreHelper] setBackingScaleFactor:newScaleFactor];
+    [_gameCoreHelper setBackingScaleFactor:newScaleFactor];
 }
 
 - (void)setShaderURL:(NSURL *)url parameters:(NSDictionary<NSString *, NSNumber *> *)parameters completionHandler:(void (^)(BOOL success, NSError * _Nullable error))block
 {
     __block __auto_type queue = _queue;
-    [self.gameCoreHelper setShaderURL:url parameters:parameters completionHandler:^(BOOL success, NSError *error) {
+    [_gameCoreHelper setShaderURL:url parameters:parameters completionHandler:^(BOOL success, NSError *error) {
         dispatch_async(queue, ^{
             block(success, error);
         });
@@ -131,12 +131,12 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
 
 - (void)setShaderParameterValue:(CGFloat)value forKey:(NSString *)key
 {
-    [self.gameCoreHelper setShaderParameterValue:value forKey:key];
+    [_gameCoreHelper setShaderParameterValue:value forKey:key];
 }
 
 - (void)setupEmulationWithCompletionHandler:(void(^)(OEIntSize screenSize, OEIntSize aspectSize))handler;
 {
-    [[self gameCoreHelper] setupEmulationWithCompletionHandler:^(OEIntSize screenSize, OEIntSize aspectSize) {
+    [_gameCoreHelper setupEmulationWithCompletionHandler:^(OEIntSize screenSize, OEIntSize aspectSize) {
         dispatch_async(self->_queue, ^{
             handler(screenSize, aspectSize);
         });
@@ -145,7 +145,7 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
 
 - (void)startEmulationWithCompletionHandler:(void(^)(void))handler;
 {
-    [[self gameCoreHelper] startEmulationWithCompletionHandler:
+    [_gameCoreHelper startEmulationWithCompletionHandler:
      ^{
          dispatch_async(self->_queue, ^{
              handler();
@@ -155,7 +155,7 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
 
 - (void)resetEmulationWithCompletionHandler:(void(^)(void))handler;
 {
-    [[self gameCoreHelper] resetEmulationWithCompletionHandler:
+    [_gameCoreHelper resetEmulationWithCompletionHandler:
      ^{
          dispatch_async(self->_queue, ^{
              handler();
@@ -165,7 +165,7 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
 
 - (void)stopEmulationWithCompletionHandler:(void(^)(void))handler;
 {
-    [[self gameCoreHelper] stopEmulationWithCompletionHandler:
+    [_gameCoreHelper stopEmulationWithCompletionHandler:
      ^{
          dispatch_async(self->_queue, ^{
              handler();
@@ -176,7 +176,7 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
 
 - (void)saveStateToFileAtPath:(NSString *)fileName completionHandler:(void (^)(BOOL success, NSError *error))block;
 {
-    [[self gameCoreHelper] saveStateToFileAtPath:fileName completionHandler:
+    [_gameCoreHelper saveStateToFileAtPath:fileName completionHandler:
      ^(BOOL success, NSError *error)
      {
          dispatch_async(self->_queue, ^{
@@ -187,7 +187,7 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
 
 - (void)loadStateFromFileAtPath:(NSString *)fileName completionHandler:(void (^)(BOOL success, NSError *error))block;
 {
-    [[self gameCoreHelper] loadStateFromFileAtPath:fileName completionHandler:
+    [_gameCoreHelper loadStateFromFileAtPath:fileName completionHandler:
      ^(BOOL success, NSError *error)
      {
          dispatch_async(self->_queue, ^{
@@ -198,41 +198,41 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
 
 - (void)captureOutputImageWithCompletionHandler:(void (^)(NSBitmapImageRep *image))block
 {
-    [[self gameCoreHelper] captureOutputImageWithCompletionHandler:^(NSBitmapImageRep *image) {
+    [_gameCoreHelper captureOutputImageWithCompletionHandler:^(NSBitmapImageRep *image) {
         block(image);
     }];
 }
 
 - (void)captureSourceImageWithCompletionHandler:(void (^)(NSBitmapImageRep *image))block
 {
-    [[self gameCoreHelper] captureSourceImageWithCompletionHandler:^(NSBitmapImageRep *image) {
+    [_gameCoreHelper captureSourceImageWithCompletionHandler:^(NSBitmapImageRep *image) {
         block(image);
     }];
 }
 
 - (void)handleMouseEvent:(OEEvent *)event
 {
-    [self.gameCoreHelper handleMouseEvent:event];
+    [_gameCoreHelper handleMouseEvent:event];
 }
 
 - (void)setHandleEvents:(BOOL)handleEvents
 {
-    [self.gameCoreHelper setHandleEvents:handleEvents];
+    [_gameCoreHelper setHandleEvents:handleEvents];
 }
 
 - (void)setHandleKeyboardEvents:(BOOL)handleKeyboardEvents
 {
-    [self.gameCoreHelper setHandleKeyboardEvents:handleKeyboardEvents];
+    [_gameCoreHelper setHandleKeyboardEvents:handleKeyboardEvents];
 }
 
 - (void)systemBindingsDidSetEvent:(OEHIDEvent *)event forBinding:(__kindof OEBindingDescription *)bindingDescription playerNumber:(NSUInteger)playerNumber
 {
-    [self.gameCoreHelper systemBindingsDidSetEvent:event forBinding:bindingDescription playerNumber:playerNumber];
+    [_gameCoreHelper systemBindingsDidSetEvent:event forBinding:bindingDescription playerNumber:playerNumber];
 }
 
 - (void)systemBindingsDidUnsetEvent:(OEHIDEvent *)event forBinding:(__kindof OEBindingDescription *)bindingDescription playerNumber:(NSUInteger)playerNumber
 {
-    [self.gameCoreHelper systemBindingsDidUnsetEvent:event forBinding:bindingDescription playerNumber:playerNumber];
+    [_gameCoreHelper systemBindingsDidUnsetEvent:event forBinding:bindingDescription playerNumber:playerNumber];
 }
 
 - (void)_notifyGameCoreDidTerminate
