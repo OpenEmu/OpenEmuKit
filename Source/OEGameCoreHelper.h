@@ -55,6 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setCheat:(NSString *)cheatCode withType:(NSString *)type enabled:(BOOL)enabled;
 - (void)setDisc:(NSUInteger)discNumber;
+- (void)changeAdvancedMenuOption:(NSString *)advancedMenu menuID:(NSString *)menuID;
 - (void)changeDisplayWithMode:(NSString *)displayMode;
 
 - (void)insertFileAtURL:(NSURL *)url completionHandler:(void (^)(BOOL success, NSError * _Nullable error))block;
@@ -100,6 +101,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// The host application would use this to adjust the size of the display window.
 - (void)setScreenSize:(OEIntSize)newScreenSize aspectSize:(OEIntSize)newAspectSize;
 - (void)setDiscCount:(NSUInteger)discCount;
+- (void)setAdvancedMenu:(NSArray <NSDictionary <NSString *, id> *> *)advancedMenu;
 - (void)setDisplayModes:(NSArray <NSDictionary <NSString *, id> *> *)displayModes;
 - (void)setRemoteContextID:(NSUInteger)contextID;
 

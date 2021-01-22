@@ -367,7 +367,7 @@ static os_log_t LOG_DISPLAY;
 
         [_gameCoreOwner setDiscCount:[_gameCore discCount]];
         [_gameCoreOwner setDisplayModes:[_gameCore displayModes]];
-
+        [_gameCoreOwner setAdvancedMenu:[_gameCore advancedMenu]];
         self.loadedRom = YES;
         
         return YES;
@@ -491,6 +491,14 @@ static os_log_t LOG_DISPLAY;
 {
     [_gameCore performBlock:^{
         [self->_gameCore insertFileAtURL:url completionHandler:block];
+    }];
+}
+
+- (void)changeAdvancedMenuOption:(NSString *)advancedMenu menuID:(NSString *)menuID
+{
+    [_gameCore performBlock:^{
+        [self->_gameCore changeAdvancedMenuOption:advancedMenu menuID:menuID];
+        [self->_gameCoreOwner setAdvancedMenu:[self->_gameCore advancedMenu]];
     }];
 }
 
