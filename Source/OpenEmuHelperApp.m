@@ -147,7 +147,6 @@ static os_log_t LOG_DISPLAY;
     _commandQueue      = [_device newCommandQueue];
     _clearColor        = MTLClearColorMake(0, 0, 0, 1);
     _filterChain       = [[OEFilterChain alloc] initWithDevice:_device];
-    [_filterChain setDefaultFilteringLinear:NO];
     
     [self updateScreenSize];
     [self updateGameRenderer];
@@ -289,14 +288,19 @@ static os_log_t LOG_DISPLAY;
     }];
 }
 
+- (ShaderCompilerOptions *)makeOptions
+{
+    return [ShaderCompilerOptions makeOptions];
+}
+
 - (BOOL)setShaderURL:(NSURL *)url parameters:(NSDictionary<NSString *, NSNumber *> *)parameters error:(NSError **)error
 {
-    BOOL success = [_filterChain setShaderFromURL:url error:error];
+    BOOL success = [_filterChain setShaderFromURL:url options:[self makeOptions] error:error];
     if (success)
     {
-        __block __auto_type shader = _filterChain.shader;
+        __block __auto_type filter = _filterChain;
         [parameters enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSNumber *obj, BOOL *stop) {
-            [shader setValue:obj.doubleValue forParameter:key];
+            [filter setValue:obj.doubleValue forParameterName:key];
         }];
     }
     
@@ -305,7 +309,7 @@ static os_log_t LOG_DISPLAY;
 
 - (void)setShaderParameterValue:(CGFloat)value forKey:(NSString *)key
 {
-    [_filterChain.shader setValue:value forParameter:key];
+    [_filterChain setValue:value forParameterName:key];
 }
 
 #pragma mark - Game Core methods

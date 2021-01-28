@@ -55,7 +55,6 @@ typedef NSArray<OEShaderParamValue *> *         OEShaderParamValues;
 @property (nonatomic, nonnull)  NSNumber  *step;
 @property (nonatomic)           BOOL      isInitial;
 
-+ (nonnull instancetype)groupWithName:(NSString *)name;
 + (OEShaderParamValues)withParameters:(NSArray<OEShaderParameter *> *)params;
 
 @end

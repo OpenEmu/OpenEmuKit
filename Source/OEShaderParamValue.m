@@ -37,20 +37,12 @@
     p.groupIndex = groupIndex;
     p.name       = param.name;
     p.desc       = param.desc;
-    p.value      = @(param.value);
+    p.value      = @(param.initial);
     p.initial    = @(param.initial);
     p.minimum    = @(param.minimum);
     p.maximum    = @(param.maximum);
     p.step       = @(param.step);
     
-    return p;
-}
-
-+ (nonnull instancetype)groupWithName:(NSString *)name
-{
-    OEShaderParamValue *p = [OEShaderParamValue new];
-    p.index = -1; // "group"
-    p.group = name;
     return p;
 }
 
