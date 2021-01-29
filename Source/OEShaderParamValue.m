@@ -29,12 +29,11 @@
 
 @implementation OEShaderParamValue
 
-+ (instancetype)fromParameter:(OEShaderParameter *)param atIndex:(NSUInteger)index atGroupIndex:(NSUInteger)groupIndex
++ (instancetype)fromParameter:(OEShaderParameter *)param atIndex:(NSUInteger)index
 {
     OEShaderParamValue *p = [OEShaderParamValue new];
     
     p.index      = index;
-    p.groupIndex = groupIndex;
     p.name       = param.name;
     p.desc       = param.desc;
     p.value      = @(param.initial);
@@ -51,18 +50,7 @@
     __block NSMutableArray<OEShaderParamValue *> *res = [[NSMutableArray alloc] initWithCapacity:params.count];
 
     [params enumerateObjectsUsingBlock:^(OEShaderParameter * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [res addObject:[OEShaderParamValue fromParameter:obj atIndex:idx atGroupIndex:0]];
-    }];
-    
-    return res;
-}
-
-+ (NSArray<OEShaderParamValue *> *)fromParameters:(NSArray<OEShaderParameter *> *)params atGroupIndex:(NSUInteger)index
-{
-    __block NSMutableArray<OEShaderParamValue *> *res = [[NSMutableArray alloc] initWithCapacity:params.count];
-
-    [params enumerateObjectsUsingBlock:^(OEShaderParameter * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [res addObject:[OEShaderParamValue fromParameter:obj atIndex:idx atGroupIndex:index]];
+        [res addObject:[OEShaderParamValue fromParameter:obj atIndex:idx]];
     }];
     
     return res;
@@ -104,10 +92,8 @@ static float newPrecision(double n, double i)
     if ((self = [super init]))
     {
         _index      = [coder decodeIntegerForKey:@"index"];
-        _groupIndex = [coder decodeIntegerForKey:@"groupIndex"];
         _name       = [coder decodeObjectOfClass:NSString.class forKey:@"name"];
         _desc       = [coder decodeObjectOfClass:NSString.class forKey:@"desc"];
-        _group      = [coder decodeObjectOfClass:NSString.class forKey:@"group"];
         _value      = [coder decodeObjectOfClass:NSNumber.class forKey:@"value"];
         _initial    = [coder decodeObjectOfClass:NSNumber.class forKey:@"initial"];
         _minimum    = [coder decodeObjectOfClass:NSNumber.class forKey:@"minimum"];
@@ -125,10 +111,8 @@ static float newPrecision(double n, double i)
 - (void)encodeWithCoder:(NSCoder *)coder
 {
     [coder encodeInteger:_index forKey:@"index"];
-    [coder encodeInteger:_groupIndex forKey:@"groupIndex"];
     [coder encodeObject:_name forKey:@"name"];
     [coder encodeObject:_desc forKey:@"desc"];
-    [coder encodeObject:_group forKey:@"group"];
     [coder encodeObject:_value forKey:@"value"];
     [coder encodeObject:_initial forKey:@"initial"];
     [coder encodeObject:_minimum forKey:@"minimum"];

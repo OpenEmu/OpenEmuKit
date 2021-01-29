@@ -44,10 +44,8 @@ typedef NSArray<OEShaderParamValue *> *         OEShaderParamValues;
 @interface OEShaderParamValue : NSObject<NSSecureCoding>
 
 @property (nonatomic)           NSInteger index;
-@property (nonatomic)           NSInteger groupIndex;
 @property (nonatomic, nonnull)  NSString  *name;
 @property (nonatomic, nonnull)  NSString  *desc;
-@property (nonatomic, nullable) NSString  *group;
 @property (nonatomic, nonnull)  NSNumber  *value;
 @property (nonatomic, nonnull)  NSNumber  *initial;
 @property (nonatomic, nonnull)  NSNumber  *minimum;

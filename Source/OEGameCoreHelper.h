@@ -29,7 +29,6 @@
 #import <OpenEmuSystem/OpenEmuSystem.h>
 
 @class OEEvent;
-@class OEShaderParamGroupValue;
 
 NS_ASSUME_NONNULL_BEGIN
 
