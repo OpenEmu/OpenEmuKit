@@ -103,9 +103,9 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
          });
      }];
 }
-- (void)changeAdvancedMenuOption:(NSString *)advancedMenu menuID:(NSString *)menuID
+- (void)changePreferenceOption:(NSString *)corePreference prefGroupID:(NSString *)prefGroupID
 {
-    [_gameCoreHelper changeAdvancedMenuOption:advancedMenu menuID:menuID];
+    [_gameCoreHelper changePreferenceOption:corePreference prefGroupID:prefGroupID];
 }
 
 - (void)changeDisplayWithMode:(NSString *)displayMode

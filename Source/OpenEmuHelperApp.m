@@ -367,7 +367,7 @@ static os_log_t LOG_DISPLAY;
 
         [_gameCoreOwner setDiscCount:[_gameCore discCount]];
         [_gameCoreOwner setDisplayModes:[_gameCore displayModes]];
-        [_gameCoreOwner setAdvancedMenu:[_gameCore advancedMenu]];
+        [_gameCoreOwner setCorePreferences:[_gameCore corePreferences]];
         self.loadedRom = YES;
         
         return YES;
@@ -494,11 +494,11 @@ static os_log_t LOG_DISPLAY;
     }];
 }
 
-- (void)changeAdvancedMenuOption:(NSString *)advancedMenu menuID:(NSString *)menuID
+- (void)changePreferenceOption:(NSString *)corePreference prefGroupID:(NSString *)prefGroupID
 {
     [_gameCore performBlock:^{
-        [self->_gameCore changeAdvancedMenuOption:advancedMenu menuID:menuID];
-        [self->_gameCoreOwner setAdvancedMenu:[self->_gameCore advancedMenu]];
+        [self->_gameCore changePreferenceOption:corePreference prefGroupID:prefGroupID];
+        [self->_gameCoreOwner setCorePreferences:[self->_gameCore corePreferences]];
     }];
 }
 
