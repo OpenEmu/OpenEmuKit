@@ -494,10 +494,10 @@ static os_log_t LOG_DISPLAY;
     }];
 }
 
-- (void)changePreferenceOption:(NSString *)corePreference prefGroupID:(NSString *)prefGroupID
+- (void)changePreferenceOption:(NSString *)preferenceID prefGroupID:(NSString *)prefGroupID
 {
     [_gameCore performBlock:^{
-        [self->_gameCore changePreferenceOption:corePreference prefGroupID:prefGroupID];
+        [self->_gameCore changePreferenceOption:preferenceID prefGroupID:prefGroupID];
         [self->_gameCoreOwner setCorePreferences:[self->_gameCore corePreferences]];
     }];
 }

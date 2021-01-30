@@ -55,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setCheat:(NSString *)cheatCode withType:(NSString *)type enabled:(BOOL)enabled;
 - (void)setDisc:(NSUInteger)discNumber;
-- (void)changePreferenceOption:(NSString *)corePreference prefGroupID:(NSString *)prefGroupID;
+- (void)changePreferenceOption:(NSString *)preferenceID prefGroupID:(NSString *)prefGroupID;
 - (void)changeDisplayWithMode:(NSString *)displayMode;
 
 - (void)insertFileAtURL:(NSURL *)url completionHandler:(void (^)(BOOL success, NSError * _Nullable error))block;
