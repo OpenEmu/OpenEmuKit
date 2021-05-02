@@ -365,6 +365,20 @@ static os_log_t LOG_DISPLAY;
     
     os_log_debug(OE_LOG_HELPER, "Loaded bundle.");
     
+    if ([NSFileManager.defaultManager isReadableFileAtPath:aPath] == NO)
+    {
+        os_log_error(OE_LOG_HELPER, "Unable to access file at path %{public}@", aPath);
+        _gameCore = nil;
+        if (error && !*error) {
+            *error = [NSError errorWithDomain:OEGameCoreErrorDomain
+                                         code:OEGameCoreCouldNotLoadROMError
+                                     userInfo:@{
+                                         NSLocalizedDescriptionKey: NSLocalizedString(@"The emulator does not have read permissions to the ROM.", @"Error when loading a ROM."),
+                                     }];
+        }
+        return NO;
+    }
+    
     if([_gameCore loadFileAtPath:aPath error:error])
     {
         os_log_debug(OE_LOG_HELPER, "Loaded new ROM: %{public}@", aPath);
