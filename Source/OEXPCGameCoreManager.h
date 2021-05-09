@@ -24,14 +24,6 @@
 
 #import <OpenEmuKit/OEGameCoreManager.h>
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface OEXPCGameCoreManagerBase : OEGameCoreManager
-
-// Abstract properties that must be implemented
-@property (readonly) NSString *serviceName;
-@property (readonly) NSURL    *executableURL;
+@interface OEXPCGameCoreManager : OEGameCoreManager
 
 @end
-
-NS_ASSUME_NONNULL_END

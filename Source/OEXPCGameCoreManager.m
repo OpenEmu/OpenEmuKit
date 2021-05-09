@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import "OEXPCGameCoreManagerBase.h"
+#import "OEXPCGameCoreManager.h"
 #import "OEXPCGameCoreHelper.h"
 #import "OECorePlugin.h"
 #import "OEGameCoreManager_Internal.h"
@@ -33,7 +33,7 @@
 #import "OEGameStartupInfo.h"
 #import "OELogging.h"
 
-@interface OEXPCGameCoreManagerBase ()
+@interface OEXPCGameCoreManager ()
 {
     NSXPCConnection *_helperConnection;
     OEThreadProxy   *_gameCoreOwnerProxy;
@@ -42,19 +42,26 @@
 @property(nonatomic, strong) id<OEXPCGameCoreHelper> gameCoreHelper;
 @end
 
-@implementation OEXPCGameCoreManagerBase
+@implementation OEXPCGameCoreManager
 @dynamic gameCoreHelper;
+
+- (NSDictionary<NSString *, NSString *> *)infoDictionary {
+    id obj = [NSBundle.mainBundle objectForInfoDictionaryKey:@"OpenEmuKit"];
+    if ([obj isKindOfClass:NSDictionary.class]) {
+        return obj;
+    }
+    return nil;
+}
 
 - (NSString *)serviceName
 {
-    [self doesNotImplementSelector:_cmd];
-    return nil;
+    return [self.infoDictionary objectForKey:@"XPCBrokerServiceName"];
 }
 
 - (NSURL *)executableURL
 {
-    [self doesNotImplementSelector:_cmd];
-    return nil;
+    NSString * name = [self.infoDictionary objectForKey:@"XPCHelperExecutableName"];
+    return [NSBundle.mainBundle URLForAuxiliaryExecutable:name];
 }
 
 - (void)loadROMWithCompletionHandler:(void(^)(void))completionHandler errorHandler:(void(^)(NSError *))errorHandler;
@@ -82,9 +89,9 @@
         return;
     }
     
-    __weak OEXPCGameCoreManagerBase *weakSelf = self;
+    __weak OEXPCGameCoreManager *weakSelf = self;
     [_helperConnection setInvalidationHandler:^{
-        OEXPCGameCoreManagerBase *strongSelf = weakSelf;
+        OEXPCGameCoreManager *strongSelf = weakSelf;
         if (strongSelf)
             [strongSelf _notifyGameCoreDidTerminate];
     }];
