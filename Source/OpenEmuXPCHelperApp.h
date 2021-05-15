@@ -26,9 +26,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface OpenEmuXPCHelperAppBase : OpenEmuHelperApp
-
-@property (readonly) NSString *serviceName;
+@interface OpenEmuXPCHelperApp : OpenEmuHelperApp
 
 @end
 

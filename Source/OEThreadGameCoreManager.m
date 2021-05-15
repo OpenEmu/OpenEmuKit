@@ -63,11 +63,6 @@
     [_helperThread start];
 }
 
-- (void)dummyTimer:(NSTimer *)dummyTimer
-{
-    
-}
-
 - (void)_executionThread:(id)object
 {
     @autoreleasepool
@@ -80,7 +75,7 @@
         {
             if(_errorHandler != nil)
             {
-                __block typeof(_errorHandler) errorHandler = _errorHandler;
+                __block __auto_type errorHandler = _errorHandler;
                 _errorHandler = nil;
                 dispatch_async(self.queue, ^{
                     errorHandler(error);
@@ -94,7 +89,7 @@
             _completionHandler = nil;
         }
 
-        _dummyTimer = [NSTimer scheduledTimerWithTimeInterval:1e9 target:self selector:@selector(dummyTimer:) userInfo:nil repeats:YES];
+        _dummyTimer = [NSTimer scheduledTimerWithTimeInterval:1e9 repeats:YES block:^(NSTimer * _Nonnull timer) {}];
 
         CFRunLoopRun();
 

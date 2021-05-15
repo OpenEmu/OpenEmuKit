@@ -32,17 +32,37 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/*!
+ * A protocol that defines the behaviour required to control an emulator core.
+ *
+ * A host application obtains an instance of @c OEGameCoreHelper in order
+ * to communicate with the core, which may be running in another thread or
+ * a remote process.
+ */
 @protocol OEGameCoreHelper <NSObject>
 
+/*!
+ * Adjust the output volume of the core.
+ * @param value The new volume level, from @c [0, 1.0]
+ */
 - (void)setVolume:(CGFloat)value;
+
+/*!
+ * Manage the paused status of the core.
+ *
+ * @param pauseEmulation Specify @c true to pause the core.
+ */
 - (void)setPauseEmulation:(BOOL)pauseEmulation;
 - (void)setAudioOutputDeviceID:(AudioDeviceID)deviceID;
 - (void)setOutputBounds:(NSRect)rect;
 - (void)setBackingScaleFactor:(CGFloat)newBackingScaleFactor;
 
 #pragma mark - Shader management
+
 - (void)setShaderURL:(NSURL *)url parameters:(NSDictionary<NSString *, NSNumber *> *)parameters completionHandler:(void (^)(BOOL success, NSError * _Nullable error))block;
 - (void)setShaderParameterValue:(CGFloat)value forKey:(NSString *)key;
+
+#pragma mark - Emulator control
 
 - (void)setupEmulationWithCompletionHandler:(void(^)(OEIntSize screenSize, OEIntSize aspectSize))handler;
 - (void)startEmulationWithCompletionHandler:(void(^)(void))handler;
@@ -65,9 +85,16 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)systemBindingsDidSetEvent:(OEHIDEvent *)event forBinding:(__kindof OEBindingDescription *)bindingDescription playerNumber:(NSUInteger)playerNumber;
 - (void)systemBindingsDidUnsetEvent:(OEHIDEvent *)event forBinding:(__kindof OEBindingDescription *)bindingDescription playerNumber:(NSUInteger)playerNumber;
 
-#pragma mark - screenshot support
+#pragma mark - Screenshot support
 
+/**
+ * Capture an image of the final core video display buffer, which includes all shader effects.
+ */
 - (void)captureOutputImageWithCompletionHandler:(void (^)(NSBitmapImageRep *image))block;
+
+/**
+ * Capture an image of the raw core video display buffer with no effects.
+ */
 - (void)captureSourceImageWithCompletionHandler:(void (^)(NSBitmapImageRep *image))block;
 
 @end
@@ -93,11 +120,20 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)nextDisplayMode;
 - (void)lastDisplayMode;
 
-/// Notify the host application the the screen and aspect sizes have changed for the core.
-///
-/// @details
-/// The host application would use this to adjust the size of the display window.
+/**
+ * Notify the host application that the screen and aspect sizes have changed for the core.
+ *
+ * The host application would use this information to adjust the size of the display window.
+ *
+ * @param newScreenSize The updated screen size
+ * @param newAspectSize The updated aspect size
+ */
 - (void)setScreenSize:(OEIntSize)newScreenSize aspectSize:(OEIntSize)newAspectSize;
+/**
+ * Notify the host application that the disc count has changed
+ *
+ *
+ */
 - (void)setDiscCount:(NSUInteger)discCount;
 - (void)setDisplayModes:(NSArray <NSDictionary <NSString *, id> *> *)displayModes;
 - (void)setRemoteContextID:(NSUInteger)contextID;

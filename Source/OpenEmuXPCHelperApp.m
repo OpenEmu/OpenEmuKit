@@ -23,14 +23,14 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import "OEXPCGameCoreHelper.h"
-#import "OpenEmuXPCHelperAppBase.h"
+#import "OpenEmuXPCHelperApp.h"
 #import <OpenEmuSystem/OpenEmuSystem.h>
 #import "OEShaderParamValue.h"
 #import "NSXPCListener+HelperApp.h"
 #import "OEGameStartupInfo.h"
 #import "OELogging.h"
 
-@interface OpenEmuXPCHelperAppBase () <NSXPCListenerDelegate, OEXPCGameCoreHelper>
+@interface OpenEmuXPCHelperApp () <NSXPCListenerDelegate, OEXPCGameCoreHelper>
 {
     NSXPCListener *_mainListener;
     NSXPCConnection *_gameCoreConnection;
@@ -41,12 +41,19 @@
 
 @end
 
-@implementation OpenEmuXPCHelperAppBase
+@implementation OpenEmuXPCHelperApp
+
+- (NSDictionary<NSString *, NSString *> *)infoDictionary {
+    id obj = [NSBundle.mainBundle objectForInfoDictionaryKey:@"OpenEmuKit"];
+    if ([obj isKindOfClass:NSDictionary.class]) {
+        return obj;
+    }
+    return nil;
+}
 
 - (NSString *)serviceName
 {
-    [self doesNotImplementSelector:_cmd];
-    return nil;
+    return [self.infoDictionary objectForKey:@"XPCBrokerServiceName"];
 }
 
 - (void)launchApplication
@@ -174,13 +181,6 @@
     NSError *error;
     [self loadWithStartupInfo:info error:&error];
     completionHandler(error);
-}
-
-- (void)stopEmulationWithCompletionHandler:(void(^)(void))handler
-{
-    [super stopEmulationWithCompletionHandler:^{
-        handler();
-    }];
 }
 
 @end
