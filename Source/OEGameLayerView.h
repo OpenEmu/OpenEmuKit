@@ -35,7 +35,6 @@ typedef uint32_t CAContextID;
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol OEGameViewDelegate <NSObject>
-@property (readonly) NSString *systemIdentifier;
 - (void)gameView:(OEGameLayerView *)gameView didReceiveMouseEvent:(OEEvent *)event;
 - (void)gameView:(OEGameLayerView *)gameView updateBounds:(CGRect)newBounds;
 - (void)gameView:(OEGameLayerView *)gameView updateBackingScaleFactor:(CGFloat)newScaleFactor;

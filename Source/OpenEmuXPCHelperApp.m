@@ -34,9 +34,6 @@
 {
     NSXPCListener *_mainListener;
     NSXPCConnection *_gameCoreConnection;
-    NSRunningApplication *_parentApplication; // the process id of the parent app (Open Emu)
-    // poll parent ID, KVO does not seem to be working with NSRunningApplication
-    NSTimer              *_pollingTimer;
 }
 
 @end
@@ -84,14 +81,6 @@
 
 - (void)setup
 {
-    _parentApplication = [NSRunningApplication runningApplicationWithProcessIdentifier:getppid()];
-    [_parentApplication addObserver:self forKeyPath:@"terminated" options:NSKeyValueObservingOptionNew context:nil];
-    if(_parentApplication != nil)
-    {
-        os_log_debug(OE_LOG_HELPER, "Parent application is %{public}@", [_parentApplication localizedName]);
-        [self setupProcessPollingTimer];
-    }
-    
     OEDeviceManager *dm = [OEDeviceManager sharedDeviceManager];
     if (@available(macOS 10.15, *))
     {
@@ -103,37 +92,9 @@
     }
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath
-                      ofObject:(id)object
-                        change:(NSDictionary<NSKeyValueChangeKey,id> *)change
-                       context:(void *)context
-{
-    [self terminate];
-}
-
-- (void)setupProcessPollingTimer
-{
-    _pollingTimer = [NSTimer scheduledTimerWithTimeInterval:5
-                                                     target:self
-                                                   selector:@selector(pollParentProcess)
-                                                   userInfo:nil
-                                                    repeats:YES];
-    _pollingTimer.tolerance = 1;
-}
-
-- (void)pollParentProcess
-{
-    if([_parentApplication isTerminated])
-    {
-        [self terminate];
-    }
-}
-
 - (void)terminate
 {
     os_log_debug(OE_LOG_HELPER, "Terminating helper");
-    
-    [_pollingTimer invalidate];
     CFRunLoopStop(CFRunLoopGetMain());
 }
 
@@ -156,16 +117,19 @@
         [_gameCoreConnection setExportedObject:self];
         [_gameCoreConnection setRemoteObjectInterface:[NSXPCInterface interfaceWithProtocol:@protocol(OEGameCoreOwner)]];
         [_gameCoreConnection setInvalidationHandler:^{
+            os_log_debug(OE_LOG_HELPER, "Connection was invalidated; exiting.");
             _Exit(EXIT_SUCCESS);
         }];
         
         [_gameCoreConnection setInterruptionHandler:^{
+            os_log_debug(OE_LOG_HELPER, "Connection was interrupted; exiting.");
             _Exit(EXIT_SUCCESS);
         }];
 
         [_gameCoreConnection resume];
 
         self.gameCoreOwner = [_gameCoreConnection remoteObjectProxyWithErrorHandler:^(NSError *error) {
+            os_log_debug(OE_LOG_HELPER, "Error communicating with OEGameCoreOwner proxy: %{public}@", error.localizedDescription);
             [self stopEmulationWithCompletionHandler:^{}];
         }];
 

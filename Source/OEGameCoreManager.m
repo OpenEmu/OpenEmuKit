@@ -26,9 +26,8 @@
 
 @import OpenEmuBase;
 
-#import "OEGameCoreManager.h"
-#import "OECorePlugin.h"
 #import "OEGameCoreManager_Internal.h"
+#import "OECorePlugin.h"
 #import "OESystemPlugin.h"
 #import "OEGameStartupInfo.h"
 
