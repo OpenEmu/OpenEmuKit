@@ -39,7 +39,6 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
                          corePlugin:(OECorePlugin *)plugin
                        systemPlugin:(OESystemPlugin *)systemPlugin
                       gameCoreOwner:(id<OEGameCoreOwner>)gameCoreOwner
-                              queue:(dispatch_queue_t _Nullable)queue
 {
     if (self = [super init])
     {
@@ -47,7 +46,6 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
         _plugin         = plugin;
         _systemPlugin   = systemPlugin;
         _gameCoreOwner  = gameCoreOwner;
-        _queue          = queue ?: dispatch_get_main_queue();
     }
     return self;
 }
@@ -62,22 +60,22 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
     [self doesNotImplementSelector:_cmd];
 }
 
-- (void)loadROMWithCompletionHandler:(void(^)(void))completionHandler errorHandler:(void(^)(NSError *))errorHandler;
+- (void)loadROMWithCompletionHandler:(void(^)(void))completionHandler errorHandler:(void(^)(NSError *))errorHandler
 {
     [self doesNotImplementSelector:_cmd];
 }
 
-- (void)setVolume:(CGFloat)value;
+- (void)setVolume:(CGFloat)value
 {
     [_gameCoreHelper setVolume:value];
 }
 
-- (void)setPauseEmulation:(BOOL)pauseEmulation;
+- (void)setPauseEmulation:(BOOL)pauseEmulation
 {
     [_gameCoreHelper setPauseEmulation:pauseEmulation];
 }
 
-- (void)setAudioOutputDeviceID:(AudioDeviceID)deviceID;
+- (void)setAudioOutputDeviceID:(AudioDeviceID)deviceID
 {
     [_gameCoreHelper setAudioOutputDeviceID:deviceID];
 }
@@ -97,9 +95,9 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
     [_gameCoreHelper insertFileAtURL:url completionHandler:
      ^(BOOL success, NSError *error)
      {
-         dispatch_async(self->_queue, ^{
-             block(success, error);
-         });
+        CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, ^{
+            block(success, error);
+        });
      }];
 }
 
@@ -120,9 +118,8 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
 
 - (void)setShaderURL:(NSURL *)url parameters:(NSDictionary<NSString *, NSNumber *> *)parameters completionHandler:(void (^)(BOOL success, NSError * _Nullable error))block
 {
-    __block __auto_type queue = _queue;
     [_gameCoreHelper setShaderURL:url parameters:parameters completionHandler:^(BOOL success, NSError *error) {
-        dispatch_async(queue, ^{
+        CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, ^{
             block(success, error);
         });
     }];
@@ -133,79 +130,79 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
     [_gameCoreHelper setShaderParameterValue:value forKey:key];
 }
 
-- (void)setupEmulationWithCompletionHandler:(void(^)(OEIntSize screenSize, OEIntSize aspectSize))handler;
+- (void)setupEmulationWithCompletionHandler:(void(^)(OEGameCoreHelperSetupResult result))handler
 {
-    [_gameCoreHelper setupEmulationWithCompletionHandler:^(OEIntSize screenSize, OEIntSize aspectSize) {
-        dispatch_async(self->_queue, ^{
-            handler(screenSize, aspectSize);
+    [_gameCoreHelper setupEmulationWithCompletionHandler:^(OEGameCoreHelperSetupResult result) {
+        CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, ^{
+            handler(result);
         });
     }];
 }
 
-- (void)startEmulationWithCompletionHandler:(void(^)(void))handler;
+- (void)startEmulationWithCompletionHandler:(void(^)(void))handler
 {
     [_gameCoreHelper startEmulationWithCompletionHandler:
      ^{
-         dispatch_async(self->_queue, ^{
-             handler();
-         });
+        CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, handler);
      }];
 }
 
-- (void)resetEmulationWithCompletionHandler:(void(^)(void))handler;
+- (void)resetEmulationWithCompletionHandler:(void(^)(void))handler
 {
     [_gameCoreHelper resetEmulationWithCompletionHandler:
      ^{
-         dispatch_async(self->_queue, ^{
-             handler();
-         });
+        CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, handler);
      }];
 }
 
-- (void)stopEmulationWithCompletionHandler:(void(^)(void))handler;
+- (void)stopEmulationWithCompletionHandler:(void(^)(void))handler
 {
     [_gameCoreHelper stopEmulationWithCompletionHandler:
      ^{
-         dispatch_async(self->_queue, ^{
-             handler();
-             [self stop];
-         });
+        CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, ^{
+            handler();
+            [self stop];
+        });
      }];
 }
 
-- (void)saveStateToFileAtPath:(NSString *)fileName completionHandler:(void (^)(BOOL success, NSError *error))block;
+- (void)saveStateToFileAtPath:(NSString *)fileName completionHandler:(void (^)(BOOL success, NSError *error))block
 {
     [_gameCoreHelper saveStateToFileAtPath:fileName completionHandler:
      ^(BOOL success, NSError *error)
      {
-         dispatch_async(self->_queue, ^{
-             block(success, error);
-         });
+        CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, ^{
+            block(success, error);
+        });
      }];
 }
 
-- (void)loadStateFromFileAtPath:(NSString *)fileName completionHandler:(void (^)(BOOL success, NSError *error))block;
+- (void)loadStateFromFileAtPath:(NSString *)fileName completionHandler:(void (^)(BOOL success, NSError *error))block
 {
     [_gameCoreHelper loadStateFromFileAtPath:fileName completionHandler:
      ^(BOOL success, NSError *error)
      {
-         dispatch_async(self->_queue, ^{
-             block(success, error);
-         });
+        CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, ^{
+            block(success, error);
+        });
      }];
 }
 
 - (void)captureOutputImageWithCompletionHandler:(void (^)(NSBitmapImageRep *image))block
 {
     [_gameCoreHelper captureOutputImageWithCompletionHandler:^(NSBitmapImageRep *image) {
-        block(image);
+        CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, ^{
+            block(image);
+        });
     }];
 }
 
 - (void)captureSourceImageWithCompletionHandler:(void (^)(NSBitmapImageRep *image))block
 {
     [_gameCoreHelper captureSourceImageWithCompletionHandler:^(NSBitmapImageRep *image) {
-        block(image);
+        CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, ^{
+            block(image);
+        });
     }];
 }
 
@@ -237,7 +234,7 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
 - (void)_notifyGameCoreDidTerminate
 {
     __weak OEGameCoreManager *weakSelf = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
+    CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, ^{
         OEGameCoreManager *strongSelf = weakSelf;
         if (!strongSelf)
             return;

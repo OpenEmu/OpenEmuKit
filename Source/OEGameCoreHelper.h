@@ -32,6 +32,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef struct _OEGameCoreHelperSetupResult {
+    OEIntSize screenSize;
+    OEIntSize aspectSize;
+} OEGameCoreHelperSetupResult;
+
 /*!
  * A protocol that defines the behaviour required to control an emulator core.
  *
@@ -64,7 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Emulator control
 
-- (void)setupEmulationWithCompletionHandler:(void(^)(OEIntSize screenSize, OEIntSize aspectSize))handler;
+- (void)setupEmulationWithCompletionHandler:(void(^)(OEGameCoreHelperSetupResult result))handler;
 - (void)startEmulationWithCompletionHandler:(void(^)(void))handler;
 - (void)resetEmulationWithCompletionHandler:(void(^)(void))handler;
 - (void)stopEmulationWithCompletionHandler:(void(^)(void))handler;
@@ -101,6 +106,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol OEGameCoreOwner <NSObject>
 
+#pragma mark - Actions
+
+// These actions are triggered from the game core via the OEGlobalEventsHandler protocol
+
+/*! Notify the host application of the user request to save the current state
+ */
 - (void)saveState;
 - (void)loadState;
 - (void)quickSave;

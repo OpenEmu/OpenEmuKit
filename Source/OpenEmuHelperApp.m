@@ -442,13 +442,18 @@ static os_log_t LOG_DISPLAY;
     }];
 }
 
-- (void)setupEmulationWithCompletionHandler:(void(^)(OEIntSize screenSize, OEIntSize aspectSize))handler
+- (void)setupEmulationWithCompletionHandler:(void(^)(OEGameCoreHelperSetupResult result))handler
 {
     [_gameCore setupEmulationWithCompletionHandler:^{
         [self setupGameCoreAudioAndVideo];
         
         if(handler)
-            handler(self->_previousScreenRect.size, self->_previousAspectSize);
+        {
+            handler((OEGameCoreHelperSetupResult){
+                .screenSize = self->_previousScreenRect.size,
+                .aspectSize = self->_previousAspectSize
+            });
+        }
     }];
 }
 

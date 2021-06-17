@@ -1,4 +1,4 @@
-// Copyright (c) 2020, OpenEmu Team
+// Copyright (c) 2021, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -22,30 +22,61 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import <Foundation/Foundation.h>
+#import "OEGameCoreManager+Synchronous.h"
+#import "OEGameCoreManager_Internal.h"
+#import <stdatomic.h>
 
-//! Project version number for OpenEmuKit.
-FOUNDATION_EXPORT double OpenEmuKitVersionNumber;
+@implementation OEGameCoreManager (Synchronous)
 
-//! Project version string for OpenEmuKit.
-FOUNDATION_EXPORT const unsigned char OpenEmuKitVersionString[];
+#define MAIN_INIT \
+    __block atomic_bool done = false;
 
-// In this header, you should import all the public headers of your framework using statements like #import <OpenEmuKit/PublicHeader.h>
+#define MAIN_BEGIN \
+    CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, ^{
 
-#import <OpenEmuKit/OEPlugin.h>
-#import <OpenEmuKit/OECorePlugin.h>
-#import <OpenEmuKit/OESystemPlugin.h>
-#import <OpenEmuKit/OEShaderParamValue.h>
-#import <OpenEmuKit/OEGameCoreHelper.h>
-#import <OpenEmuKit/OpenEmuHelperApp.h>
-#import <OpenEmuKit/OpenEmuXPCHelperApp.h>
-#import <OpenEmuKit/OEGameCoreManager.h>
-#import <OpenEmuKit/OEGameCoreManager+Synchronous.h>
-#import <OpenEmuKit/OEThreadGameCoreManager.h>
-#import <OpenEmuKit/OEXPCGameCoreManager.h>
-#import <OpenEmuKit/OEGameLayerView.h>
-#import <OpenEmuKit/NSXPCConnection+HelperApp.h>
-#import <OpenEmuKit/NSXPCListener+HelperApp.h>
-#import <OpenEmuKit/OEXPCDebugSupport.h>
-#import <OpenEmuKit/OEGameStartupInfo.h>
-#import <OpenEmuKit/NSFileManager+ExtendedAttributes.h>
+#define MAIN_END \
+        atomic_store(&done, true); \
+        CFRunLoopStop(CFRunLoopGetMain()); \
+    });
+
+#define MAIN_WAIT \
+    while (atomic_load(&done) == false) \
+    { \
+        if (CFRunLoopRunInMode(kCFRunLoopDefaultMode, 10.0, NO) == kCFRunLoopRunFinished) break; \
+    }
+
+#pragma mark - Synchronous APIs
+
+- (NSBitmapImageRep *)captureOutputImage
+{
+    MAIN_INIT
+    
+    __block NSBitmapImageRep *res = nil;
+    [self.gameCoreHelper captureOutputImageWithCompletionHandler:^(NSBitmapImageRep * _Nonnull image) {
+        MAIN_BEGIN
+        res = image;
+        MAIN_END
+    }];
+    
+    MAIN_WAIT
+
+    return res;
+}
+
+- (NSBitmapImageRep *)captureSourceImage
+{
+    MAIN_INIT
+    
+    __block NSBitmapImageRep *res = nil;
+    [self.gameCoreHelper captureSourceImageWithCompletionHandler:^(NSBitmapImageRep * _Nonnull image) {
+        MAIN_BEGIN
+        res = image;
+        MAIN_END
+    }];
+    
+    MAIN_WAIT
+    
+    return res;
+}
+
+@end

@@ -64,7 +64,7 @@
     return [NSBundle.mainBundle URLForAuxiliaryExecutable:name];
 }
 
-- (void)loadROMWithCompletionHandler:(void(^)(void))completionHandler errorHandler:(void(^)(NSError *))errorHandler;
+- (void)loadROMWithCompletionHandler:(void(^)(void))completionHandler errorHandler:(void(^)(NSError *))errorHandler
 {
     NSError *error = nil;
     _helperConnection = [NSXPCConnection connectionWithServiceName:self.serviceName executableURL:self.executableURL error:&error];
@@ -78,8 +78,7 @@
                                         code:OEGameCoreCouldNotLoadROMError
                                     userInfo:nil];
         }
-        
-        dispatch_async(self.queue, ^{
+        CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, ^{
             errorHandler(error);
         });
         
@@ -120,10 +119,7 @@
         os_log_error(OE_LOG_HELPER, "Helper Connection (%p) failed with error: %{public}@",
                      gameCoreHelperPointer, error);
         
-        dispatch_async(self.queue, ^{
-            errorHandler(error);
-            [self stop];
-        });
+        [self stop];
     }];
 
     gameCoreHelperPointer = (__bridge void *)gameCoreHelper;
@@ -135,7 +131,7 @@
      {
          if(error != nil)
          {
-             dispatch_async(self.queue, ^{
+             CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, ^{
                  errorHandler(error);
                  [self stop];
              });
@@ -146,13 +142,11 @@
          }
 
          [self setGameCoreHelper:gameCoreHelper];
-         dispatch_async(self.queue, ^{
-             completionHandler();
-         });
+         CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, completionHandler);
      }];
 }
 
-- (void)stop{
+- (void)stop {
     [self setGameCoreHelper:nil];
     _gameCoreOwnerProxy = nil;
     [_helperConnection invalidate];

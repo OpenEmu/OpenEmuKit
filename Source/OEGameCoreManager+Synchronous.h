@@ -1,4 +1,4 @@
-// Copyright (c) 2019, OpenEmu Team
+// Copyright (c) 2021, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -22,25 +22,24 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-@import Foundation;
+#import <AppKit/AppKit.h>
+#import <OpenEmuKit/OpenEmuKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface OEXPCCDebugSupport: NSObject
-
-/*! Returns a boolean to indicate whether a debugger is currently attached to the process.
+/*! Category with APIs that run synchronously on the main thread
  */
-@property (class, nonatomic, readonly) BOOL debuggerAttached;
+@interface OEGameCoreManager (Synchronous)
 
-/*! Wait up to a specified number of nanoseconds for a debugger to attach.
- 
- @returns YES if a debugger attached
+/**
+ * Capture an image of the final core video display buffer, which includes all shader effects.
  */
-+ (BOOL)waitForDebuggerUntil:(NSUInteger)nanoseconds;
+- (NSBitmapImageRep *)captureOutputImage;
 
-/*! Wait indefinitely until a debugger is attached
+/**
+ * Capture an image of the raw core video display buffer with no effects.
  */
-+ (void)waitForDebugger;
+- (NSBitmapImageRep *)captureSourceImage;
 
 @end
 

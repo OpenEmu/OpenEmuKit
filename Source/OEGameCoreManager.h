@@ -49,15 +49,13 @@ typedef NS_ERROR_ENUM(OEGameCoreErrorDomain, OEGameCoreManagerErrorCodes)
  * @details
  * The @c OEGameCoreManager is responsible for brokering communication between the
  * host and the game core.
- * @param queue The queue to execute completion handlers. If nil, handlers will be executed on the main queue.
  */
-- (instancetype)initWithStartupInfo:(OEGameStartupInfo *)startupInfo corePlugin:(OECorePlugin *)plugin systemPlugin:(OESystemPlugin *)systemPlugin gameCoreOwner:(id<OEGameCoreOwner>)gameCoreOwner queue:(dispatch_queue_t _Nullable)queue;
+- (instancetype)initWithStartupInfo:(OEGameStartupInfo *)startupInfo corePlugin:(OECorePlugin *)plugin systemPlugin:(OESystemPlugin *)systemPlugin gameCoreOwner:(id<OEGameCoreOwner>)gameCoreOwner;
 
 @property(readonly, copy) OEGameStartupInfo             *startupInfo;
 @property(readonly, weak) OECorePlugin                  *plugin;
 @property(readonly, weak) OESystemPlugin                *systemPlugin;
 @property(readonly, weak) id<OEGameCoreOwner>            gameCoreOwner;
-@property(readonly)       dispatch_queue_t               queue;
 
 #pragma mark - Abstract methods, must be overrode in subclasses
 

@@ -31,6 +31,27 @@
 #import "OESystemPlugin.h"
 #import "OpenEmuHelperApp.h"
 
+@interface OEThreadStartup: NSObject
+@property (nonatomic, nullable) void(^completionHandler)(void);
+@property (nonatomic, nullable) void(^errorHandler)(NSError *error);
+- (instancetype)initWithCompletionHandler:(void(^)(void))completion errorHandler:(void(^)(NSError *error))error;
+@end
+
+@implementation OEThreadStartup
+
+- (instancetype)initWithCompletionHandler:(void(^)(void))completion errorHandler:(void(^)(NSError *error))error
+{
+    if (self = [super init])
+    {
+        _completionHandler = [completion copy];
+        _errorHandler      = [error copy];
+    }
+    return self;
+}
+
+@end
+
+
 @implementation OEThreadGameCoreManager
 {
     NSThread         *_helperThread;
@@ -41,17 +62,14 @@
 
     OEThreadProxy    *_gameCoreOwnerProxy;
 
-    void(^_completionHandler)(void);
-    void(^_errorHandler)(NSError *error);
     void(^_stopHandler)(void);
 }
 
-- (void)loadROMWithCompletionHandler:(void(^)(void))completionHandler errorHandler:(void(^)(NSError *))errorHandler;
+- (void)loadROMWithCompletionHandler:(void(^)(void))completionHandler errorHandler:(void(^)(NSError *))errorHandler
 {
-    _completionHandler = [completionHandler copy];
-    _errorHandler = [errorHandler copy];
+    OEThreadStartup *startup = [[OEThreadStartup alloc] initWithCompletionHandler:completionHandler errorHandler:errorHandler];
 
-    _helperThread = [[NSThread alloc] initWithTarget:self selector:@selector(_executionThread:) object:nil];
+    _helperThread = [[NSThread alloc] initWithTarget:self selector:@selector(_executionThread:) object:startup];
     _helperThread.name = @"org.openemu.core-manager-thread";
     _helperThread.qualityOfService = NSQualityOfServiceUserInitiated;
 
@@ -63,7 +81,7 @@
     [_helperThread start];
 }
 
-- (void)_executionThread:(id)object
+- (void)_executionThread:(OEThreadStartup *)startup
 {
     @autoreleasepool
     {
@@ -73,21 +91,22 @@
         NSError *error;
         if(![_helper loadWithStartupInfo:self.startupInfo error:&error])
         {
-            if(_errorHandler != nil)
+            if(startup.errorHandler != nil)
             {
-                __block __auto_type errorHandler = _errorHandler;
-                _errorHandler = nil;
-                dispatch_async(self.queue, ^{
+                __block __auto_type errorHandler = startup.errorHandler;
+                CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, ^{
                     errorHandler(error);
                 });
             }
             return;
         }
 
-        if (_completionHandler) {
-            dispatch_async(self.queue, _completionHandler);
-            _completionHandler = nil;
+        if (startup.completionHandler) {
+            __block __auto_type completionHandler = startup.completionHandler;
+            CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, completionHandler);
         }
+        
+        startup = nil;
 
         _dummyTimer = [NSTimer scheduledTimerWithTimeInterval:1e9 repeats:YES block:^(NSTimer * _Nonnull timer) {}];
 
@@ -95,7 +114,7 @@
 
         if(_stopHandler)
         {
-            dispatch_async(self.queue, _stopHandler);
+            CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, _stopHandler);
             _stopHandler = nil;
         }
     }
@@ -116,8 +135,6 @@
     _helperProxy        = nil;
     _helper             = nil;
     _gameCoreOwnerProxy = nil;
-    _completionHandler  = nil;
-    _errorHandler       = nil;
 }
 
 - (void)stop

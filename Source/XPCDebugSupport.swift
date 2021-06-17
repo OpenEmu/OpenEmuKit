@@ -1,4 +1,4 @@
-// Copyright (c) 2020, OpenEmu Team
+// Copyright (c) 2021, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -22,30 +22,37 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import <Foundation/Foundation.h>
+import Foundation
+import Darwin
 
-//! Project version number for OpenEmuKit.
-FOUNDATION_EXPORT double OpenEmuKitVersionNumber;
-
-//! Project version string for OpenEmuKit.
-FOUNDATION_EXPORT const unsigned char OpenEmuKitVersionString[];
-
-// In this header, you should import all the public headers of your framework using statements like #import <OpenEmuKit/PublicHeader.h>
-
-#import <OpenEmuKit/OEPlugin.h>
-#import <OpenEmuKit/OECorePlugin.h>
-#import <OpenEmuKit/OESystemPlugin.h>
-#import <OpenEmuKit/OEShaderParamValue.h>
-#import <OpenEmuKit/OEGameCoreHelper.h>
-#import <OpenEmuKit/OpenEmuHelperApp.h>
-#import <OpenEmuKit/OpenEmuXPCHelperApp.h>
-#import <OpenEmuKit/OEGameCoreManager.h>
-#import <OpenEmuKit/OEGameCoreManager+Synchronous.h>
-#import <OpenEmuKit/OEThreadGameCoreManager.h>
-#import <OpenEmuKit/OEXPCGameCoreManager.h>
-#import <OpenEmuKit/OEGameLayerView.h>
-#import <OpenEmuKit/NSXPCConnection+HelperApp.h>
-#import <OpenEmuKit/NSXPCListener+HelperApp.h>
-#import <OpenEmuKit/OEXPCDebugSupport.h>
-#import <OpenEmuKit/OEGameStartupInfo.h>
-#import <OpenEmuKit/NSFileManager+ExtendedAttributes.h>
+@objc
+@objcMembers
+public class XPCDebugSupport: NSObject {
+    
+    /// Returns a value indicating whether a debugger is attached to the current process
+    public static var isDebuggerAttached: Bool {
+        let keys = [CTL_KERN, KERN_PROC, KERN_PROC_PID, Int32(getpid())]
+        return keys.withUnsafeBufferPointer { keysPtr -> Bool in
+            var info = kinfo_proc()
+            info.kp_proc.p_flag = 0
+            
+            var size = MemoryLayout.size(ofValue: info)
+            let res = Darwin.sysctl(UnsafeMutablePointer<Int32>(mutating: keysPtr.baseAddress), UInt32(keys.count), &info, &size, nil, 0)
+            // Assume no debugger if sysctl fails
+            guard res == 0 else { return false }
+            
+            return (info.kp_proc.p_flag & P_TRACED) != 0;
+        }
+    }
+    
+    /// Wait until a debuger is attached for a specific amount of time.
+    /// - Parameter time: The time to wait for a debugger to be attached.
+    /// - Returns: A value indicating whether the debugger is attached.
+    @discardableResult public static func waitForDebugger(until time: Date = .distantFuture) -> Bool {
+        while !isDebuggerAttached && Date() < time {
+            // check every 100ms
+            Thread.sleep(forTimeInterval: 0.100)
+        }
+        return isDebuggerAttached
+    }
+}
