@@ -46,6 +46,5 @@ FOUNDATION_EXPORT const unsigned char OpenEmuKitVersionString[];
 #import <OpenEmuKit/OEGameLayerView.h>
 #import <OpenEmuKit/NSXPCConnection+HelperApp.h>
 #import <OpenEmuKit/NSXPCListener+HelperApp.h>
-#import <OpenEmuKit/OEXPCDebugSupport.h>
 #import <OpenEmuKit/OEGameStartupInfo.h>
 #import <OpenEmuKit/NSFileManager+ExtendedAttributes.h>
