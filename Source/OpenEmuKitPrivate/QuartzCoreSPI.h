@@ -1,4 +1,4 @@
-// Copyright (c) 2020, OpenEmu Team
+// Copyright 2014 The Chromium Authors. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -27,20 +27,35 @@
 
 #include <stdint.h>
 
-// SPI: Stolen from Chrome
+// https://chromium.googlesource.com/chromium/src/+/refs/heads/main/ui/base/cocoa/remote_layer_api.h
 
+// The CAContextID type identifies a CAContext across processes. This is the
+// token that is passed from the process that is sharing the CALayer that it is
+// rendering to the process that will be displaying that CALayer.
 typedef uint32_t CAContextID;
 
+// The CAContext has a static CAContextID which can be sent to another process.
+// When a CALayerHost is created using that CAContextID in another process, the
+// content displayed by that CALayerHost will be the content of the CALayer
+// that is set as the |layer| property on the CAContext.
 @interface CAContext : NSObject
-+ (id)contextWithCGSConnection:(CAContextID)contextId options:(NSDictionary*)optionsDict;
++ (instancetype)contextWithCGSConnection:(CAContextID)contextId options:(NSDictionary*)optionsDict;
 @property(readonly) CAContextID contextId;
 @property(retain) CALayer *layer;
 @end
 
+// The CALayerHost is created in the process that will display the content
+// being rendered by another process. Setting the |contextId| property on
+// an object of this class will make this layer display the content of the
+// CALayer that is set to the CAContext with that CAContextID in the layer
+// sharing process.
 @interface CALayerHost : CALayer
 @property CAContextID contextId;
 @end
 
+// The CGSConnectionID is used to create the CAContext in the process that is
+// going to share the CALayers that it is rendering to another process to
+// display.
 typedef uint32_t CGSConnectionID;
 CGSConnectionID CGSMainConnectionID(void);
 
