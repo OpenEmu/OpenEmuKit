@@ -32,6 +32,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef uint32_t OEContextID; // == CAContextID, see QuartzCoreSPI.h
+
 typedef struct _OEGameCoreHelperSetupResult {
     OEIntSize screenSize;
     OEIntSize aspectSize;
@@ -166,7 +168,7 @@ typedef NS_ENUM(NSUInteger, OEGameCoreEffectsMode) {
  */
 - (void)setDiscCount:(NSUInteger)discCount;
 - (void)setDisplayModes:(NSArray <NSDictionary <NSString *, id> *> *)displayModes;
-- (void)setRemoteContextID:(NSUInteger)contextID;
+- (void)setRemoteContextID:(OEContextID)contextID;
 
 @optional
 
