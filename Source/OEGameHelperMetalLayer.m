@@ -57,15 +57,21 @@
             // TODO: Since our images are mostly the "old TV" colorspace (NTSC 1953), try
             // using that (with a per-core setting). The color hue will be a little different.
             // Currently we use ITUR_709 (HDTV) which is close to sRGB but adapted to a dark room.
-
-            self.colorspace = CGColorSpaceCreateWithName(kCGColorSpaceITUR_709);
+		{
+			CGColorSpaceRef colorSpace = CGColorSpaceCreateWithName(kCGColorSpaceITUR_709);
+            self.colorspace = colorSpace;
+			CGColorSpaceRelease(colorSpace);
+		}
             self.wantsExtendedDynamicRangeContent = NO;
             break;
         case MTLPixelFormatRGBA16Float:
             // For a filter that wants to output HDR, or at least linear gamma.
             // This "should" use the colorspace above but linear. This is close enough.
-
-            self.colorspace = CGColorSpaceCreateWithName(kCGColorSpaceExtendedLinearSRGB);
+		{
+			CGColorSpaceRef colorSpace = CGColorSpaceCreateWithName(kCGColorSpaceExtendedLinearSRGB);
+			self.colorspace = colorSpace;
+			CGColorSpaceRelease(colorSpace);
+		}
             self.wantsExtendedDynamicRangeContent = YES;
             break;
         default:
