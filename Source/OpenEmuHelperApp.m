@@ -761,15 +761,6 @@ static os_log_t LOG_DISPLAY;
     [_gameRenderer suspendFPSLimiting];
 }
 
-- (BOOL)enableVSync {
-    return NO;
-}
-
-- (void)setEnableVSync:(BOOL)enableVSync
-{
-// TODO: Stub. Remove this when remote-layer lands
-}
-
 #pragma mark - OEAudioDelegate
 
 - (void)audioSampleRateDidChange
