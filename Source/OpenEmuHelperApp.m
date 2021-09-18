@@ -91,6 +91,7 @@
     id<MTLCommandQueue>     _commandQueue;
     MTLClearColor           _clearColor;
     NSUInteger              _skippedFrames;
+    OEGameCoreEffectsMode   _effectsMode;
     
     id   _unhandledEventsMonitor;
     BOOL _hasStartedAudio;
@@ -433,6 +434,11 @@ static os_log_t LOG_DISPLAY;
     }];
 }
 
+- (void)setEffectsMode:(OEGameCoreEffectsMode)mode
+{
+    _effectsMode = mode;
+}
+
 - (void)setAudioOutputDeviceID:(AudioDeviceID)deviceID
 {
     os_log_debug(OE_LOG_HELPER, "Set audio output to device number %lu", (unsigned long)deviceID);
@@ -624,6 +630,57 @@ static os_log_t LOG_DISPLAY;
     CFRunLoopStop(CFRunLoopGetCurrent());
 }
 
+- (void)gameCoreWillBeginFrame
+{
+    [_scope beginScope];
+}
+
+- (void)gameCoreWillEndFrame
+{
+    if (!_gameCore.isEmulationPaused || _effectsMode == OEGameCoreEffectsModeDisplayAlways)
+    {
+        @autoreleasepool {
+            if (dispatch_semaphore_wait(_inflightSemaphore, DISPATCH_TIME_NOW) != 0) {
+                _skippedFrames++;
+            } else {
+                id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
+                commandBuffer.label = @"offscreen";
+                [commandBuffer enqueue];
+                [_filterChain renderOffscreenPassesWithCommandBuffer:commandBuffer];
+                [commandBuffer commit];
+
+                id<CAMetalDrawable> drawable = _videoLayer.nextDrawable;
+                if (drawable != nil) {
+                    MTLRenderPassDescriptor *rpd = [MTLRenderPassDescriptor new];
+                    rpd.colorAttachments[0].clearColor = self->_clearColor;
+                    // TODO: Investigate whether we can avoid the MTLLoadActionClear
+                    // Frame buffer should be overwritten completely by final pass.
+                    rpd.colorAttachments[0].loadAction = MTLLoadActionClear;
+                    rpd.colorAttachments[0].texture    = drawable.texture;
+                    commandBuffer = [_commandQueue commandBuffer];
+                    commandBuffer.label = @"final";
+                    id<MTLRenderCommandEncoder> rce = [commandBuffer renderCommandEncoderWithDescriptor:rpd];
+                    [_filterChain renderFinalPassWithCommandEncoder:rce];
+                    [rce endEncoding];
+
+                    __block dispatch_semaphore_t inflight = _inflightSemaphore;
+                    [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> _) {
+                        dispatch_semaphore_signal(inflight);
+                    }];
+
+                    [commandBuffer presentDrawable:drawable];
+                    [commandBuffer commit];
+                } else {
+                    dispatch_semaphore_signal(self->_inflightSemaphore);
+                }
+            }
+        }
+    }
+    
+    [_scope endScope];
+    [_videoLayer display];
+}
+
 #pragma mark - OERenderDelegate protocol methods
 
 - (id)presentationFramebuffer
@@ -687,46 +744,6 @@ static os_log_t LOG_DISPLAY;
     
     [_gameRenderer didExecuteFrame];
     
-    @autoreleasepool {
-        if (dispatch_semaphore_wait(_inflightSemaphore, DISPATCH_TIME_NOW) != 0) {
-            _skippedFrames++;
-        } else {
-            id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
-            commandBuffer.label = @"offscreen";
-            [commandBuffer enqueue];
-            [_filterChain renderOffscreenPassesWithCommandBuffer:commandBuffer];
-            [commandBuffer commit];
-
-            id<CAMetalDrawable> drawable = _videoLayer.nextDrawable;
-            if (drawable != nil) {
-                MTLRenderPassDescriptor *rpd = [MTLRenderPassDescriptor new];
-                rpd.colorAttachments[0].clearColor = self->_clearColor;
-                // TODO: Investigate whether we can avoid the MTLLoadActionClear
-                // Frame buffer should be overwritten completely by final pass.
-                rpd.colorAttachments[0].loadAction = MTLLoadActionClear;
-                rpd.colorAttachments[0].texture    = drawable.texture;
-                commandBuffer = [_commandQueue commandBuffer];
-                commandBuffer.label = @"final";
-                id<MTLRenderCommandEncoder> rce = [commandBuffer renderCommandEncoderWithDescriptor:rpd];
-                [_filterChain renderFinalPassWithCommandEncoder:rce];
-                [rce endEncoding];
-
-                __block dispatch_semaphore_t inflight = _inflightSemaphore;
-                [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> _) {
-                    dispatch_semaphore_signal(inflight);
-                }];
-
-                [commandBuffer presentDrawable:drawable];
-                [commandBuffer commit];
-            } else {
-                dispatch_semaphore_signal(self->_inflightSemaphore);
-            }
-        }
-    }
-    
-    [_scope endScope];
-
-    [_videoLayer display];
     [CATransaction commit];
 
     if(!_hasStartedAudio)

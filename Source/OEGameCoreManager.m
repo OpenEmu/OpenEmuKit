@@ -75,6 +75,11 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
     [_gameCoreHelper setPauseEmulation:pauseEmulation];
 }
 
+- (void)setEffectsMode:(OEGameCoreEffectsMode)mode
+{
+    [_gameCoreHelper setEffectsMode:mode];
+}
+
 - (void)setAudioOutputDeviceID:(AudioDeviceID)deviceID
 {
     [_gameCoreHelper setAudioOutputDeviceID:deviceID];

@@ -37,6 +37,16 @@ typedef struct _OEGameCoreHelperSetupResult {
     OEIntSize aspectSize;
 } OEGameCoreHelperSetupResult;
 
+typedef NS_ENUM(NSUInteger, OEGameCoreEffectsMode) {
+    /*! Shader effects are displayed when the game core is running and
+     * paused when game core is paused. This is the default mode.
+     */
+    OEGameCoreEffectsModeReflectPaused,
+    /*! Shader effects continue to run when game core is paused.
+     */
+    OEGameCoreEffectsModeDisplayAlways,
+};
+
 /*!
  * A protocol that defines the behaviour required to control an emulator core.
  *
@@ -58,6 +68,15 @@ typedef struct _OEGameCoreHelperSetupResult {
  * @param pauseEmulation Specify @c true to pause the core.
  */
 - (void)setPauseEmulation:(BOOL)pauseEmulation;
+
+/*! Specifies how and when shader effects are rendered.
+ *
+ * Shader effects are normally paused when the core is paused. This
+ * API allows futher control over when the effects are rendered.
+ *
+ * @param mode Determines how and when shader effects are rendered.
+ */
+- (void)setEffectsMode:(OEGameCoreEffectsMode)mode;
 - (void)setAudioOutputDeviceID:(AudioDeviceID)deviceID;
 - (void)setOutputBounds:(NSRect)rect;
 - (void)setBackingScaleFactor:(CGFloat)newBackingScaleFactor;
