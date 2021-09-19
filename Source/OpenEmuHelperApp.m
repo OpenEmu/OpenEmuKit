@@ -39,7 +39,6 @@
 #import "OEGameHelperMetalLayer.h"
 #import <OpenEmuSystem/OpenEmuSystem.h>
 #import "OECoreVideoTexture.h"
-#import "OEShaderParamValue.h"
 #import "OEGameStartupInfo.h"
 #import <OpenEmuKit/OpenEmuKit-Swift.h>
 #import "OELogging.h"

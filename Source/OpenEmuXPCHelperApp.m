@@ -25,7 +25,6 @@
 #import "OEXPCGameCoreHelper.h"
 #import "OpenEmuXPCHelperApp.h"
 #import <OpenEmuSystem/OpenEmuSystem.h>
-#import "OEShaderParamValue.h"
 #import "NSXPCListener+HelperApp.h"
 #import "OEGameStartupInfo.h"
 #import "OELogging.h"

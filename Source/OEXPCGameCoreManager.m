@@ -28,7 +28,6 @@
 #import "OEGameCoreManager_Internal.h"
 #import "OESystemPlugin.h"
 #import "OEThreadProxy.h"
-#import "OEShaderParamValue.h"
 #import "NSXPCConnection+HelperApp.h"
 #import "OEGameStartupInfo.h"
 #import "OELogging.h"

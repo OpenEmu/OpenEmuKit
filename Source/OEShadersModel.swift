@@ -244,7 +244,7 @@ public class OEShadersModel : NSObject {
         }
         
         @objc
-        public func write(parameters params: [OEShaderParamValue], identifier: String) {
+        public func write(parameters params: [ShaderParamValue], identifier: String) {
             var state = [String]()
             
             for p in params.filter({ !$0.isInitial }) {
@@ -268,19 +268,15 @@ public class OEShadersModel : NSObject {
 }
 
 extension OEShadersModel.OEShaderModel {
-    public func readGroups() -> [OEShaderParamGroupValue] {
+    public func readGroups() -> [ShaderParamGroupValue] {
         guard let ss = try? SlangShader(fromURL: url) else { return [] }
         
         if let groups = readGroupsModel() {
             var all = ss.parameters
-            var dg: OEShaderParamGroupValue?
+            var dg: ShaderParamGroupValue?
             
-            let res: [OEShaderParamGroupValue] = groups.enumerated().map { (i, g) in
-                let gv = OEShaderParamGroupValue()
-                gv.index = i
-                gv.name = g.name
-                gv.desc = g.desc
-                gv.hidden = g.hidden
+            let res: [ShaderParamGroupValue] = groups.enumerated().map { (i, g) in
+                let gv = ShaderParamGroupValue(index: i, name: g.name, desc: g.desc, hidden: g.hidden)
                 
                 if g.name == "default" {
                     dg = gv
@@ -292,22 +288,19 @@ extension OEShadersModel.OEShaderModel {
                 }
                 all.removeAll { p.contains($0) }
                 
-                gv.parameters = OEShaderParamValue.withParameters(p)
+                gv.parameters = ShaderParamValue.from(parameters: p)
                 return gv
             }
             
             if let dg = dg, !all.isEmpty {
-                dg.parameters = OEShaderParamValue.withParameters(all)
+                dg.parameters = ShaderParamValue.from(parameters: all)
             }
             
             return res
         }
         
-        let gv = OEShaderParamGroupValue()
-        gv.index = 0
-        gv.name = "default"
-        gv.desc = "Default"
-        gv.parameters = OEShaderParamValue.withParameters(ss.parameters)
+        let gv = ShaderParamGroupValue(index: 0, name: "default", desc: "Default")
+        gv.parameters = ShaderParamValue.from(parameters: ss.parameters)
         return [gv]
     }
     
