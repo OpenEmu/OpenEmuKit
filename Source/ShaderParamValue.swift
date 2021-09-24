@@ -43,7 +43,10 @@ public final class ShaderParamValue: NSObject {
     @objc dynamic public var minimum: NSNumber
     @objc dynamic public var maximum: NSNumber
     @objc dynamic public var step: NSNumber
-    
+    @objc public var isInitial: Bool {
+        value.doubleValue.isApproximatelyEqual(to: initial.doubleValue)
+    }
+
     init(parameter p: ShaderParameter, at index: Int) {
         self.index = index
         name    = p.name
@@ -59,10 +62,6 @@ public final class ShaderParamValue: NSObject {
         params.enumerated().map { el in
             ShaderParamValue(parameter: el.element, at: el.offset)
         }
-    }
-    
-    var isInitial: Bool {
-        value.doubleValue.isApproximatelyEqual(to: initial.doubleValue)
     }
 }
 
