@@ -84,7 +84,7 @@ public class OEGameLayerView: NSView, CALayerDelegate {
         delegate?.gameView(self, updateBounds: bounds)
     }
     
-    func updateTopLayer(_ layer: CALayer, with remoteContextID: CAContextID) {
+    func updateTopLayer(_ layer: CALayer, with remoteContextID: OEContextID) {
         if remoteLayer == nil {
             remoteLayer = CALayerHost()
             
@@ -105,7 +105,7 @@ public class OEGameLayerView: NSView, CALayerDelegate {
     
     // MARK: - APIs
     
-    public var remoteContextID: CAContextID? {
+    public var remoteContextID: OEContextID? {
         didSet {
             if let layer = layer, let remoteContextID = remoteContextID {
                 updateTopLayer(layer, with: remoteContextID)
