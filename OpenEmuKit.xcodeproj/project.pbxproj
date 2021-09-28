@@ -24,6 +24,8 @@
 		05713219259C33B9001CB13A /* NSFileManager+ExtendedAttributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 05713217259C33B9001CB13A /* NSFileManager+ExtendedAttributes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0571321A259C33B9001CB13A /* NSFileManager+ExtendedAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = 05713218259C33B9001CB13A /* NSFileManager+ExtendedAttributes.m */; };
 		0578484B25C1392400A842E7 /* ShaderCompilerOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578484A25C1392300A842E7 /* ShaderCompilerOptions.swift */; };
+		057CCE222703BAE80078701F /* Shaders.h in Headers */ = {isa = PBXBuildFile; fileRef = 057CCE212703BAA60078701F /* Shaders.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		057CCE242703BB310078701F /* Shaders.m in Sources */ = {isa = PBXBuildFile; fileRef = 057CCE232703BB310078701F /* Shaders.m */; };
 		05AAD98726758240004466E3 /* XPCDebugSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AAD98626758240004466E3 /* XPCDebugSupport.swift */; };
 		05B48723266309600049A5F6 /* OEGameCoreManager+Synchronous.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B48721266309600049A5F6 /* OEGameCoreManager+Synchronous.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		05B48724266309600049A5F6 /* OEGameCoreManager+Synchronous.m in Sources */ = {isa = PBXBuildFile; fileRef = 05B48722266309600049A5F6 /* OEGameCoreManager+Synchronous.m */; };
@@ -112,6 +114,8 @@
 		05713217259C33B9001CB13A /* NSFileManager+ExtendedAttributes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+ExtendedAttributes.h"; sourceTree = "<group>"; };
 		05713218259C33B9001CB13A /* NSFileManager+ExtendedAttributes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+ExtendedAttributes.m"; sourceTree = "<group>"; };
 		0578484A25C1392300A842E7 /* ShaderCompilerOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShaderCompilerOptions.swift; sourceTree = "<group>"; };
+		057CCE212703BAA60078701F /* Shaders.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Shaders.h; sourceTree = "<group>"; };
+		057CCE232703BB310078701F /* Shaders.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Shaders.m; sourceTree = "<group>"; };
 		05AAD98626758240004466E3 /* XPCDebugSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCDebugSupport.swift; sourceTree = "<group>"; };
 		05B48721266309600049A5F6 /* OEGameCoreManager+Synchronous.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OEGameCoreManager+Synchronous.h"; sourceTree = "<group>"; };
 		05B48722266309600049A5F6 /* OEGameCoreManager+Synchronous.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OEGameCoreManager+Synchronous.m"; sourceTree = "<group>"; };
@@ -415,6 +419,8 @@
 		05E6BA5924CCDFB200ACFB35 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				057CCE212703BAA60078701F /* Shaders.h */,
+				057CCE232703BB310078701F /* Shaders.m */,
 				05C40F8726F69B6F0072B722 /* ShaderParamValue.swift */,
 				0547FD9724E7717E005C1FFC /* OEShadersModel.swift */,
 				054A774825B2399100F2F3D6 /* ShaderParameterGroupModel.swift */,
@@ -435,6 +441,7 @@
 				05E6BA0B24CCD50100ACFB35 /* OEGameCoreHelper.h in Headers */,
 				05E6B9FB24CCD46900ACFB35 /* OEGameRenderer.h in Headers */,
 				05713219259C33B9001CB13A /* NSFileManager+ExtendedAttributes.h in Headers */,
+				057CCE222703BAE80078701F /* Shaders.h in Headers */,
 				05E6BA3F24CCD79600ACFB35 /* OELogging.h in Headers */,
 				05E6BA2B24CCD75900ACFB35 /* OEGameAudio.h in Headers */,
 				0518D6E524F2BA4B0037101D /* OEGameStartupInfo.h in Headers */,
@@ -546,6 +553,7 @@
 				05E6BA4B24CCD7DB00ACFB35 /* OEGameCoreManager.m in Sources */,
 				0518D6E424F2BA4B0037101D /* OEGameStartupInfo.m in Sources */,
 				05D828D524E9881E00BB975E /* OEXPCMatchMaking.swift in Sources */,
+				057CCE242703BB310078701F /* Shaders.m in Sources */,
 				05E6BA2824CCD75900ACFB35 /* OEGameAudio.m in Sources */,
 				054A774925B2399100F2F3D6 /* ShaderParameterGroupModel.swift in Sources */,
 				05C40F8A26F6A72F0072B722 /* ApproximatelyEqual.swift in Sources */,

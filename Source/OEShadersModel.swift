@@ -30,8 +30,6 @@ import OpenEmuShaders
 public class OEShadersModel: NSObject {
     // MARK: Notifications
     
-    @objc public static let shaderModelCustomShadersDidChange = Notification.Name("OEShaderModelCustomShadersDidChangeNotification")
-    
     public enum Preferences {
         case global
         case system(String)
@@ -76,7 +74,7 @@ public class OEShadersModel: NSObject {
     @objc public func reload() {
         customShaders       = loadCustomShaders()
         _customShaderNames  = nil
-        NotificationCenter.default.post(name: Self.shaderModelCustomShadersDidChange, object: nil)
+        NotificationCenter.default.post(name: .shaderModelCustomShadersDidChange, object: nil)
     }
     
     private var _systemShaderNames: [String]!
