@@ -65,7 +65,7 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
     [self doesNotImplementSelector:_cmd];
 }
 
-- (void)setVolume:(CGFloat)value
+- (void)setVolume:(float)value
 {
     [_gameCoreHelper setVolume:value];
 }

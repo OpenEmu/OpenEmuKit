@@ -31,7 +31,7 @@
 
 @interface OEGameAudio : NSObject
 
-@property(nonatomic) CGFloat volume;
+@property(nonatomic) float volume;
 @property(nonatomic) AudioDeviceID outputDeviceID;
 
 - (id)initWithCore:(OEGameCore *)core;

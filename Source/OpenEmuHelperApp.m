@@ -418,7 +418,7 @@ static os_log_t LOG_DISPLAY;
 
 #pragma mark - OEGameCoreHelper methods
 
-- (void)setVolume:(CGFloat)volume
+- (void)setVolume:(float)volume
 {
     [_gameCore performBlock:^{
         [self->_gameAudio setVolume:volume];

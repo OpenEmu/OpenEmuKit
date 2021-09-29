@@ -262,7 +262,7 @@
     }
 }
 
-- (void)setVolume:(CGFloat)aVolume
+- (void)setVolume:(float)aVolume
 {
     _volume = aVolume;
     if (_engine) {

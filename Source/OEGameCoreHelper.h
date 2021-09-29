@@ -62,7 +62,7 @@ typedef NS_ENUM(NSUInteger, OEGameCoreEffectsMode) {
  * Adjust the output volume of the core.
  * @param value The new volume level, from @c [0,1.0]
  */
-- (void)setVolume:(CGFloat)value;
+- (void)setVolume:(float)value;
 
 /*!
  * Manage the paused status of the core.
