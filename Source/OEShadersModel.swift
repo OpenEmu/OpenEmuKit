@@ -74,11 +74,11 @@ public class OEShadersModel: NSObject {
     @objc public func reload() {
         customShaders       = loadCustomShaders()
         _customShaderNames  = nil
+        _sortedCustomShaderNames = nil
         NotificationCenter.default.post(name: .shaderModelCustomShadersDidChange, object: nil)
     }
     
     private var _systemShaderNames: [String]!
-    
     @objc public var systemShaderNames: [String] {
         if _systemShaderNames == nil {
             _systemShaderNames = systemShaders.map(\.name)
@@ -87,7 +87,6 @@ public class OEShadersModel: NSObject {
     }
     
     private var _customShaderNames: [String]!
-    
     @objc public var customShaderNames: [String] {
         if _customShaderNames == nil {
             _customShaderNames = customShaders.map(\.name)
@@ -95,7 +94,25 @@ public class OEShadersModel: NSObject {
         return _customShaderNames
     }
     
-    // MARK: Shader queries
+    private var _sortedSystemShaderNames: [String]!
+    /// Returns `systemShaderNames` as sorted by the Finder.
+    @objc public var sortedSystemShaderNames: [String] {
+        if _sortedSystemShaderNames == nil {
+            _sortedSystemShaderNames = systemShaderNames.sorted { $0.localizedStandardCompare($1) == .orderedAscending }
+        }
+        return _sortedSystemShaderNames
+    }
+    
+    private var _sortedCustomShaderNames: [String]!
+    /// Returns `customShaderNames` as sorted by the Finder.
+    @objc public var sortedCustomShaderNames: [String] {
+        if _sortedCustomShaderNames == nil {
+            _sortedCustomShaderNames = customShaderNames.sorted { $0.localizedStandardCompare($1) == .orderedAscending }
+        }
+        return _sortedCustomShaderNames
+    }
+    
+    // MARK: - Shader queries
     
     
     /// Returns the default shader name or `Pixellate` if the current default does
