@@ -1,4 +1,4 @@
-// Copyright (c) 2020, OpenEmu Team
+// Copyright (c) 2021, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -23,39 +23,50 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import Foundation
-import OpenEmuKitPrivate
+import CommonCrypto
 
-/// `LaunchControl` provides programmatic access to `launchctl` commands.
-public struct LaunchControl {
-    
-    /// Unloads the specified service name from launchd.
-    /// - Remark:
-    /// A use case is to remove application-specific xpc services at exit of an application. This
-    /// allows the application bundle to be moved around and the xpc service will be automatically
-    /// registered with `launchd` each time the application is opened.
-    /// 
-    /// - Parameter name: The name of the service.
-    /// - Throws:
-    ///   - `POSIXError` if the command fails.
-    ///   - `NSError` if the `launchctl` command is inaccessible.
-    public static func remove(service name: String) throws {
-        try run("remove", args: name)
+public enum Crypto {
+    public struct MD5 {
+        public static func digest<T: StringProtocol>(string: T) -> String {
+            var digest = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
+            string.withFastUTF8IfAvailable {
+                _ = CC_MD5($0.baseAddress, CC_LONG($0.count), &digest)
+            }
+            var res = ""
+            for byte in digest {
+                res.append(String(format: "%02x", UInt8(byte)))
+            }
+            return res
+        }
     }
     
-    private static func run(_ cmd: String, args: String...) throws {
-        let p = Process()
-        p.executableURL = URL(fileURLWithPath: "/bin/launchctl")
-        p.arguments = [cmd] + args
-        try p.run()
-        p.waitUntilExit()
-        if p.terminationStatus == 0 {
-            return
+    public struct SHA256 {
+        public static func digest<T: StringProtocol>(string: T) -> String {
+            var digest = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
+            string.withFastUTF8IfAvailable {
+                _ = CC_SHA256($0.baseAddress, CC_LONG($0.count), &digest)
+            }
+            var res = ""
+            for byte in digest {
+                res.append(String(format: "%02x", UInt8(byte)))
+            }
+            return res
         }
-        
-        if let code = POSIXErrorCode(rawValue: p.terminationStatus) {
-            throw POSIXError(code)
+    }
+}
+
+fileprivate extension StringProtocol {
+    var isUTF8ContiguousStorageAvailable: Bool {
+        utf8.withContiguousStorageIfAvailable { _ in 0 } != .none
+    }
+    
+    func withFastUTF8IfAvailable<R>(
+        _ f: (UnsafeBufferPointer<UInt8>) throws -> R
+    ) rethrows -> R? {
+        if isUTF8ContiguousStorageAvailable {
+            return try utf8.withContiguousStorageIfAvailable(f)
         }
-        
-        // TODO: Should throw a generic error
+        var s = String(self)
+        return try s.withUTF8(f)
     }
 }

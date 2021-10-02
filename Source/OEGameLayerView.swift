@@ -36,7 +36,7 @@ public protocol OEGameViewDelegate: NSObjectProtocol {
 }
 
 /// View which hosts and resizes the helper app’s game rendering.
-/// TODO: If this was tvOS, we'd set a preferred frame rate here. Can we do that?
+/// NOTE: If this was tvOS, we'd set a preferred frame rate here. Can we do that?
 public class OEGameLayerView: NSView, CALayerDelegate {
     
     public weak var delegate: OEGameViewDelegate?

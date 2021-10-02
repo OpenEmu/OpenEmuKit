@@ -1,4 +1,4 @@
-// Copyright (c) 2020, OpenEmu Team
+// Copyright (c) 2021, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -24,11 +24,11 @@
 
 import Foundation
 
-@objc(OEXPCMatchMaking)
-public protocol OEXPCMatchMaking {
-    @objc(registerListenerEndpoint:forIdentifier:completionHandler:)
-    func register(_ endpoint: NSXPCListenerEndpoint, forIdentifier identifier: String, completionHandler handler: @escaping () -> Void)
+public protocol KeyValueStore {
+    func string(forKey key: String) -> String?
+    mutating func set(_ value: String, forKey key: String)
+    mutating func removeValue(forKey key: String)
     
-    @objc(retrieveListenerEndpointForIdentifier:completionHandler:)
-    func retrieveListenerEndpoint(forIdentifier identifier: String, completionHandler handler: @escaping (NSXPCListenerEndpoint) -> Void)
+    var allKeys: [String] { get }
+    func keys(withPrefix prefix: String) -> [String]
 }

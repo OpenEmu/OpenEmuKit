@@ -35,13 +35,11 @@ public class OEShadersModel: NSObject {
         case system(String)
         
         public var key: String {
-            get {
-                switch self {
-                case .global:
-                    return "videoShader"
-                case .system(let identifier):
-                    return "videoShader.\(identifier)"
-                }
+            switch self {
+            case .global:
+                return "videoShader"
+            case .system(let identifier):
+                return "videoShader.\(identifier)"
             }
         }
     }
@@ -52,7 +50,6 @@ public class OEShadersModel: NSObject {
     
     private var systemShaders = [OEShaderModel]()
     private var customShaders = [OEShaderModel]()
-    
     
     /// Creates a shader model used for accessing shaders and their user state.
     /// - Parameters:
@@ -114,12 +111,11 @@ public class OEShadersModel: NSObject {
     
     // MARK: - Shader queries
     
-    
     /// Returns the default shader name or `Pixellate` if the current default does
     /// not exist.
     @objc public var defaultShaderName: String {
         get {
-            if let name = store.string(forKey: Preferences.global.key), let _ = self[name] {
+            if let name = store.string(forKey: Preferences.global.key), self[name] != nil {
                 return name
             }
             return "Pixellate"
@@ -154,7 +150,7 @@ public class OEShadersModel: NSObject {
     @objc public func shaderName(forSystem identifier: String) -> String {
         guard
             let name = store.string(forKey: Preferences.system(identifier).key),
-            let _ = self[name]
+            self[name] != nil
         else { return defaultShaderName }
         return name
     }
@@ -205,7 +201,8 @@ public class OEShadersModel: NSObject {
         let dirs = urls.filter { (try? $0.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false }
         for dir in dirs {
             guard
-                let files = try? fm.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants])
+                let files = try? fm.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil,
+                                                        options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants])
             else { continue }
             if let slangp = files.first(where: { $0.pathExtension == "slangp" }) {
                 // we have a file!
@@ -247,7 +244,7 @@ public class OEShadersModel: NSObject {
     }
 }
 
-fileprivate protocol ShaderModelStore {
+private protocol ShaderModelStore {
     /// Read the customised shader parameters for the shader and system identifer.
     func read(parametersForShader name: String, identifier: String) -> String?
     
@@ -264,13 +261,11 @@ extension UserDefaults: ShaderModelStore {
         case system(String, String)
         
         public var key: String {
-            get {
-                switch self {
-                case .global(let shader):
-                    return "videoShader.\(shader).params"
-                case .system(let shader, let identifier):
-                    return "videoShader.\(identifier).\(shader).params"
-                }
+            switch self {
+            case .global(let shader):
+                return "videoShader.\(shader).params"
+            case .system(let shader, let identifier):
+                return "videoShader.\(identifier).\(shader).params"
             }
         }
     }
@@ -303,7 +298,7 @@ public class OEShaderModel: NSObject {
     
     public func parameters(forIdentifier identifier: String) -> [String: Double]? {
         if let state = store.read(parametersForShader: name, identifier: identifier) {
-            var res = [String:Double]()
+            var res = [String: Double]()
             for param in state.split(separator: ";") {
                 let vals = param.split(separator: "=")
                 if let d = Double(vals[1]) {
@@ -319,7 +314,7 @@ public class OEShaderModel: NSObject {
     public func write(parameters params: [ShaderParamValue], identifier: String) {
         let state = params
             .filter { !$0.isInitial }
-            .map    { "\($0.name)=\($0.value)" }
+            .map { "\($0.name)=\($0.value)" }
         
         if state.isEmpty {
             store.remove(parametersForShader: name, identifier: identifier)

@@ -1,4 +1,4 @@
-// Copyright (c) 2020, OpenEmu Team
+// Copyright (c) 2021, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -22,13 +22,57 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import Foundation
+import XCTest
+import Nimble
+@testable import OpenEmuKit
 
-@objc(OEXPCMatchMaking)
-public protocol OEXPCMatchMaking {
-    @objc(registerListenerEndpoint:forIdentifier:completionHandler:)
-    func register(_ endpoint: NSXPCListenerEndpoint, forIdentifier identifier: String, completionHandler handler: @escaping () -> Void)
+class ShaderPresetsModelTests: XCTestCase {
+    private var defaults: UserDefaults!
+    private var store: KeyValueStore!
     
-    @objc(retrieveListenerEndpointForIdentifier:completionHandler:)
-    func retrieveListenerEndpoint(forIdentifier identifier: String, completionHandler handler: @escaping (NSXPCListenerEndpoint) -> Void)
+    private var path: String!
+    
+    override func setUp() {
+        super.setUp()
+        
+        path = FileManager.default
+            .temporaryDirectory
+            .appendingPathComponent("OpenEmuKitTests", isDirectory: true)
+            .appendingPathComponent(UUID().uuidString).absoluteString
+        
+        defaults = UserDefaults(suiteName: path)
+        defaults.removePersistentDomain(forName: path)
+        
+        store = defaults
+    }
+    
+    override func tearDown() {
+        try? FileManager.default.removeItem(atPath: path)
+        super.tearDown()
+    }
+    
+    func testOnlyListsPresets() throws {
+        
+        func name(_ name: String) -> String {
+            "\(ShaderPresetsModel.presetPrefix)\(name)"
+        }
+        
+        store.add([
+            name("second"): "",
+            name("first"): "",
+            "another": "",
+            "\(ShaderPresetsModel.presetPrefix.dropLast())notme": "",
+        ])
+        let sp = ShaderPresetsModel(store: store)
+        let names = sp.presetNames
+        expect(names).to(contain("first", "second"))
+    }
+}
+
+extension KeyValueStore {
+    mutating func add(_ dict: [String: String]) {
+        for (key, val) in dict {
+            set(val, forKey: key)
+        }
+    }
 }

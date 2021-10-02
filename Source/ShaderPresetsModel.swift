@@ -1,4 +1,4 @@
-// Copyright (c) 2020, OpenEmu Team
+// Copyright (c) 2021, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -24,11 +24,29 @@
 
 import Foundation
 
-@objc(OEXPCMatchMaking)
-public protocol OEXPCMatchMaking {
-    @objc(registerListenerEndpoint:forIdentifier:completionHandler:)
-    func register(_ endpoint: NSXPCListenerEndpoint, forIdentifier identifier: String, completionHandler handler: @escaping () -> Void)
+/// An client for interacting with all shader presets
+@objc public class ShaderPresetsModel: NSObject {
+    private let store: KeyValueStore
     
-    @objc(retrieveListenerEndpointForIdentifier:completionHandler:)
-    func retrieveListenerEndpoint(forIdentifier identifier: String, completionHandler handler: @escaping (NSXPCListenerEndpoint) -> Void)
+    public init(store: KeyValueStore) {
+        self.store = store
+        super.init()
+    }
+    
+    static let presetPrefix = "videoShader.user.preset."
+    static let presetPrefixCount = presetPrefix.count
+    
+    public var presetNames: [String] {
+        store.keys(withPrefix: Self.presetPrefix).map { String($0.dropFirst(Self.presetPrefixCount)) }
+    }
+    
+    public func read(presetNamed name: String) -> ShaderPreset? {
+        guard let d = store.string(forKey: "\(Self.presetPrefix)\(name)") else { return nil }
+        
+        return try? ShaderPresetTextReader().read(text: d)
+    }
+    
+    public func write(preset: ShaderPreset) {
+        
+    }
 }

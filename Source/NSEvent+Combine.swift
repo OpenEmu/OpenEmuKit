@@ -58,8 +58,8 @@ extension NSEvent {
             self.matching = matching
         }
         
-        public func receive<S>(subscriber: S) where S : Subscriber, Self.Failure == S.Failure, Self.Output == S.Input {
-            let subscription = Subscription(scope:scope, matching: matching, subscriber: subscriber)
+        public func receive<S>(subscriber: S) where S: Subscriber, Self.Failure == S.Failure, Self.Output == S.Input {
+            let subscription = Subscription(scope: scope, matching: matching, subscriber: subscriber)
             subscriber.receive(subscription: subscription)
         }
     }

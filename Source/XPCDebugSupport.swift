@@ -41,7 +41,7 @@ public class XPCDebugSupport: NSObject {
             // Assume no debugger if sysctl fails
             guard res == 0 else { return false }
             
-            return (info.kp_proc.p_flag & P_TRACED) != 0;
+            return (info.kp_proc.p_flag & P_TRACED) != 0
         }
     }
     

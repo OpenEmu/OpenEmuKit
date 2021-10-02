@@ -1,4 +1,4 @@
-// Copyright (c) 2020, OpenEmu Team
+// Copyright (c) 2021, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -24,11 +24,18 @@
 
 import Foundation
 
-@objc(OEXPCMatchMaking)
-public protocol OEXPCMatchMaking {
-    @objc(registerListenerEndpoint:forIdentifier:completionHandler:)
-    func register(_ endpoint: NSXPCListenerEndpoint, forIdentifier identifier: String, completionHandler handler: @escaping () -> Void)
+extension UserDefaults: KeyValueStore {
+    public func set(_ value: String, forKey key: String) {
+        set(value as Any?, forKey: key)
+    }
     
-    @objc(retrieveListenerEndpointForIdentifier:completionHandler:)
-    func retrieveListenerEndpoint(forIdentifier identifier: String, completionHandler handler: @escaping (NSXPCListenerEndpoint) -> Void)
+    public func removeValue(forKey key: String) {
+        removeObject(forKey: key)
+    }
+    
+    public var allKeys: [String] { Array(dictionaryRepresentation().keys) }
+    
+    public func keys(withPrefix prefix: String) -> [String] {
+        Array(dictionaryRepresentation().keys.lazy.filter { $0.hasPrefix(prefix) })
+    }
 }
