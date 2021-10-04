@@ -27,35 +27,35 @@ import CommonCrypto
 
 public enum Crypto {
     public struct MD5 {
-        public static func digest<T: StringProtocol>(string: T) -> String {
+        public static func digest<T: DataProtocol>(data: T) -> String {
             var digest = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
-            string.withFastUTF8IfAvailable {
+            data.withContiguousStorageIfAvailable {
                 _ = CC_MD5($0.baseAddress, CC_LONG($0.count), &digest)
             }
-            var res = ""
-            for byte in digest {
-                res.append(String(format: "%02x", UInt8(byte)))
-            }
-            return res
+            return digest.hexString
+        }
+        
+        public static func digest<T: StringProtocol>(string: T) -> String {
+            string.withFastUTF8IfAvailable { digest(data: $0) } ?? ""
         }
     }
     
     public struct SHA256 {
-        public static func digest<T: StringProtocol>(string: T) -> String {
+        public static func digest<T: DataProtocol>(data: T) -> String {
             var digest = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
-            string.withFastUTF8IfAvailable {
+            data.withContiguousStorageIfAvailable {
                 _ = CC_SHA256($0.baseAddress, CC_LONG($0.count), &digest)
             }
-            var res = ""
-            for byte in digest {
-                res.append(String(format: "%02x", UInt8(byte)))
-            }
-            return res
+            return digest.hexString
+        }
+        
+        public static func digest<T: StringProtocol>(string: T) -> String {
+            string.withFastUTF8IfAvailable { digest(data: $0) } ?? ""
         }
     }
 }
 
-fileprivate extension StringProtocol {
+private extension StringProtocol {
     var isUTF8ContiguousStorageAvailable: Bool {
         utf8.withContiguousStorageIfAvailable { _ in 0 } != .none
     }

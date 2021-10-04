@@ -67,6 +67,9 @@ public enum ShaderPresetWriteError: Error {
     
     static let invalidCharacters = CharacterSet(charactersIn: #"'":@#|[]{}$%^&*()/\;<>!?`"#)
     
+    /// A boolean value to determine if a string is a valid identifier.
+    /// - Parameter s: The string to be validated.
+    /// - Returns: `true` if s is a valid identifier.
     public static func isValidIdentifier(_ s: String) -> Bool {
         s.rangeOfCharacter(from: Self.invalidCharacters) == nil
     }

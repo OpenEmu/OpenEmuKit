@@ -17,6 +17,7 @@
 		0547C2052707E62B00D386D3 /* ShaderPresetTextReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547C2042707E62B00D386D3 /* ShaderPresetTextReaderTests.swift */; };
 		0547C2072707E63200D386D3 /* ShaderPresetTextWriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547C2062707E63200D386D3 /* ShaderPresetTextWriterTests.swift */; };
 		0547C20C2707F60500D386D3 /* Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547C20B2707F60500D386D3 /* Crypto.swift */; };
+		0547C210270A61C200D386D3 /* DataProtocol+HexString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547C20F270A61C200D386D3 /* DataProtocol+HexString.swift */; };
 		0547FD9824E7717E005C1FFC /* OEShadersModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547FD9724E7717E005C1FFC /* OEShadersModel.swift */; };
 		0547FDCA24E84498005C1FFC /* NSXPCConnection+HelperApp.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FDC824E84498005C1FFC /* NSXPCConnection+HelperApp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0547FDCB24E84498005C1FFC /* NSXPCConnection+HelperApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 0547FDC924E84498005C1FFC /* NSXPCConnection+HelperApp.m */; };
@@ -130,6 +131,7 @@
 		0547C2092707E96400D386D3 /* .swift-format.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ".swift-format.json"; sourceTree = "<group>"; };
 		0547C20A2707E96400D386D3 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		0547C20B2707F60500D386D3 /* Crypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto.swift; sourceTree = "<group>"; };
+		0547C20F270A61C200D386D3 /* DataProtocol+HexString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DataProtocol+HexString.swift"; sourceTree = "<group>"; };
 		0547FD9724E7717E005C1FFC /* OEShadersModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OEShadersModel.swift; sourceTree = "<group>"; };
 		0547FDC824E84498005C1FFC /* NSXPCConnection+HelperApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSXPCConnection+HelperApp.h"; sourceTree = "<group>"; };
 		0547FDC924E84498005C1FFC /* NSXPCConnection+HelperApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSXPCConnection+HelperApp.m"; sourceTree = "<group>"; };
@@ -444,7 +446,9 @@
 		05E6BA3324CCD78300ACFB35 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				05C40F8926F6A72F0072B722 /* ApproximatelyEqual.swift */,
 				0547C20B2707F60500D386D3 /* Crypto.swift */,
+				0547C20F270A61C200D386D3 /* DataProtocol+HexString.swift */,
 				05E6BA3924CCD79600ACFB35 /* OELogging.h */,
 				05E6BA3724CCD79300ACFB35 /* OELogging.m */,
 				05E6BA3624CCD79200ACFB35 /* OEThreadProxy.h */,
@@ -452,7 +456,6 @@
 				05713217259C33B9001CB13A /* NSFileManager+ExtendedAttributes.h */,
 				05713218259C33B9001CB13A /* NSFileManager+ExtendedAttributes.m */,
 				05ED1CF8259D1FB200A2D400 /* NSFileManager+ExtendedAttributes.swift */,
-				05C40F8926F6A72F0072B722 /* ApproximatelyEqual.swift */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -679,6 +682,7 @@
 				054A774925B2399100F2F3D6 /* ShaderParameterGroupModel.swift in Sources */,
 				05C40F8A26F6A72F0072B722 /* ApproximatelyEqual.swift in Sources */,
 				0547C20C2707F60500D386D3 /* Crypto.swift in Sources */,
+				0547C210270A61C200D386D3 /* DataProtocol+HexString.swift in Sources */,
 				05E6B9F824CCD46900ACFB35 /* OEMTLGameRenderer.m in Sources */,
 				05E6BA2A24CCD75900ACFB35 /* OEAudioUnit.mm in Sources */,
 				05E6BA3E24CCD79600ACFB35 /* OEThreadProxy.m in Sources */,
