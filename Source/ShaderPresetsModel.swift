@@ -26,27 +26,39 @@ import Foundation
 
 /// An client for interacting with all shader presets
 @objc public class ShaderPresetsModel: NSObject {
-    private let store: KeyValueStore
+    private var store: KeyValueStore
     
     public init(store: KeyValueStore) {
         self.store = store
         super.init()
     }
     
-    static let presetPrefix = "videoShader.user.preset."
+    static let presetPrefix = "videoShader.user.preset.obj."
     static let presetPrefixCount = presetPrefix.count
     
     public var presetNames: [String] {
         store.keys(withPrefix: Self.presetPrefix).map { String($0.dropFirst(Self.presetPrefixCount)) }
     }
     
+    static func makeKey(name: String) -> String {
+        "\(Self.presetPrefix)\(name)"
+    }
+    
     public func read(presetNamed name: String) -> ShaderPreset? {
-        guard let d = store.string(forKey: "\(Self.presetPrefix)\(name)") else { return nil }
-        
+        guard let d = store.string(forKey: Self.makeKey(name: name)) else { return nil }
         return try? ShaderPresetTextReader().read(text: d)
     }
     
-    public func write(preset: ShaderPreset) {
-        
+    public func write(preset: ShaderPreset) throws {
+        let text = try ShaderPresetTextWriter().write(preset: preset, options: [.name, .shader])
+        store.set(text, forKey: Self.makeKey(name: preset.id))
+    }
+    
+    public func remove(presetNamed name: String) {
+        store.removeValue(forKey: name)
+    }
+    
+    public func contains(presetNamed name: String) -> Bool {
+        store.string(forKey: Self.makeKey(name: name)) != nil
     }
 }

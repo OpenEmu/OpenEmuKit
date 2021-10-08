@@ -36,6 +36,6 @@ extension UserDefaults: KeyValueStore {
     public var allKeys: [String] { Array(dictionaryRepresentation().keys) }
     
     public func keys(withPrefix prefix: String) -> [String] {
-        Array(dictionaryRepresentation().keys.lazy.filter { $0.hasPrefix(prefix) })
+        dictionaryRepresentation().keys.filter { $0.hasPrefix(prefix) }
     }
 }

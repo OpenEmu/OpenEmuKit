@@ -62,7 +62,7 @@ class ShaderPresetTextWriterTests: XCTestCase {
     
     // MARK: - invalid characters in identifiers
     
-    let invalidCharacters = #"'":@#|[]{}$%^&*()/\;<>!?`"#
+    let invalidCharacters = ShaderPresetTextWriter.invalidCharacters
     
     func testIdDoesNotAllowInvalidCharacters() {
         let w = w!

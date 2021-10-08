@@ -52,10 +52,7 @@ class ShaderPresetsModelTests: XCTestCase {
     }
     
     func testOnlyListsPresets() throws {
-        
-        func name(_ name: String) -> String {
-            "\(ShaderPresetsModel.presetPrefix)\(name)"
-        }
+        let name = ShaderPresetsModel.makeKey(name:)
         
         store.add([
             name("second"): "",
@@ -66,6 +63,17 @@ class ShaderPresetsModelTests: XCTestCase {
         let sp = ShaderPresetsModel(store: store)
         let names = sp.presetNames
         expect(names).to(contain("first", "second"))
+    }
+    
+    func testFoo() {
+        let name = ShaderPresetsModel.makeKey(name:)
+        
+        store.add([
+            name("second"): "",
+            name("first"): "",
+            "another": "",
+            "\(ShaderPresetsModel.presetPrefix.dropLast())notme": "",
+        ])
     }
 }
 

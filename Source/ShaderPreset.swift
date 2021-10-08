@@ -50,6 +50,22 @@ public enum ShaderPresetWriteError: Error {
     case invalidCharacters
 }
 
+/*
+ EBNF for shader preset
+ 
+ preset_id := '"' identifier '"'
+ 
+ shader_name := '"' identifier '"'
+ 
+ header := ( ( preset_id "," )? shader_name ':' )
+ 
+ parameter := identifier '=' double
+ 
+ parameters := parameter ( ',' parameter )*
+ 
+ preset := header? parameters
+ */
+
 @frozen public struct ShaderPresetTextWriter {
     @frozen public struct Options: OptionSet {
         public let rawValue: Int
@@ -65,13 +81,14 @@ public enum ShaderPresetWriteError: Error {
         public static let all: Options = [.name, .shader]
     }
     
-    static let invalidCharacters = CharacterSet(charactersIn: #"'":@#|[]{}$%^&*()/\;<>!?`"#)
+    static let invalidCharacters = #"'":@#|[]{}$%^&*()/\;<>!?`.,"#
+    static let invalidCharacterSet = CharacterSet(charactersIn: invalidCharacters)
     
     /// A boolean value to determine if a string is a valid identifier.
     /// - Parameter s: The string to be validated.
     /// - Returns: `true` if s is a valid identifier.
     public static func isValidIdentifier(_ s: String) -> Bool {
-        s.rangeOfCharacter(from: Self.invalidCharacters) == nil
+        s.rangeOfCharacter(from: Self.invalidCharacterSet) == nil
     }
     
     public init() {}
@@ -79,23 +96,21 @@ public enum ShaderPresetWriteError: Error {
     public func write(preset c: ShaderPreset, options: Options = [.shader]) throws -> String {
         var s = ""
 
-        var wroteName: Bool
+        var wroteName = false
         if options.contains(.name) {
             guard Self.isValidIdentifier(c.id) else { throw ShaderPresetWriteError.invalidCharacters }
             
             wroteName = true
             s.append("\"\(c.id)\"")
-        } else {
-            wroteName = false
         }
         
-        if options.contains(.shader) {
+        if options.contains(.shader) || wroteName {
             guard Self.isValidIdentifier(c.shader) else { throw ShaderPresetWriteError.invalidCharacters }
             
             if wroteName {
                 s.append(",")
             }
-            s.append("\"\(c.shader)\":")
+            s.append("\"\(c.shader)\"")
         }
         
         if options.contains([.name, .shader]) {
@@ -145,6 +160,7 @@ public enum ShaderPresetReadError: Error {
     }
     
     public func read(text: String) throws -> ShaderPreset {
+        
         var paramsStart = text.startIndex
         var paramsEnd   = text.endIndex
 
