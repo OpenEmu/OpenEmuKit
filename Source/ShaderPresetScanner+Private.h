@@ -1,4 +1,4 @@
-// Copyright (c) 2020, OpenEmu Team
+// Copyright (c) 2021, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -22,5 +22,23 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import "QuartzCoreSPI.h"
-#import "../ShaderPresetScanner.h"
+#import <OpenEmuKit/ShaderPresetScanner.h>
+
+typedef struct _Scanner {
+    /* Scanner state. */
+    int cs;
+    int act;
+    uint8_t const * ts;
+    uint8_t const * te;
+    uint8_t const * p;
+    uint8_t const * pe;
+    uint8_t const * eof;
+    bool done;
+    
+    uint8_t const * src;
+    size_t src_len;
+    
+    /* Token data */
+    uint8_t const * data;
+    size_t len;
+} Scanner;

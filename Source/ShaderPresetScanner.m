@@ -1,4 +1,6 @@
-// Copyright (c) 2020, OpenEmu Team
+
+/* #line 1 "ShaderPresetScanner.rl" */
+// Copyright (c) 2021, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -22,5 +24,22 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import "QuartzCoreSPI.h"
-#import "../ShaderPresetScanner.h"
+@import Foundation;
+#import "ShaderPresetScanner+Private.h"
+
+PScanner scanner_create()
+{
+    return calloc(1, sizeof(Scanner));
+}
+
+void scanner_destroy(PScanner s)
+{
+    free(s);
+}
+
+NSString * scanner_text(PScanner ps)
+{
+    Scanner *s =(Scanner *)ps;
+    if (s->len == 0) return nil;
+    return [[NSString alloc] initWithBytesNoCopy:(void *)s->ts length:s->len encoding:NSASCIIStringEncoding freeWhenDone:NO];
+}
