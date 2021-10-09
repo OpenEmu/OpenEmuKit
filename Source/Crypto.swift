@@ -36,7 +36,7 @@ public enum Crypto {
         }
         
         public static func digest<T: StringProtocol>(string: T) -> String {
-            string.withFastUTF8IfAvailable { digest(data: $0) } ?? ""
+            string.withFastUTF8IfAvailable { digest(data: $0) }
         }
     }
     
@@ -50,21 +50,24 @@ public enum Crypto {
         }
         
         public static func digest<T: StringProtocol>(string: T) -> String {
-            string.withFastUTF8IfAvailable { digest(data: $0) } ?? ""
+            string.withFastUTF8IfAvailable { digest(data: $0) }
         }
     }
 }
 
-private extension StringProtocol {
+extension StringProtocol {
     var isUTF8ContiguousStorageAvailable: Bool {
         utf8.withContiguousStorageIfAvailable { _ in 0 } != .none
     }
     
     func withFastUTF8IfAvailable<R>(
         _ f: (UnsafeBufferPointer<UInt8>) throws -> R
-    ) rethrows -> R? {
+    ) rethrows -> R {
         if isUTF8ContiguousStorageAvailable {
-            return try utf8.withContiguousStorageIfAvailable(f)
+            if let res = try utf8.withContiguousStorageIfAvailable(f) {
+                return res
+            }
+            // unlikely to hit this, but we try again through the slow path
         }
         var s = String(self)
         return try s.withUTF8(f)
