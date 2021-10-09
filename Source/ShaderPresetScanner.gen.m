@@ -24,76 +24,86 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+// ****
+// Generated with
+//
+// ragel -L -C ShaderPresetScanner.rl -o ShaderPresetScanner.gen.m
+//
+// ****
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 #include "ShaderPresetScanner+Private.h"
 
 
-/* #line 34 "ShaderPresetScanner.gen.m" */
+/* #line 41 "ShaderPresetScanner.gen.m" */
 static const char _Scanner_actions[] = {
-	0, 1, 0, 1, 1, 1, 2, 1, 
-	3, 1, 4, 1, 5, 1, 6, 1, 
-	7, 1, 8, 1, 9
+	0, 1, 0, 1, 1, 1, 4, 1, 
+	5, 2, 0, 1, 2, 1, 2, 2, 
+	1, 3
 };
 
 static const char _Scanner_key_offsets[] = {
-	0, 2, 2, 13, 15, 17
+	0, 0, 6, 8, 10, 12, 13, 15, 
+	17, 18, 23, 31, 33, 33, 33, 37
 };
 
 static const char _Scanner_trans_keys[] = {
-	34, 92, 32, 34, 95, 9, 10, 48, 
-	57, 65, 90, 97, 122, 34, 92, 48, 
-	57, 95, 48, 57, 65, 90, 97, 122, 
+	34, 95, 65, 90, 97, 122, 34, 92, 
+	34, 92, 44, 58, 34, 34, 92, 34, 
+	92, 58, 95, 65, 90, 97, 122, 61, 
+	95, 48, 57, 65, 90, 97, 122, 48, 
+	57, 46, 59, 48, 57, 59, 48, 57, 
 	0
 };
 
 static const char _Scanner_single_lengths[] = {
-	2, 0, 3, 2, 0, 1
+	0, 2, 2, 2, 2, 1, 2, 2, 
+	1, 1, 2, 0, 0, 0, 2, 1
 };
 
 static const char _Scanner_range_lengths[] = {
-	0, 0, 4, 0, 1, 3
+	0, 2, 0, 0, 0, 0, 0, 0, 
+	0, 2, 3, 1, 0, 0, 1, 1
 };
 
 static const char _Scanner_index_offsets[] = {
-	0, 3, 4, 12, 15, 17
+	0, 0, 5, 8, 11, 14, 16, 19, 
+	22, 24, 28, 34, 36, 37, 38, 42
 };
 
 static const char _Scanner_trans_targs[] = {
-	2, 1, 0, 0, 2, 3, 5, 2, 
-	4, 5, 5, 2, 2, 1, 0, 4, 
-	2, 5, 5, 5, 5, 2, 2, 2, 
-	2, 2, 2, 0
+	2, 10, 10, 10, 0, 4, 13, 3, 
+	4, 13, 3, 5, 9, 0, 6, 0, 
+	8, 12, 7, 8, 12, 7, 9, 0, 
+	10, 10, 10, 0, 11, 10, 10, 10, 
+	10, 0, 14, 0, 7, 3, 15, 9, 
+	14, 0, 9, 15, 0, 0
 };
 
 static const char _Scanner_trans_actions[] = {
-	9, 0, 0, 0, 7, 5, 0, 7, 
-	0, 0, 0, 11, 9, 0, 0, 0, 
-	15, 0, 0, 0, 0, 13, 19, 19, 
-	17, 15, 13, 0
+	0, 1, 1, 1, 0, 9, 1, 1, 
+	3, 0, 0, 5, 7, 0, 0, 0, 
+	9, 1, 1, 3, 0, 0, 7, 0, 
+	1, 1, 1, 0, 12, 0, 0, 0, 
+	0, 0, 1, 0, 0, 0, 0, 15, 
+	0, 0, 15, 0, 0, 0
 };
 
-static const char _Scanner_to_state_actions[] = {
-	0, 0, 1, 0, 0, 0
+static const char _Scanner_eof_actions[] = {
+	0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 15, 15
 };
 
-static const char _Scanner_from_state_actions[] = {
-	0, 0, 3, 0, 0, 0
-};
+static const int Scanner_start = 1;
+static const int Scanner_first_final = 14;
+static const int Scanner_error = 0;
 
-static const char _Scanner_eof_trans[] = {
-	24, 24, 0, 25, 26, 27
-};
-
-static const int Scanner_start = 2;
-static const int Scanner_first_final = 2;
-static const int Scanner_error = -1;
-
-static const int Scanner_en_main = 2;
+static const int Scanner_en_main = 1;
 
 
-/* #line 33 "ShaderPresetScanner.rl" */
+/* #line 40 "ShaderPresetScanner.rl" */
 
 
 void scanner_init( PScanner ps, uint8_t const * src, size_t src_len )
@@ -104,20 +114,17 @@ void scanner_init( PScanner ps, uint8_t const * src, size_t src_len )
     s->src_len  = src_len;
     s->p        = src;
     s->pe       = src + src_len;
-    s->eof      = 0;
+    s->eof      = s->pe;
     
-/* #line 110 "ShaderPresetScanner.gen.m" */
+/* #line 120 "ShaderPresetScanner.gen.m" */
 	{
 	 s->cs = Scanner_start;
-	 s->ts = 0;
-	 s->te = 0;
-	 s->act = 0;
 	}
 
-/* #line 45 "ShaderPresetScanner.rl" */
+/* #line 52 "ShaderPresetScanner.rl" */
 }
 
-#define ret_tok( _tok ) token = _tok; s->data = s->ts
+#define ret_tok( _tok ) token = _tok;
 
 ScannerToken scanner_scan( PScanner ps )
 {
@@ -126,7 +133,7 @@ ScannerToken scanner_scan( PScanner ps )
     
     while ( !s->done ) {
         // Check for EOF
-        if ( s->p == s->pe ) {
+        if ( s->p >= s->pe ) {
             s->len  = 0;
             token   = ScannerTokenEOF;
             s->done = true;
@@ -134,7 +141,7 @@ ScannerToken scanner_scan( PScanner ps )
         }
         
         
-/* #line 138 "ShaderPresetScanner.gen.m" */
+/* #line 145 "ShaderPresetScanner.gen.m" */
 	{
 	int _klen;
 	unsigned int _trans;
@@ -144,19 +151,9 @@ ScannerToken scanner_scan( PScanner ps )
 
 	if ( ( s->p) == ( s->pe) )
 		goto _test_eof;
+	if (  s->cs == 0 )
+		goto _out;
 _resume:
-	_acts = _Scanner_actions + _Scanner_from_state_actions[ s->cs];
-	_nacts = (unsigned int) *_acts++;
-	while ( _nacts-- > 0 ) {
-		switch ( *_acts++ ) {
-	case 1:
-/* #line 1 "NONE" */
-	{ s->ts = ( s->p);}
-	break;
-/* #line 157 "ShaderPresetScanner.gen.m" */
-		}
-	}
-
 	_keys = _Scanner_trans_keys + _Scanner_key_offsets[ s->cs];
 	_trans = _Scanner_index_offsets[ s->cs];
 
@@ -206,7 +203,6 @@ _resume:
 	}
 
 _match:
-_eof_trans:
 	 s->cs = _Scanner_trans_targs[_trans];
 
 	if ( _Scanner_trans_actions[_trans] == 0 )
@@ -218,70 +214,63 @@ _eof_trans:
 	{
 		switch ( *_acts++ )
 		{
+	case 0:
+/* #line 77 "ShaderPresetScanner.rl" */
+	{ /* action: token_start */ s->ts = s->p; }
+	break;
+	case 1:
+/* #line 78 "ShaderPresetScanner.rl" */
+	{ /* action: token_end   */ s->te = s->p; }
+	break;
 	case 2:
-/* #line 1 "NONE" */
-	{ s->te = ( s->p)+1;}
+/* #line 85 "ShaderPresetScanner.rl" */
+	{ ret_tok( ScannerTokenIdentifier ); {( s->p)++; goto _out; } }
 	break;
 	case 3:
-/* #line 76 "ShaderPresetScanner.rl" */
-	{ s->te = ( s->p)+1;}
+/* #line 89 "ShaderPresetScanner.rl" */
+	{ ret_tok( ScannerTokenFloat ); {( s->p)++; goto _out; } }
 	break;
 	case 4:
-/* #line 78 "ShaderPresetScanner.rl" */
-	{ s->te = ( s->p)+1;{ ret_tok( ScannerTokenString ); {( s->p)++; goto _out; } }}
+/* #line 101 "ShaderPresetScanner.rl" */
+	{ ret_tok( ScannerTokenName   ); {( s->p)++; goto _out; } }
 	break;
 	case 5:
-/* #line 84 "ShaderPresetScanner.rl" */
-	{ s->te = ( s->p)+1;{ ret_tok( *s->p ); {( s->p)++; goto _out; } }}
+/* #line 102 "ShaderPresetScanner.rl" */
+	{ ret_tok( ScannerTokenShader ); {( s->p)++; goto _out; } }
 	break;
-	case 6:
-/* #line 73 "ShaderPresetScanner.rl" */
-	{ s->te = ( s->p);( s->p)--;{ ret_tok( ScannerTokenIdentifier ); {( s->p)++; goto _out; } }}
-	break;
-	case 7:
-/* #line 81 "ShaderPresetScanner.rl" */
-	{ s->te = ( s->p);( s->p)--;{ ret_tok( ScannerTokenNumber ); {( s->p)++; goto _out; } }}
-	break;
-	case 8:
-/* #line 84 "ShaderPresetScanner.rl" */
-	{ s->te = ( s->p);( s->p)--;{ ret_tok( *s->p ); {( s->p)++; goto _out; } }}
-	break;
-	case 9:
-/* #line 84 "ShaderPresetScanner.rl" */
-	{{( s->p) = (( s->te))-1;}{ ret_tok( *s->p ); {( s->p)++; goto _out; } }}
-	break;
-/* #line 254 "ShaderPresetScanner.gen.m" */
+/* #line 242 "ShaderPresetScanner.gen.m" */
 		}
 	}
 
 _again:
-	_acts = _Scanner_actions + _Scanner_to_state_actions[ s->cs];
-	_nacts = (unsigned int) *_acts++;
-	while ( _nacts-- > 0 ) {
-		switch ( *_acts++ ) {
-	case 0:
-/* #line 1 "NONE" */
-	{ s->ts = 0;}
-	break;
-/* #line 267 "ShaderPresetScanner.gen.m" */
-		}
-	}
-
+	if (  s->cs == 0 )
+		goto _out;
 	if ( ++( s->p) != ( s->pe) )
 		goto _resume;
 	_test_eof: {}
 	if ( ( s->p) == ( s->eof) )
 	{
-	if ( _Scanner_eof_trans[ s->cs] > 0 ) {
-		_trans = _Scanner_eof_trans[ s->cs] - 1;
-		goto _eof_trans;
+	const char *__acts = _Scanner_actions + _Scanner_eof_actions[ s->cs];
+	unsigned int __nacts = (unsigned int) *__acts++;
+	while ( __nacts-- > 0 ) {
+		switch ( *__acts++ ) {
+	case 1:
+/* #line 78 "ShaderPresetScanner.rl" */
+	{ /* action: token_end   */ s->te = s->p; }
+	break;
+	case 3:
+/* #line 89 "ShaderPresetScanner.rl" */
+	{ ret_tok( ScannerTokenFloat ); {( s->p)++; goto _out; } }
+	break;
+/* #line 266 "ShaderPresetScanner.gen.m" */
+		}
 	}
 	}
 
 	_out: {}
 	}
 
-/* #line 88 "ShaderPresetScanner.rl" */
+/* #line 109 "ShaderPresetScanner.rl" */
 
         
         if ( s->cs == Scanner_error )
@@ -291,7 +280,7 @@ _again:
         
         if ( token != ScannerTokenNone )
         {
-            s->len = s->p - s->data;
+            s->len = s->te - s->ts;
             return token;
         }
     }

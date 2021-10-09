@@ -24,28 +24,117 @@
 
 import XCTest
 import Nimble
-// @testable import OpenEmuKit
+
 @testable import OpenEmuKitPrivate
 @testable import OpenEmuKit
 
 class ShaderPresetScannerTests: XCTestCase {
-    func testOne() {
-        let sc2 = PScanner()
-        defer { scanner_destroy(sc2) }
+    
+    // MARK: - Valid Input
+    
+    func testIsValidWithAllParts() {
+        let str = #""The Name","MAME HLSL":ccvalue=3.5795;chromaa_y=0.3401"#
+        let (tokens, text) = parse(text: str)
         
-        // swiftlint:disable line_length
-        //var str = #""MAME HLSL":ccvalue=3.5795;chromaa_y=0.3401;chromab_x=0.3101;chromab_y=0.6;chromac_x=0.16;chromac_y=0.0701;col_saturation=1.2001;distort_corner_amount=0.0502;distortion_amount=0.0502;humbar_hertz_rate=0.002;humbaralpha=0.06;ifreqresponse=1.2001;ntscsignal=1.0;phosphor_b=0.45;phosphor_g=0.45;phosphor_r=0.45;qfreqresponse=0.6001;reflection_amount=0.0502;round_corner_amount=0.0502;scanline_crawl=1.0;scanlinealpha=0.35;scantime=52.6;smooth_border_amount=0.03;vignette_amount=0.08;ygain_b=0.12;ygain_g=0.69@1f4"#
-        var str = #""MAME HLSL":"#
-        str.withUTF8 { bp in
-            sc2.setData(bp.baseAddress!, length: bp.count)
-            
-            let v1 = sc2.scan()
-            print(sc2.text)
-            let v2 = sc2.scan()
-            print(sc2.text)
-            let v3 = sc2.scan()
-            print(sc2.text)
-            
+        let expTok: [ScannerToken] = [.name, .shader, .identifier, .float, .identifier, .float]
+        expect(tokens).to(equal(expTok))
+        
+        let expText: [String] = ["The Name", "MAME HLSL", "ccvalue", "3.5795", "chromaa_y", "0.3401"]
+        expect(text).to(equal(expText))
+    }
+    
+    func testIsValidWithNoName() {
+        let str = #""MAME HLSL":ccvalue=3.5795;chromaa_y=0.3401"#
+        let (tokens, text) = parse(text: str)
+        
+        let expTok: [ScannerToken] = [.shader, .identifier, .float, .identifier, .float]
+        expect(tokens).to(equal(expTok))
+        
+        let expText: [String] = ["MAME HLSL", "ccvalue", "3.5795", "chromaa_y", "0.3401"]
+        expect(text).to(equal(expText))
+    }
+    
+    func testIsValidWithNoHeader() {
+        let str = #"ccvalue=3.5795;chromaa_y=0.3401"#
+        let (tokens, text) = parse(text: str)
+        
+        let expTok: [ScannerToken] = [.identifier, .float, .identifier, .float]
+        expect(tokens).to(equal(expTok))
+        
+        let expText: [String] = ["ccvalue", "3.5795", "chromaa_y", "0.3401"]
+        expect(text).to(equal(expText))
+    }
+    
+    func testIsValidWithNoHeaderAndSignature() {
+        let str = #"ccvalue=3.5795;chromaa_y=0.3401"#
+        let (tokens, text) = parse(text: str)
+        
+        let expTok: [ScannerToken] = [.identifier, .float, .identifier, .float]
+        expect(tokens).to(equal(expTok))
+        
+        let expText: [String] = ["ccvalue", "3.5795", "chromaa_y", "0.3401"]
+        expect(text).to(equal(expText))
+    }
+
+    // MARK: - Invalid Input
+
+    func testIsInvalidUnclosedQuoteInName() {
+        let str = #""The Name,"MAME HLSL":ccvalue=3.5795;chromaa_y=0.3401"#
+        expect {
+            try PScanner.parse(text: str)
+        }
+        .to(throwError(PScanner.Error.malformed))
+
+    }
+
+    func testIsInvalidUnclosedQuoteInShader() {
+        let str = #""The Name",MAME HLSL":ccvalue=3.5795;chromaa_y=0.3401"#
+        expect {
+            try PScanner.parse(text: str)
+        }
+        .to(throwError(PScanner.Error.malformed))
+
+    }
+
+    func testIsInvalidMissingCommaInHeader() {
+        let str = #""The Name""MAME HLSL":ccvalue=3.5795;chromaa_y=0.3401"#
+        expect {
+            try PScanner.parse(text: str)
+        }
+        .to(throwError(PScanner.Error.malformed))
+
+    }
+
+    func testIsInvalidMissingColonInHeader() {
+        let str = #""The Name","MAME HLSL"ccvalue=3.5795;chromaa_y=0.3401"#
+        expect {
+            try PScanner.parse(text: str)
+        }
+        .to(throwError(PScanner.Error.malformed))
+    }
+
+    func testIsInvalidMissingParameterName() {
+        let str = #"=3.5795;chromaa_y=0.3401"#
+        expect {
+            try PScanner.parse(text: str)
+        }
+        .to(throwError(PScanner.Error.malformed))
+    }
+
+    func testIsInvalidNotValidFloat() {
+        expect {
+            try PScanner.parse(text: #"ccvalue=foo;chromaa_y=0.3401"#)
+        }
+        .to(throwError(PScanner.Error.malformed))
+    }
+
+    func parse(text: String) -> ([ScannerToken], [String]) {
+        guard let tokens = try? PScanner.parse(text: text) else { return ([], []) }
+        
+        let result = ([ScannerToken](), [String]())
+        return tokens.reduce(into: result) { acc, pair in
+            acc.0.append(pair.0)
+            acc.1.append(pair.1)
         }
     }
 }

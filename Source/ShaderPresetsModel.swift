@@ -24,6 +24,10 @@
 
 import Foundation
 
+public enum TheError: CustomNSError {
+    
+}
+
 /// An client for interacting with all shader presets
 @objc public class ShaderPresetsModel: NSObject {
     private var store: KeyValueStore

@@ -39,7 +39,7 @@ void scanner_destroy(PScanner s)
 
 NSString * scanner_text(PScanner ps)
 {
-    Scanner *s =(Scanner *)ps;
-    if (s->len == 0) return nil;
+    Scanner *s = (Scanner *)ps;
+    if (s->len == 0) return @"";
     return [[NSString alloc] initWithBytesNoCopy:(void *)s->ts length:s->len encoding:NSASCIIStringEncoding freeWhenDone:NO];
 }

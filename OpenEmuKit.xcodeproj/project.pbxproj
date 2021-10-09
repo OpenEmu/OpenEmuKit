@@ -12,6 +12,7 @@
 		0507FA7E270E451300A81795 /* ShaderPresetScannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0507FA7D270E451300A81795 /* ShaderPresetScannerTests.swift */; };
 		0507FA7F270E456500A81795 /* ShaderPresetScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = 0507FA7A270E426700A81795 /* ShaderPresetScanner.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0507FA85270FABB100A81795 /* ShaderPresetScanner.gen.m in Sources */ = {isa = PBXBuildFile; fileRef = 0507FA84270FABB100A81795 /* ShaderPresetScanner.gen.m */; };
+		0507FA892712420B00A81795 /* ShaderPresetScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0507FA882712420B00A81795 /* ShaderPresetScanner.swift */; };
 		0518D6E424F2BA4B0037101D /* OEGameStartupInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 0518D6E224F2BA4B0037101D /* OEGameStartupInfo.m */; };
 		0518D6E524F2BA4B0037101D /* OEGameStartupInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 0518D6E324F2BA4B0037101D /* OEGameStartupInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0518D6E824F32DD10037101D /* NSEvent+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0518D6E724F32DD10037101D /* NSEvent+Combine.swift */; };
@@ -124,6 +125,7 @@
 		0507FA7D270E451300A81795 /* ShaderPresetScannerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShaderPresetScannerTests.swift; sourceTree = "<group>"; };
 		0507FA84270FABB100A81795 /* ShaderPresetScanner.gen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShaderPresetScanner.gen.m; sourceTree = "<group>"; };
 		0507FA86270FAF5800A81795 /* ShaderPresetScanner+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ShaderPresetScanner+Private.h"; sourceTree = "<group>"; };
+		0507FA882712420B00A81795 /* ShaderPresetScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderPresetScanner.swift; sourceTree = "<group>"; };
 		050A9A0924F9B26C00321847 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		050A9A0B24F9B2B800321847 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		050A9A0C24F9B2E900321847 /* QuartzCoreSPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QuartzCoreSPI.h; sourceTree = "<group>"; };
@@ -240,6 +242,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0507FA8727123A2A00A81795 /* Scanner */ = {
+			isa = PBXGroup;
+			children = (
+				0507FA7A270E426700A81795 /* ShaderPresetScanner.h */,
+				0507FA86270FAF5800A81795 /* ShaderPresetScanner+Private.h */,
+				0507FA78270E40C400A81795 /* ShaderPresetScanner.m */,
+				0507FA76270E3F3600A81795 /* ShaderPresetScanner.rl */,
+				0507FA84270FABB100A81795 /* ShaderPresetScanner.gen.m */,
+				0507FA882712420B00A81795 /* ShaderPresetScanner.swift */,
+			);
+			name = Scanner;
+			sourceTree = "<group>";
+		};
 		050A9A0A24F9B29300321847 /* OpenEmuKitPrivate */ = {
 			isa = PBXGroup;
 			children = (
@@ -482,11 +497,7 @@
 		05E6BA5924CCDFB200ACFB35 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
-				0507FA7A270E426700A81795 /* ShaderPresetScanner.h */,
-				0507FA86270FAF5800A81795 /* ShaderPresetScanner+Private.h */,
-				0507FA78270E40C400A81795 /* ShaderPresetScanner.m */,
-				0507FA76270E3F3600A81795 /* ShaderPresetScanner.rl */,
-				0507FA84270FABB100A81795 /* ShaderPresetScanner.gen.m */,
+				0507FA8727123A2A00A81795 /* Scanner */,
 				057CCE212703BAA60078701F /* Shaders.h */,
 				057CCE232703BB310078701F /* Shaders.m */,
 				0547FD9724E7717E005C1FFC /* OEShadersModel.swift */,
@@ -506,8 +517,8 @@
 			children = (
 				05EEF1012707C986008A03DC /* ShaderPresetsModelTests.swift */,
 				0547C2022707E59C00D386D3 /* ShaderPresetTests.swift */,
-				0547C2042707E62B00D386D3 /* ShaderPresetTextReaderTests.swift */,
 				0507FA7D270E451300A81795 /* ShaderPresetScannerTests.swift */,
+				0547C2042707E62B00D386D3 /* ShaderPresetTextReaderTests.swift */,
 				0547C2062707E63200D386D3 /* ShaderPresetTextWriterTests.swift */,
 			);
 			path = OpenEmuKitTests;
@@ -702,6 +713,7 @@
 				05E6BA2824CCD75900ACFB35 /* OEGameAudio.m in Sources */,
 				054A774925B2399100F2F3D6 /* ShaderParameterGroupModel.swift in Sources */,
 				05C40F8A26F6A72F0072B722 /* ApproximatelyEqual.swift in Sources */,
+				0507FA892712420B00A81795 /* ShaderPresetScanner.swift in Sources */,
 				0547C20C2707F60500D386D3 /* Crypto.swift in Sources */,
 				0547C210270A61C200D386D3 /* DataProtocol+HexString.swift in Sources */,
 				05E6B9F824CCD46900ACFB35 /* OEMTLGameRenderer.m in Sources */,

@@ -22,21 +22,31 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import <OpenEmuKit/ShaderPresetScanner.h>
+import Foundation
+import OpenEmuKitPrivate
 
-typedef struct _Scanner {
-    /* Scanner state. */
-    int cs;
-    int act;
-    uint8_t const * ts;
-    uint8_t const * te;
-    uint8_t const * p;
-    uint8_t const * pe;
-    uint8_t const * eof;
-    bool done;
+extension PScanner {
+    enum Error: Swift.Error {
+        case malformed
+    }
     
-    uint8_t const * src;
-    size_t src_len;
-    
-    size_t len;
-} Scanner;
+    static func parse<T: StringProtocol>(text: T) throws -> [(ScannerToken, String)] {
+        let sc = Self()
+        defer { scanner_destroy(sc) }
+        
+        return try text.withFastUTF8IfAvailable { bp throws -> [(ScannerToken, String)] in
+            sc.setData(bp.baseAddress!, length: bp.count)
+            
+            var tokens = [(ScannerToken, String)]()
+            
+            while true {
+                let tok = sc.scan()
+                guard tok != .error else { throw Error.malformed }
+                guard tok != .eof else { break }
+                tokens.append((tok, String(sc.text)))
+            }
+            
+            return tokens
+        }
+    }
+}

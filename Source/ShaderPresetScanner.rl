@@ -22,6 +22,13 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+// ****
+// Generated with
+//
+// ragel -L -C ShaderPresetScanner.rl -o ShaderPresetScanner.gen.m
+//
+// ****
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
@@ -40,11 +47,11 @@ void scanner_init( PScanner ps, uint8_t const * src, size_t src_len )
     s->src_len  = src_len;
     s->p        = src;
     s->pe       = src + src_len;
-    s->eof      = 0;
+    s->eof      = s->pe;
     %% write init;
 }
 
-#define ret_tok( _tok ) token = _tok; s->data = s->ts
+#define ret_tok( _tok ) token = _tok;
 
 ScannerToken scanner_scan( PScanner ps )
 {
@@ -53,7 +60,7 @@ ScannerToken scanner_scan( PScanner ps )
     
     while ( !s->done ) {
         // Check for EOF
-        if ( s->p == s->pe ) {
+        if ( s->p >= s->pe ) {
             s->len  = 0;
             token   = ScannerTokenEOF;
             s->done = true;
@@ -67,22 +74,36 @@ ScannerToken scanner_scan( PScanner ps )
             variable pe s->pe;
             variable eof s->eof;
             
-            main := |*
+            action token_start { /* action: token_start */ s->ts = s->p; }
+            action token_end   { /* action: token_end   */ s->te = s->p; }
             
-                # Identifiers
-                ( [a-zA-Z_] [a-zA-Z0-9_]* ) => { ret_tok( ScannerTokenIdentifier ); fbreak; };
+            string =
+                '"' %token_start ( [^\\"] | '\\' any ) * %token_end '"'
+                ;
             
-                # Ignore Whitespace
-                [ \t\n];
+            identifier =
+                ( [a-zA-Z_] >token_start ( alnum | [_] )* )  %token_end %{ ret_tok( ScannerTokenIdentifier ); fbreak; }
+                ;
+                
+            float =
+                ( digit+ >token_start ( '.' digit* )? )      %token_end %{ ret_tok( ScannerTokenFloat ); fbreak; }
+                ;
+                
+            parameter =
+                identifier '=' float
+                ;
+                
+            parameters =
+                parameter ( ';' parameter )*
+                ;
             
-                '"' ( [^\\"] | '\\' any ) * '"' => { ret_tok( ScannerTokenString ); fbreak; };
-            
-                # Number
-                digit+ => { ret_tok( ScannerTokenNumber ); fbreak; };
-            
-                # Anything else
-                any => { ret_tok( *s->p ); fbreak; };
-            *|;
+            header =
+                ( string ',' )? @{ ret_tok( ScannerTokenName   ); fbreak; }
+                ( string ':' )  @{ ret_tok( ScannerTokenShader ); fbreak; }
+                ;
+                
+            main := header? parameters
+                ;
             
             write exec;
         }%%
@@ -94,7 +115,7 @@ ScannerToken scanner_scan( PScanner ps )
         
         if ( token != ScannerTokenNone )
         {
-            s->len = s->p - s->data;
+            s->len = s->te - s->ts;
             return token;
         }
     }

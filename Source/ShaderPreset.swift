@@ -23,6 +23,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import Foundation
+import OpenEmuKitPrivate
 
 @frozen public struct ShaderPreset: Hashable, Identifiable {
     public let id: String
@@ -95,7 +96,7 @@ public enum ShaderPresetWriteError: Error {
     
     public func write(preset c: ShaderPreset, options: Options = [.shader]) throws -> String {
         var s = ""
-
+        
         var wroteName = false
         if options.contains(.name) {
             guard Self.isValidIdentifier(c.id) else { throw ShaderPresetWriteError.invalidCharacters }
@@ -160,18 +161,8 @@ public enum ShaderPresetReadError: Error {
     }
     
     public func read(text: String) throws -> ShaderPreset {
-        
-        var paramsStart = text.startIndex
-        var paramsEnd   = text.endIndex
-
-        let header: [String]?
-        if let idx = text.firstIndex(of: ":") {
-            paramsStart = text.index(after: idx)
-            header = try parseHeader(text: text[..<idx])
-        } else {
-            header = nil
-        }
-        
+        // do we have a signature?
+        var paramsEnd = text.endIndex
         if let idx = text.lastIndex(of: "@") {
             paramsEnd = idx
             let sig = Crypto.MD5.digest(string: text[..<idx])
@@ -180,83 +171,97 @@ public enum ShaderPresetReadError: Error {
             }
         }
         
-        let params = try parseParams(text: text[paramsStart..<paramsEnd])
+        guard let tokens = try? PScanner.parse(text: text[..<paramsEnd])
+        else { throw ShaderPresetReadError.malformed }
         
-        if let header = header, !header.isEmpty {
-            if header.count == 2 {
-                return ShaderPreset(id: header[0], shader: header[1], parameters: params)
-            } else if header.count == 1 {
-                return ShaderPreset(id: "Unnamed", shader: header[0], parameters: params)
-            }
+        var id: String?
+        var shader: String?
+        
+        var tokIter = tokens.makePeekableIterator()
+        if let (tok, _) = tokIter.peek(), tok == .name || tok == .shader {
+            (id, shader) = parseHeader(&tokIter)
         }
         
-        return ShaderPreset(id: "Unnamed", shader: "", parameters: params)
-    }
-    
-    func parseHeader<T: StringProtocol>(text: T) throws -> [String] {
-        var header = [String]()
-        var iter   = text.makeIterator()
+        let params = parseParams(&tokIter)
         
-        while let ch = iter.next() {
-            switch ch {
-            case "\"":
-                // quoted string
-                var s = ""
-                while let ch = iter.next() {
-                    if ch == "\"" {
-                        header.append(s)
-                        break
-                    }
-                    s.append(ch)
-                }
-            case ",":
-                continue
-            default:
-                throw ShaderPresetReadError.malformed
-            }
-        }
-        
-        return header
-    }
-    
-    func parseParams<T: StringProtocol>(text: T) throws -> [String: Double] {
-        var params = [String: Double]()
-        
-        var iter = text.makeIterator()
-        var state: State = .key
-        var key = ""
-        var current = ""
-        while let ch = iter.next() {
-            if ch == "=" {
-                if state == .key {
-                    key     = current
-                    current = ""
-                    state   = .value
-                    continue
-                }
-                throw ShaderPresetReadError.malformed
-            }
-            
-            if ch == ";" {
-                if state == .value {
-                    state = .key
-                    params[key] = Double(current)
-                    key = ""
-                    current = ""
-                    continue
-                }
-                throw ShaderPresetReadError.malformed
-            }
-            
-            current.append(ch)
-        }
-        
-        if state == .value {
-            params[key] = Double(current)
-        } else {
+        switch (id, shader) {
+        case (.none, .none):
+            return ShaderPreset(id: "Unnamed", shader: "", parameters: params)
+        case (.none, .some(let shader)):
+            return ShaderPreset(id: "Unnamed", shader: shader, parameters: params)
+        case (.some(let id), .some(let shader)):
+            return ShaderPreset(id: id, shader: shader, parameters: params)
+        default:
             throw ShaderPresetReadError.malformed
         }
+    }
+    
+    func parseHeader(_ iter: inout PeekableIterator<Array<(ScannerToken, String)>.Iterator>) -> (String?, String?) {
+        var id: String?
+        var shader: String?
         
-        return params
+        if let (tok, text) = iter.peek(), tok == .name {
+            iter.next()
+            id = text
+        }
+        
+        if let (tok, text) = iter.peek(), tok == .shader {
+            iter.next()
+            shader = text
+        }
+        
+        return (id, shader)
+    }
+    
+    func parseParams(_ iter: inout PeekableIterator<Array<(ScannerToken, String)>.Iterator>) -> [String: Double] {
+        var res = [String: Double]()
+        while true {
+            guard
+                let (tok, param) = iter.peek(),
+                tok == .identifier
+            else { break }
+            iter.next()
+            
+            guard
+                let (tok, val) = iter.peek(),
+                tok == .float
+            else { break }
+            iter.next()
+            
+            res[param] = Double(val)
+        }
+        return res
+    }
+}
+
+struct PeekableIterator<Base: IteratorProtocol>: IteratorProtocol {
+    private var peeked: Base.Element??
+    private var iter: Base
+    
+    init(_ base: Base) {
+        iter = base
+    }
+    
+    mutating func peek() -> Base.Element? {
+        if peeked == nil {
+            peeked = iter.next()
+        }
+        return peeked!
+    }
+    
+    @discardableResult
+    mutating func next() -> Base.Element? {
+        if let val = peeked {
+            peeked = nil
+            return val
+        }
+        
+        return iter.next()
+    }
+}
+
+extension Sequence {
+    func makePeekableIterator() -> PeekableIterator<Self.Iterator> {
+        return PeekableIterator(makeIterator())
     }
 }

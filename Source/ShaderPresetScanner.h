@@ -25,15 +25,14 @@
 @import Foundation;
 
 typedef NS_ENUM(NSUInteger, ScannerToken) {
-    ScannerTokenNone        =  -1,
-    ScannerTokenError       = 128,
-    ScannerTokenEOF         = 129,
-    ScannerTokenIdentifier  = 130,
-    ScannerTokenNumber      = 131,
-    ScannerTokenString      = 132,
-    ScannerTokenColor       = 133, // :
-    ScannerTokenAssign      = 134, // =
-    ScannerTokenAt          = 135, // @
+    ScannerTokenNone        ,
+    ScannerTokenError       ,
+    ScannerTokenEOF         NS_SWIFT_NAME(eof),
+    ScannerTokenName        ,
+    ScannerTokenShader      ,
+    ScannerTokenIdentifier  ,
+    ScannerTokenFloat       ,
+    ScannerTokenString      ,
 };
 
 NS_ASSUME_NONNULL_BEGIN
@@ -47,7 +46,7 @@ extern void         scanner_init( PScanner s, uint8_t const * src, size_t src_le
                     NS_SWIFT_NAME(PScanner.setData(self:_:length:));
 extern ScannerToken scanner_scan( PScanner s )
                     NS_SWIFT_NAME(PScanner.scan(self:));
-extern NSString * _Nullable scanner_text(PScanner ps)
+extern NSString *   scanner_text(PScanner ps)
                     NS_SWIFT_NAME(getter:PScanner.text(self:));
 
 NS_ASSUME_NONNULL_END
