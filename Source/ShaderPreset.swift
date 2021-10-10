@@ -114,7 +114,7 @@ public enum ShaderPresetWriteError: Error {
             s.append("\"\(c.shader)\"")
         }
         
-        if options.contains([.name, .shader]) {
+        if options.contains(.name) || options.contains(.shader) {
             s.append(":")
         }
         
