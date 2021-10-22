@@ -31,6 +31,8 @@
 @protocol OEGameCoreOwner;
 @class OECorePlugin, OEGameCoreController, OESystemPlugin, OEGameStartupInfo;
 
+typedef void(^OEStartupCompletionHandler)(NSError * _Nullable);
+
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSString * const OEGameCoreErrorDomain;
@@ -60,6 +62,7 @@ typedef NS_ERROR_ENUM(OEGameCoreErrorDomain, OEGameCoreManagerErrorCodes)
 #pragma mark - Abstract methods, must be overrode in subclasses
 
 - (void)loadROMWithCompletionHandler:(void(^)(void))completionHandler errorHandler:(void(^)(NSError *))errorHandler;
+- (void)loadROMWithCompletionHandler:(OEStartupCompletionHandler)completionHandler;
 
 @end
 

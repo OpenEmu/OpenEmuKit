@@ -94,7 +94,7 @@ int xpc_task_key = 0;
         }];
 
 #ifdef DEBUG_PRINT
-    dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+        dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 #else
         dispatch_time_t waitTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(NSEC_PER_SEC * 2));
         if (dispatch_semaphore_wait(sem, waitTime) != 0)

@@ -81,6 +81,20 @@
     [_helperThread start];
 }
 
+- (void)loadROMWithCompletionHandler:(OEStartupCompletionHandler)completionHandler
+{
+    _helperThread = [[NSThread alloc] initWithTarget:self selector:@selector(_executionThreadNew:) object:completionHandler];
+    _helperThread.name = @"org.openemu.core-manager-thread";
+    _helperThread.qualityOfService = NSQualityOfServiceUserInitiated;
+
+    _helper = [[OpenEmuHelperApp alloc] init];
+    _helperProxy = [OEThreadProxy threadProxyWithTarget:_helper thread:_helperThread];
+
+    _gameCoreOwnerProxy = [OEThreadProxy threadProxyWithTarget:[self gameCoreOwner] thread:[NSThread mainThread]];
+
+    [_helperThread start];
+}
+
 - (void)_executionThread:(OEThreadStartup *)startup
 {
     @autoreleasepool
@@ -107,6 +121,42 @@
         }
         
         startup = nil;
+
+        _dummyTimer = [NSTimer scheduledTimerWithTimeInterval:1e9 repeats:YES block:^(NSTimer * _Nonnull timer) {}];
+
+        CFRunLoopRun();
+
+        if(_stopHandler)
+        {
+            CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, _stopHandler);
+            _stopHandler = nil;
+        }
+    }
+    
+    [self _notifyGameCoreDidTerminate];
+}
+
+- (void)_executionThreadNew:(OEStartupCompletionHandler)handler
+{
+    @autoreleasepool
+    {
+        [self setGameCoreHelper:(id<OEGameCoreHelper>)_helperProxy];
+        [_helper setGameCoreOwner:(id<OEGameCoreOwner>)_gameCoreOwnerProxy];
+
+        NSError *error;
+        if(![_helper loadWithStartupInfo:self.startupInfo error:&error])
+        {
+            CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, ^{
+                handler(error);
+            });
+            return;
+        }
+
+        CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, ^{
+            handler(nil);
+        });
+        
+        handler = nil;
 
         _dummyTimer = [NSTimer scheduledTimerWithTimeInterval:1e9 repeats:YES block:^(NSTimer * _Nonnull timer) {}];
 

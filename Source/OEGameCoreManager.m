@@ -60,6 +60,11 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
     [self doesNotImplementSelector:_cmd];
 }
 
+- (void)loadROMWithCompletionHandler:(OEStartupCompletionHandler)completionHandler
+{
+    [self doesNotImplementSelector:_cmd];
+}
+
 - (void)loadROMWithCompletionHandler:(void(^)(void))completionHandler errorHandler:(void(^)(NSError *))errorHandler
 {
     [self doesNotImplementSelector:_cmd];

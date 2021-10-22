@@ -63,6 +63,90 @@
     return [NSBundle.mainBundle URLForAuxiliaryExecutable:name];
 }
 
+- (void)loadROMWithCompletionHandler:(OEStartupCompletionHandler)completionHandler
+{
+    NSError *error = nil;
+    _helperConnection = [NSXPCConnection connectionWithServiceName:self.serviceName executableURL:self.executableURL error:&error];
+    if(_helperConnection == nil)
+    {
+        os_log_error(OE_LOG_HELPER, "No listener endpoint for identifier: %@", self.executableURL);
+
+        if (error == nil)
+        {
+            error = [NSError errorWithDomain:OEGameCoreErrorDomain
+                                        code:OEGameCoreCouldNotLoadROMError
+                                    userInfo:nil];
+        }
+        CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, ^{
+            completionHandler(error);
+        });
+        
+        // There's no listener endpoint, so don't bother trying to create an NSXPCConnection.
+        // Returning now since calling initWithListenerEndpoint: and passing it nil results in a memory leak.
+        // Also, there's no point in trying to get the gameCoreHelper if there's no _helperConnection.
+        return;
+    }
+    
+    __weak OEXPCGameCoreManager *weakSelf = self;
+    [_helperConnection setInvalidationHandler:^{
+        OEXPCGameCoreManager *strongSelf = weakSelf;
+        if (strongSelf)
+            [strongSelf _notifyGameCoreDidTerminate];
+    }];
+    
+    _gameCoreOwnerProxy = [OEThreadProxy threadProxyWithTarget:[self gameCoreOwner] thread:[NSThread mainThread]];
+    
+    [_helperConnection setExportedInterface:[NSXPCInterface interfaceWithProtocol:@protocol(OEGameCoreOwner)]];
+    [_helperConnection setExportedObject:_gameCoreOwnerProxy];
+
+    NSXPCInterface *intf = [NSXPCInterface interfaceWithProtocol:@protocol(OEXPCGameCoreHelper)];
+    
+    // startup
+    [intf setClasses:[NSSet setWithObject:OEGameStartupInfo.class]
+         forSelector:@selector(loadWithStartupInfo:completionHandler:)
+       argumentIndex:0
+             ofReply:NO];
+   
+    [_helperConnection setRemoteObjectInterface:intf];
+    [_helperConnection resume];
+
+    __block void *gameCoreHelperPointer;
+    id<OEXPCGameCoreHelper> gameCoreHelper =
+    [_helperConnection remoteObjectProxyWithErrorHandler:
+     ^(NSError *error)
+     {
+        os_log_error(OE_LOG_HELPER, "Helper Connection (%p) failed with error: %{public}@",
+                     gameCoreHelperPointer, error);
+        
+        [self stop];
+    }];
+
+    gameCoreHelperPointer = (__bridge void *)gameCoreHelper;
+
+    if(gameCoreHelper == nil) return;
+
+    [gameCoreHelper loadWithStartupInfo:self.startupInfo completionHandler:
+     ^(NSError *error)
+     {
+         if(error != nil)
+         {
+             CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, ^{
+                 completionHandler(error);
+                 [self stop];
+             });
+
+             // There's no listener endpoint, so don't bother trying to create an NSXPCConnection.
+             // Returning now since calling initWithListenerEndpoint: and passing it nil results in a memory leak.
+             return;
+         }
+
+         [self setGameCoreHelper:gameCoreHelper];
+        CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, ^{
+            completionHandler(nil);
+        });
+     }];
+}
+
 - (void)loadROMWithCompletionHandler:(void(^)(void))completionHandler errorHandler:(void(^)(NSError *))errorHandler
 {
     NSError *error = nil;
