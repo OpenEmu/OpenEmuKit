@@ -87,4 +87,6 @@ NS_ERROR_ENUM(OEGameCoreErrorDomain) {
 // When YES, the plugin is automatically removed
 @property (readonly, getter=isOutOfSupport) BOOL outOfSupport;
 
+- (void)flushBundleCache;
+
 @end

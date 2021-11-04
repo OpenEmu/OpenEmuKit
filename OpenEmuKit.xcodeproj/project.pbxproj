@@ -226,6 +226,7 @@
 		05EEF0F72707C96B008A03DC /* OpenEmuKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenEmuKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		05EEF1012707C986008A03DC /* ShaderPresetStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderPresetStoreTests.swift; sourceTree = "<group>"; };
 		05EEF1032707CA7A008A03DC /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/MacOSX.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		8F4AEABF27354776005C6246 /* CFBundle+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CFBundle+Private.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -256,6 +257,7 @@
 			children = (
 				050A9A0B24F9B2B800321847 /* module.modulemap */,
 				050A9A1024F9C35B00321847 /* OpenEmuKitPrivate.h */,
+				8F4AEABF27354776005C6246 /* CFBundle+Private.h */,
 				050A9A0C24F9B2E900321847 /* QuartzCoreSPI.h */,
 			);
 			path = OpenEmuKitPrivate;

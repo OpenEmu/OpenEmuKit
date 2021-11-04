@@ -27,6 +27,7 @@
 #import "OEPlugin.h"
 #import <objc/runtime.h>
 #import "OELogging.h"
+#import "OpenEmuKitPrivate.h"
 
 @implementation NSObject (OEPlugin)
 + (BOOL)isPluginClass
@@ -444,6 +445,19 @@ NSInteger OE_compare(OEPlugin *obj1, OEPlugin *obj2, void *ctx)
 - (NSArray *)availablePreferenceViewControllerKeys
 {
     return _bundle != nil ? [[self controller] availablePreferenceViewControllerKeys] : nil;
+}
+
+- (void)flushBundleCache
+{
+    if (_CFBundleFlushBundleCaches != NULL) {
+        CFBundleRef cfBundle = CFBundleCreate(nil, (CFURLRef)_bundle.bundleURL);
+        _CFBundleFlushBundleCaches(cfBundle);
+        CFRelease(cfBundle);
+        
+        _infoDictionary = _bundle.infoDictionary;
+        _version        = _infoDictionary[@"CFBundleVersion"];
+        _displayName    = _infoDictionary[@"CFBundleName"] ? : _infoDictionary[@"CFBundleExecutable"];
+    }
 }
 
 @end

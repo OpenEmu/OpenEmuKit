@@ -1,4 +1,4 @@
-// Copyright (c) 2020, OpenEmu Team
+// Copyright (c) 2021, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -22,6 +22,6 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import "QuartzCoreSPI.h"
-#import "../KeyValueScanner.h"
-#import "CFBundle+Private.h"
+@import CoreFoundation.CFBundle;
+
+extern void _CFBundleFlushBundleCaches(CFBundleRef bundle) __attribute__((weak_import));
