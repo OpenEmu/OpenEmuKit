@@ -120,10 +120,6 @@ NSNotificationName const OESystemPluginDidRegisterNotification = @"OESystemPlugi
         
         _responderClass   = [[self controller] responderClass];
 
-        NSString *iconPath = [[self bundle] pathForResource:[[self infoDictionary] objectForKey:@"CFIconName"] ofType:@"icns"];
-
-        _bundleIcon = [[NSImage alloc] initWithContentsOfFile:iconPath];
-
         [[self class] registerGameSystemPlugin:self forIdentifier:_systemIdentifier];
     }
 

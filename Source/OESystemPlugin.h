@@ -42,7 +42,6 @@ extern NSNotificationName const OESystemPluginDidRegisterNotification;
 @property(strong, readonly) NSImage  *systemIcon;
 @property(readonly)         BOOL     supportsDiscsWithDescriptorFile;
 @property(readonly)         CGFloat  coverAspectRatio;
-@property(strong, readonly) NSImage  *bundleIcon;
 
 @property(strong, readonly) Class     responderClass;
 

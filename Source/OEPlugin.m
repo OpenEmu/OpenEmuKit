@@ -442,11 +442,6 @@ NSInteger OE_compare(OEPlugin *obj1, OEPlugin *obj2, void *ctx)
             ? : [self pluginWithFileAtPath:OE_pluginPathForNameType(aName, aType) type:aType]);
 }
 
-- (NSArray *)availablePreferenceViewControllerKeys
-{
-    return _bundle != nil ? [[self controller] availablePreferenceViewControllerKeys] : nil;
-}
-
 - (void)flushBundleCache
 {
     if (_CFBundleFlushBundleCaches != NULL) {

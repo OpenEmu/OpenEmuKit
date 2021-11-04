@@ -81,9 +81,6 @@ static NSArray *_cachedRequiredFiles = nil;
 {
     if((self = [super initWithFileAtPath:aPath name:aName error:outError]))
     {
-        NSString *iconPath = [[self bundle] pathForResource:[[self infoDictionary] objectForKey:@"CFIconName"] ofType:@"icns"];
-        _icon = [[NSImage alloc] initWithContentsOfFile:iconPath];
-
         // invalidate global cache
         _cachedRequiredFiles = nil;
     }

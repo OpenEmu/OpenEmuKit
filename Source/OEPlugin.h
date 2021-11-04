@@ -81,8 +81,6 @@ NS_ERROR_ENUM(OEGameCoreErrorDomain) {
 @property(class, readonly) NSString *pluginExtension;
 + (Class)typeForExtension:(NSString *)anExtension;
 
-@property(readonly) NSArray <NSString *> *availablePreferenceViewControllerKeys;
-
 @property (readonly, getter=isDeprecated) BOOL deprecated;
 // When YES, the plugin is automatically removed
 @property (readonly, getter=isOutOfSupport) BOOL outOfSupport;
