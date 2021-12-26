@@ -114,12 +114,12 @@ typedef NS_ENUM(NSUInteger, OEGameCoreEffectsMode) {
 #pragma mark - Screenshot support
 
 /**
- * Capture an image of the final core video display buffer, which includes all shader effects.
+ * Capture an image of the core's video display buffer, which includes all shader effects.
  */
 - (void)captureOutputImageWithCompletionHandler:(void (^)(NSBitmapImageRep *image))block;
 
 /**
- * Capture an image of the raw core video display buffer with no effects.
+ * Capture an image of the core's raw video display buffer with no effects.
  */
 - (void)captureSourceImageWithCompletionHandler:(void (^)(NSBitmapImageRep *image))block;
 
