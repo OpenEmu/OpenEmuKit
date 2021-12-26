@@ -41,7 +41,7 @@ typedef struct Scanner * PScanner __attribute__((__swift_wrapper__(struct)));
 
 extern PScanner     scanner_create(void)
                     NS_SWIFT_NAME(PScanner.init());
-extern void         scanner_destroy(PScanner s);
+extern void         scanner_free(PScanner s);
 extern void         scanner_init( PScanner s, uint8_t const * src, size_t src_len )
                     NS_SWIFT_NAME(PScanner.setData(self:_:length:));
 extern ScannerToken scanner_scan( PScanner s )

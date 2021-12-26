@@ -34,29 +34,29 @@ class ShaderPresetTextWriterTests: XCTestCase {
     }
     
     func testWriteDefaultOptions() throws {
-        let got = try w.write(preset: .init(id: "foo", shader: "CRT", parameters: ["a": 5, "b": 6]))
+        let got = try w.write(preset: .init(name: "foo", shader: "CRT", parameters: ["a": 5, "b": 6]))
         expect(got) == #""CRT":a=5.0;b=6.0"#
     }
     
     func testWriteParametersNoOptions() throws {
-        let got = try w.write(preset: .init(id: "foo", shader: "CRT", parameters: ["a": 5, "b": 6]), options: [])
+        let got = try w.write(preset: .init(name: "foo", shader: "CRT", parameters: ["a": 5, "b": 6]), options: [])
         expect(got) == #"a=5.0;b=6.0"#
     }
 
     func testWriteNoParametersDefaultOptions() throws {
-        let got = try w.write(preset: .init(id: "foo", shader: "CRT", parameters: [:]))
+        let got = try w.write(preset: .init(name: "foo", shader: "CRT", parameters: [:]))
         expect(got) == #""CRT":"#
     }
     
     func testWriteNoParametersAndOptions() throws {
-        let got = try w.write(preset: .init(id: "foo", shader: "CRT", parameters: [:]), options: [])
+        let got = try w.write(preset: .init(name: "foo", shader: "CRT", parameters: [:]), options: [])
         expect(got) == #""#
     }
     
     // MARK: - signed
     
     func testWriteWithSignature() throws {
-        let got = try w.write(preset: .init(id: "foo", shader: "CRT", parameters: ["a": 5, "b": 6]), options: [.shader, .sign])
+        let got = try w.write(preset: .init(name: "foo", shader: "CRT", parameters: ["a": 5, "b": 6]), options: [.shader, .sign])
         expect(got) == #""CRT":a=5.0;b=6.0@d80"#
     }
     
@@ -68,7 +68,7 @@ class ShaderPresetTextWriterTests: XCTestCase {
         let w = w!
         for ch in invalidCharacters {
             expect {
-                try w.write(preset: .init(id: "foo\(ch)foo", shader: "CRT", parameters: ["a": 5, "b": 6]), options: [.name])
+                try w.write(preset: .init(name: "foo\(ch)foo", shader: "CRT", parameters: ["a": 5, "b": 6]), options: [.name])
             }.to(throwError(ShaderPresetWriteError.invalidCharacters))
         }
     }
@@ -77,7 +77,7 @@ class ShaderPresetTextWriterTests: XCTestCase {
         let w = w!
         for ch in invalidCharacters {
             expect {
-                try w.write(preset: .init(id: "foo", shader: "CRT\(ch) Geom", parameters: ["a": 5, "b": 6]), options: [.shader])
+                try w.write(preset: .init(name: "foo", shader: "CRT\(ch) Geom", parameters: ["a": 5, "b": 6]), options: [.shader])
             }.to(throwError(ShaderPresetWriteError.invalidCharacters))
         }
     }

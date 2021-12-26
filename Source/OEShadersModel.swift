@@ -26,24 +26,12 @@ import Foundation
 import OpenEmuBase
 import OpenEmuShaders
 
-@objc
-public class OEShadersModel: NSObject {
-    // MARK: Notifications
-    
-    public enum Preferences {
-        case global
-        case system(String)
-        
-        public var key: String {
-            switch self {
-            case .global:
-                return "videoShader"
-            case .system(let identifier):
-                return "videoShader.\(identifier)"
-            }
-        }
-    }
-    
+extension NSNotification.Name {
+    public static let shaderModelCustomShadersDidChange = NSNotification.Name("shaderModelCustomShadersDidChange")
+}
+
+/// The main object used for accessing system and user-installed shaders.
+@objc public class OEShadersModel: NSObject {
     private let store: UserDefaults
     private let userPathName: String
     private let bundle: Bundle
@@ -66,6 +54,10 @@ public class OEShadersModel: NSObject {
         
         self.systemShaders  = loadSystemShaders()
         self.customShaders  = loadCustomShaders()
+        
+        store.register(defaults: [
+            makeGlobalKey(): "Pixellate",
+        ])
     }
     
     @objc public func reload() {
@@ -73,6 +65,36 @@ public class OEShadersModel: NSObject {
         _customShaderNames  = nil
         _sortedCustomShaderNames = nil
         NotificationCenter.default.post(name: .shaderModelCustomShadersDidChange, object: nil)
+    }
+    
+    /// Returns the default shader name or `Pixellate` if the current default does
+    /// not exist.
+    @objc public var defaultShaderName: String {
+        get {
+            if let name = store.string(forKey: makeGlobalKey()), self[name] != nil {
+                return name
+            }
+            return "Pixellate"
+        }
+        
+        set {
+            store.set(newValue, forKey: makeGlobalKey())
+        }
+    }
+    
+    /// Returns the default shader model or Pixellate if the current default does not exist.
+    @objc public var defaultShader: OEShaderModel {
+        get {
+            self[defaultShaderName]!
+        }
+        
+        set {
+            defaultShaderName = newValue.name
+        }
+    }
+    
+    @objc public func shader(withName name: String) -> OEShaderModel? {
+        return self[name]
     }
     
     private var _systemShaderNames: [String]!
@@ -109,84 +131,42 @@ public class OEShadersModel: NSObject {
         return _sortedCustomShaderNames
     }
     
-    // MARK: - Shader queries
-    
-    /// Returns the default shader name or `Pixellate` if the current default does
-    /// not exist.
-    @objc public var defaultShaderName: String {
-        get {
-            if let name = store.string(forKey: Preferences.global.key), self[name] != nil {
-                return name
-            }
-            return "Pixellate"
-        }
-        
-        set {
-            store.set(newValue, forKey: Preferences.global.key)
-        }
-    }
-    
-    /// Returns the default shader model or Pixellate if the current default does not exist.
-    @objc public var defaultShader: OEShaderModel {
-        get {
-            self[defaultShaderName]!
-        }
-        
-        set {
-            defaultShaderName = newValue.name
-        }
-    }
-    
-    @objc public func shader(withName name: String) -> OEShaderModel? {
-        return self[name]
-    }
-    
-    @objc public func shader(forSystem identifier: String) -> OEShaderModel? {
-        guard let name = store.string(forKey: Preferences.system(identifier).key) else { return defaultShader }
-        return self[name]
-    }
-    
-    /// Returns the name of the shader for the specified system, falling back to the default shader if none is set.
-    @objc public func shaderName(forSystem identifier: String) -> String {
+    @objc public var userShadersPath: URL? {
         guard
-            let name = store.string(forKey: Preferences.system(identifier).key),
-            self[name] != nil
-        else { return defaultShaderName }
-        return name
+            let path = try? FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        else { return nil }
+        
+        return path.appendingPathComponent(userPathName, isDirectory: true).appendingPathComponent("Shaders", isDirectory: true)
     }
     
-    /// Reset to the default shader for the specified system.
-    @objc public func resetShader(forSystem identifier: String) {
-        store.removeObject(forKey: Preferences.system(identifier).key)
+    @objc public var shadersCachePath: URL? {
+        guard
+            let path = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        else { return nil }
+        
+        return path.appendingPathComponent(userPathName, isDirectory: true).appendingPathComponent("Shaders", isDirectory: true)
     }
     
-    /// Specify a default shader for the specified system.
-    @objc public func setShaderName(_ name: String, forSystem identifier: String) {
-        store.set(name, forKey: Preferences.system(identifier).key)
-    }
+    // MARK: - helpers
     
-    @objc public func shader(forURL url: URL) -> OEShaderModel {
-        OEShaderModel(url: url, store: store)
-    }
+    func makeGlobalKey() -> String { "videoShader" }
     
     subscript(name: String) -> OEShaderModel? {
         systemShaders.first { $0.name == name } ?? customShaders.first { $0.name == name }
     }
     
-    // MARK: - helpers
-    
     private func loadSystemShaders() -> [OEShaderModel] {
         if let path = bundle.resourcePath {
             let url = URL(fileURLWithPath: path, isDirectory: true).appendingPathComponent("Shaders", isDirectory: true)
             let urls = Self.urlsForShaders(at: url)
-            return urls.map { OEShaderModel(url: $0, store: store) }
+            return urls.map(OEShaderModel.init(url:))
         }
         return []
     }
     
     private func loadCustomShaders() -> [OEShaderModel] {
         guard let path = userShadersPath else { return [] }
-        return Self.urlsForShaders(at: path).map { OEShaderModel(url: $0, store: store) }
+        return Self.urlsForShaders(at: path).map(OEShaderModel.init(url:))
     }
     
     private static func urlsForShaders(at url: URL) -> [URL] {
@@ -212,115 +192,25 @@ public class OEShadersModel: NSObject {
         
         return res
     }
-    
-    @objc public var userShadersPath: URL? {
-        guard
-            let path = try? FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-        else { return nil }
-        
-        return path.appendingPathComponent(userPathName, isDirectory: true).appendingPathComponent("Shaders", isDirectory: true)
-    }
-    
-    @objc public var shadersCachePath: URL? {
-        guard
-            let path = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-        else { return nil }
-        
-        return path.appendingPathComponent(userPathName, isDirectory: true).appendingPathComponent("Shaders", isDirectory: true)
-    }
-    
-    // MARK: - Shader parameter storage
-    
-    public func read(parametersForShader name: String, identifier: String) -> String? {
-        store.read(parametersForShader: name, identifier: identifier)
-    }
-    
-    public func write(parameters params: String, forShader name: String, identifier: String) {
-        store.write(parameters: params, forShader: name, identifier: identifier)
-    }
-    
-    public func remove(parametersForShader name: String, identifier: String) {
-        store.remove(parametersForShader: name, identifier: identifier)
-    }
-}
-
-private protocol ShaderModelStore {
-    /// Read the customised shader parameters for the shader and system identifer.
-    func read(parametersForShader name: String, identifier: String) -> String?
-    
-    /// Write the customised shader parameters for the shader and system identifer.
-    func write(parameters params: String, forShader name: String, identifier: String)
-    
-    /// Remove the customised shader parameters for the shader and system identifer.
-    func remove(parametersForShader name: String, identifier: String)
-}
-
-extension UserDefaults: ShaderModelStore {
-    enum Params {
-        case global(String)
-        case system(String, String)
-        
-        public var key: String {
-            switch self {
-            case .global(let shader):
-                return "videoShader.\(shader).params"
-            case .system(let shader, let identifier):
-                return "videoShader.\(identifier).\(shader).params"
-            }
-        }
-    }
-    
-    func read(parametersForShader name: String, identifier: String) -> String? {
-        string(forKey: Params.system(name, identifier).key)
-    }
-    
-    func write(parameters params: String, forShader name: String, identifier: String) {
-        set(params, forKey: Params.system(name, identifier).key)
-    }
-    
-    func remove(parametersForShader name: String, identifier: String) {
-        removeObject(forKey: Params.system(name, identifier).key)
-    }
 }
 
 @objc
 @objcMembers
 public class OEShaderModel: NSObject {
-    private let store: ShaderModelStore
     public var name: String
     public var url: URL
     
-    fileprivate init(url: URL, store: ShaderModelStore) {
-        self.store  = store
+    private lazy var slangShader: SlangShader? = {
+        try? SlangShader(fromURL: url)
+    }()
+    
+    fileprivate init(url: URL) {
         self.name   = url.deletingLastPathComponent().lastPathComponent
         self.url    = url
     }
     
-    public func parameters(forIdentifier identifier: String) -> [String: Double]? {
-        if let state = store.read(parametersForShader: name, identifier: identifier) {
-            var res = [String: Double]()
-            for param in state.split(separator: ";") {
-                let vals = param.split(separator: "=")
-                if let d = Double(vals[1]) {
-                    res[String(vals[0])] = d
-                }
-            }
-            return res
-        }
-        
-        return nil
-    }
-    
-    public func write(parameters params: [ShaderParamValue], identifier: String) {
-        let state = params
-            .filter { !$0.isInitial }
-            .map { "\($0.name)=\($0.value)" }
-        
-        if state.isEmpty {
-            store.remove(parametersForShader: name, identifier: identifier)
-        } else {
-            store.write(parameters: state.joined(separator: ";"), forShader: name, identifier: identifier)
-        }
+    public var defaultParameters: [ShaderParamValue] {
+        ShaderParamValue.from(parameters: slangShader?.parameters ?? [])
     }
     
     override public var description: String {
@@ -330,11 +220,9 @@ public class OEShaderModel: NSObject {
     public override var debugDescription: String {
         return "\(name) \(url.absoluteString)"
     }
-}
-
-extension OEShaderModel {
+    
     public func readGroups() -> [ShaderParamGroupValue] {
-        guard let ss = try? SlangShader(fromURL: url) else { return [] }
+        guard let ss = slangShader else { return [] }
         
         if let groups = readGroupsModel() {
             var all = ss.parameters

@@ -22,7 +22,46 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import "Shaders.h"
-@import Foundation;
+import XCTest
+import Nimble
+@testable import OpenEmuKit
 
-NSNotificationName const ShaderModelCustomShadersDidChange = @"shaderModelCustomShadersDidChange";
+class ShaderPresetStoreTests: XCTestCase {
+    
+    private var defaults: UserDefaults!
+    private var store: ShaderPresetStore!
+    
+    private var path: String!
+    
+    override func setUp() {
+        super.setUp()
+        
+        path = FileManager.default
+            .temporaryDirectory
+            .appendingPathComponent("OpenEmuKitTests", isDirectory: true)
+            .appendingPathComponent(UUID().uuidString).absoluteString
+        
+        defaults = UserDefaults(suiteName: path)
+        defaults.removePersistentDomain(forName: path)
+        
+        store = defaults
+    }
+    
+    override func tearDown() {
+        try? FileManager.default.removeItem(atPath: path)
+        super.tearDown()
+    }
+
+    func testSaveSearch() throws {
+        try store.save(ShaderPreset(name: "id1", shader: "CRT", parameters: [:]))
+        try store.save(ShaderPreset(name: "id2", shader: "CRT", parameters: [:]))
+        try store.save(ShaderPreset(name: "id3", shader: "MAME", parameters: [:]))
+        try store.save(ShaderPreset(name: "id4", shader: "Pixellate", parameters: [:]))
+        let presets = store.presets(matching: { $0.shader == "CRT" })
+        let exp = [
+            ShaderPreset(name: "id1", shader: "CRT", parameters: [:]),
+            ShaderPreset(name: "id2", shader: "CRT", parameters: [:]),
+        ]
+        expect(presets).to(contain(exp))
+    }
+}

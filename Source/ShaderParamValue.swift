@@ -35,7 +35,7 @@ public final class ShaderParamValue: NSObject {
             if step.doubleValue > 0.0 {
                 let d = 1.0 / step.doubleValue
                 let v = (value.doubleValue * d) / d
-                value = NSNumber(value: v.toPrecision(4))
+                value = v.toPrecision(4) as NSNumber
             }
         }
     }
@@ -51,11 +51,11 @@ public final class ShaderParamValue: NSObject {
         self.index = index
         name    = p.name
         desc    = p.desc
-        value   = NSNumber(value: p.initial)
-        initial = NSNumber(value: p.initial)
-        minimum = NSNumber(value: p.minimum)
-        maximum = NSNumber(value: p.maximum)
-        step    = NSNumber(value: p.step)
+        value   = p.initial as NSNumber
+        initial = p.initial as NSNumber
+        minimum = p.minimum as NSNumber
+        maximum = p.maximum as NSNumber
+        step    = p.step    as NSNumber
     }
     
     public static func from(parameters params: [ShaderParameter]) -> [ShaderParamValue] {

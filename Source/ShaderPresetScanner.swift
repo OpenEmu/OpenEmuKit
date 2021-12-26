@@ -32,7 +32,7 @@ extension PScanner {
     
     static func parse<T: StringProtocol>(text: T) throws -> [(ScannerToken, String)] {
         let sc = Self()
-        defer { scanner_destroy(sc) }
+        defer { scanner_free(sc) }
         
         return try text.withFastUTF8IfAvailable { bp throws -> [(ScannerToken, String)] in
             sc.setData(bp.baseAddress!, length: bp.count)

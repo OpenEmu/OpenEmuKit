@@ -22,10 +22,16 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import <Foundation/Foundation.h>
+import Foundation
 
-NS_ASSUME_NONNULL_BEGIN
-
-extern NSNotificationName const ShaderModelCustomShadersDidChange NS_SWIFT_NAME(shaderModelCustomShadersDidChange);
-
-NS_ASSUME_NONNULL_END
+/// A ShaderPresetStore describes the behaviour required to
+/// persist shader presets.
+public protocol ShaderPresetStore {
+    // MARK: - Shader preset persistence functions
+    
+    func presets(matching predicate: (ShaderPreset) -> Bool) -> [ShaderPreset]
+    func findPreset(forName name: String) -> ShaderPreset?
+    func save(_ preset: ShaderPreset) throws
+    func remove(_ name: String)
+    func exists(_ name: String) -> Bool
+}

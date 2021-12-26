@@ -32,9 +32,9 @@ PScanner scanner_create()
     return calloc(1, sizeof(Scanner));
 }
 
-void scanner_destroy(PScanner s)
+void scanner_free(PScanner ps)
 {
-    free(s);
+    free(ps);
 }
 
 NSString * scanner_text(PScanner ps)

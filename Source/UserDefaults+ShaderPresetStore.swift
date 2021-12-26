@@ -24,18 +24,50 @@
 
 import Foundation
 
-extension UserDefaults: KeyValueStore {
-    public func set(_ value: String, forKey key: String) {
-        set(value as Any?, forKey: key)
+extension UserDefaults: ShaderPresetStore {
+    static let presetPrefix     = "videoShader.user.preset.data."
+    static let presetPrefixLen  = presetPrefix.count
+    
+    static func makeKey(name: String) -> String {
+        "\(Self.presetPrefix)\(name)"
     }
     
-    public func removeValue(forKey key: String) {
-        removeObject(forKey: key)
+    var shaderPresetKeys: [String] {
+        dictionaryRepresentation().keys.compactMap { key in
+            key.hasPrefix(Self.presetPrefix) ? key : nil
+        }
     }
     
-    public var allKeys: [String] { Array(dictionaryRepresentation().keys) }
+    public func exists(_ name: String) -> Bool {
+        string(forKey: Self.makeKey(name: name)) != nil
+    }
     
-    public func keys(withPrefix prefix: String) -> [String] {
-        dictionaryRepresentation().keys.filter { $0.hasPrefix(prefix) }
+    public func presets(matching predicate: (ShaderPreset) -> Bool) -> [ShaderPreset] {
+        let r = ShaderPresetTextReader()
+        return shaderPresetKeys.compactMap {
+            guard let text = string(forKey: $0) else { return nil }
+            return try? r.read(text: text)
+        }
+        .filter(predicate)
+    }
+    
+    public func findPresent(forName name: String) -> ShaderPreset? {
+        fatalError("Not implemented")
+    }
+    
+    public func findPreset(forName name: String) -> ShaderPreset? {
+        if let text = string(forKey: Self.makeKey(name: name)) {
+            return try? ShaderPresetTextReader().read(text: text)
+        }
+        return nil
+    }
+    
+    public func save(_ preset: ShaderPreset) throws {
+        let text = try ShaderPresetTextWriter().write(preset: preset, options: [.name, .shader])
+        set(text, forKey: Self.makeKey(name: preset.name))
+    }
+    
+    public func remove(_ name: String) {
+        removeObject(forKey: Self.makeKey(name: name))
     }
 }
