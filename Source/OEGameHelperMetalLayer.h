@@ -27,6 +27,10 @@
 @import Metal;
 @import QuartzCore;
 
+// TODO: Remove this file when OpenEmuHelperApp is converted to Swift
+// NOTE:
+// This file exists to expose the internal Swift GameHelperMetalLayer class to
+// Objective-C.
 @interface OEGameHelperMetalLayer : CAMetalLayer
 
 @end

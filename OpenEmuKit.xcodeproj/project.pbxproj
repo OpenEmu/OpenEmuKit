@@ -40,6 +40,7 @@
 		057CCE222703BAE80078701F /* Shaders.h in Headers */ = {isa = PBXBuildFile; fileRef = 057CCE212703BAA60078701F /* Shaders.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		057CCE242703BB310078701F /* Shaders.m in Sources */ = {isa = PBXBuildFile; fileRef = 057CCE232703BB310078701F /* Shaders.m */; };
 		05AAD98726758240004466E3 /* XPCDebugSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AAD98626758240004466E3 /* XPCDebugSupport.swift */; };
+		05B0781B273882C600F1E302 /* GameHelperMetalLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B0781A273882C600F1E302 /* GameHelperMetalLayer.swift */; };
 		05B48723266309600049A5F6 /* OEGameCoreManager+Synchronous.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B48721266309600049A5F6 /* OEGameCoreManager+Synchronous.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		05B48724266309600049A5F6 /* OEGameCoreManager+Synchronous.m in Sources */ = {isa = PBXBuildFile; fileRef = 05B48722266309600049A5F6 /* OEGameCoreManager+Synchronous.m */; };
 		05C40F8826F69B6F0072B722 /* ShaderParamValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C40F8726F69B6F0072B722 /* ShaderParamValue.swift */; };
@@ -56,7 +57,6 @@
 		05E6B9FC24CCD46900ACFB35 /* OEOpenGL3GameRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E6B9F524CCD46700ACFB35 /* OEOpenGL3GameRenderer.h */; };
 		05E6B9FD24CCD46900ACFB35 /* OEOpenGL2GameRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 05E6B9F624CCD46800ACFB35 /* OEOpenGL2GameRenderer.m */; };
 		05E6B9FE24CCD46900ACFB35 /* OEMTLGameRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E6B9F724CCD46900ACFB35 /* OEMTLGameRenderer.h */; };
-		05E6BA0424CCD49600ACFB35 /* OEGameHelperMetalLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 05E6BA0024CCD49200ACFB35 /* OEGameHelperMetalLayer.m */; };
 		05E6BA0524CCD49600ACFB35 /* OECoreVideoTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = 05E6BA0124CCD49300ACFB35 /* OECoreVideoTexture.m */; };
 		05E6BA0624CCD49600ACFB35 /* OECoreVideoTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E6BA0224CCD49500ACFB35 /* OECoreVideoTexture.h */; };
 		05E6BA0724CCD49600ACFB35 /* OEGameHelperMetalLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E6BA0324CCD49600ACFB35 /* OEGameHelperMetalLayer.h */; };
@@ -161,6 +161,7 @@
 		057CCE212703BAA60078701F /* Shaders.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Shaders.h; sourceTree = "<group>"; };
 		057CCE232703BB310078701F /* Shaders.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Shaders.m; sourceTree = "<group>"; };
 		05AAD98626758240004466E3 /* XPCDebugSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCDebugSupport.swift; sourceTree = "<group>"; };
+		05B0781A273882C600F1E302 /* GameHelperMetalLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameHelperMetalLayer.swift; sourceTree = "<group>"; };
 		05B48721266309600049A5F6 /* OEGameCoreManager+Synchronous.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OEGameCoreManager+Synchronous.h"; sourceTree = "<group>"; };
 		05B48722266309600049A5F6 /* OEGameCoreManager+Synchronous.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OEGameCoreManager+Synchronous.m"; sourceTree = "<group>"; };
 		05C40F8726F69B6F0072B722 /* ShaderParamValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderParamValue.swift; sourceTree = "<group>"; };
@@ -179,7 +180,6 @@
 		05E6B9F524CCD46700ACFB35 /* OEOpenGL3GameRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEOpenGL3GameRenderer.h; sourceTree = "<group>"; };
 		05E6B9F624CCD46800ACFB35 /* OEOpenGL2GameRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OEOpenGL2GameRenderer.m; sourceTree = "<group>"; };
 		05E6B9F724CCD46900ACFB35 /* OEMTLGameRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEMTLGameRenderer.h; sourceTree = "<group>"; };
-		05E6BA0024CCD49200ACFB35 /* OEGameHelperMetalLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OEGameHelperMetalLayer.m; sourceTree = "<group>"; };
 		05E6BA0124CCD49300ACFB35 /* OECoreVideoTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OECoreVideoTexture.m; sourceTree = "<group>"; };
 		05E6BA0224CCD49500ACFB35 /* OECoreVideoTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OECoreVideoTexture.h; sourceTree = "<group>"; };
 		05E6BA0324CCD49600ACFB35 /* OEGameHelperMetalLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEGameHelperMetalLayer.h; sourceTree = "<group>"; };
@@ -385,7 +385,7 @@
 				05E6BA0224CCD49500ACFB35 /* OECoreVideoTexture.h */,
 				05E6BA0124CCD49300ACFB35 /* OECoreVideoTexture.m */,
 				05E6BA0324CCD49600ACFB35 /* OEGameHelperMetalLayer.h */,
-				05E6BA0024CCD49200ACFB35 /* OEGameHelperMetalLayer.m */,
+				05B0781A273882C600F1E302 /* GameHelperMetalLayer.swift */,
 			);
 			name = Video;
 			sourceTree = "<group>";
@@ -724,6 +724,7 @@
 				0571321A259C33B9001CB13A /* NSFileManager+ExtendedAttributes.m in Sources */,
 				05ED1CFC259D43E800A2D400 /* LaunchControl.swift in Sources */,
 				0547FD9824E7717E005C1FFC /* OEShadersModel.swift in Sources */,
+				05B0781B273882C600F1E302 /* GameHelperMetalLayer.swift in Sources */,
 				05E6BA1D24CCD71D00ACFB35 /* OESystemPlugin.m in Sources */,
 				0547FDCF24E850EB005C1FFC /* NSXPCListener+HelperApp.m in Sources */,
 				05C40F8826F69B6F0072B722 /* ShaderParamValue.swift in Sources */,
@@ -741,7 +742,6 @@
 				05E6BA0524CCD49600ACFB35 /* OECoreVideoTexture.m in Sources */,
 				05E6B9FD24CCD46900ACFB35 /* OEOpenGL2GameRenderer.m in Sources */,
 				05D828DB24E98A8E00BB975E /* OEXPCMatchMaker.swift in Sources */,
-				05E6BA0424CCD49600ACFB35 /* OEGameHelperMetalLayer.m in Sources */,
 				0530C3B32512DF680050F90F /* OEScaledGameLayerView.swift in Sources */,
 				0547C2012707DC4100D386D3 /* UserDefaults+KeyValueStore.swift in Sources */,
 				05EEF0F02707B7E6008A03DC /* ShaderPresetsModel.swift in Sources */,
