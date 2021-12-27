@@ -25,8 +25,7 @@
 import Foundation
 import OpenEmuShaders
 
-@objc
-public final class ShaderParamValue: NSObject {
+@objc public final class ShaderParamValue: NSObject {
     @objc dynamic public var index: Int
     @objc dynamic public var name: String
     @objc dynamic public var desc: String
@@ -65,8 +64,7 @@ public final class ShaderParamValue: NSObject {
     }
 }
 
-@objc
-public final class ShaderParamGroupValue: NSObject {
+@objc public final class ShaderParamGroupValue: NSObject {
     @objc dynamic public var index: Int
     @objc dynamic public var name: String
     @objc dynamic public var desc: String

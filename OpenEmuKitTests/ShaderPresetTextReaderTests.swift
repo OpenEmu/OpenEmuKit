@@ -37,24 +37,24 @@ class ShaderPresetTextReaderTests: XCTestCase {
     
     func testReadShaderParams() throws {
         let got = try r.read(text: #""CRT":a=5.0;b=6.0"#)
-        expect(got) == ShaderPreset(name: "Unnamed", shader: "CRT", parameters: ["a": 5, "b": 6])
+        expect(got) == ShaderPresetData(name: "Unnamed", shader: "CRT", parameters: ["a": 5, "b": 6])
     }
     
     func testReadNameShaderParams() throws {
         let got = try r.read(text: #""Name","CRT":a=5.0;b=6.0"#)
-        expect(got) == ShaderPreset(name: "Name", shader: "CRT", parameters: ["a": 5, "b": 6])
+        expect(got) == ShaderPresetData(name: "Name", shader: "CRT", parameters: ["a": 5, "b": 6])
     }
 
     func testReadParams() throws {
         let got = try r.read(text: #"a=5.0;b=6.0"#)
-        expect(got) == ShaderPreset(name: "Unnamed", shader: "", parameters: ["a": 5, "b": 6])
+        expect(got) == ShaderPresetData(name: "Unnamed", shader: "", parameters: ["a": 5, "b": 6])
     }
 
     // MARK: - With signature
     
     func testReadShaderParamsSignature() throws {
         let got = try r.read(text: #""CRT":a=5.0;b=6.0@d80"#)
-        expect(got) == ShaderPreset(name: "Unnamed", shader: "CRT", parameters: ["a": 5, "b": 6])
+        expect(got) == ShaderPresetData(name: "Unnamed", shader: "CRT", parameters: ["a": 5, "b": 6])
     }
 
     func testShaderParamsIsValidSignature() throws {
@@ -84,7 +84,7 @@ class ShaderPresetTextReaderTests: XCTestCase {
 
     func testReadNameShaderParamsSignature() throws {
         let got = try r.read(text: #""Name","CRT":a=5.0;b=6.0@462"#)
-        expect(got) == ShaderPreset(name: "Name", shader: "CRT", parameters: ["a": 5, "b": 6])
+        expect(got) == ShaderPresetData(name: "Name", shader: "CRT", parameters: ["a": 5, "b": 6])
     }
 
     func testNameShaderParamsIsValidSignature() throws {
@@ -94,7 +94,7 @@ class ShaderPresetTextReaderTests: XCTestCase {
 
     func testReadParamsSignature() throws {
         let got = try r.read(text: #"a=5.0;b=6.0@346"#)
-        expect(got) == ShaderPreset(name: "Unnamed", shader: "", parameters: ["a": 5, "b": 6])
+        expect(got) == ShaderPresetData(name: "Unnamed", shader: "", parameters: ["a": 5, "b": 6])
     }
     
     func testInvalidSignature() {

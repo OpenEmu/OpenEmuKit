@@ -24,7 +24,7 @@
 
 import Foundation
 
-/// A type that manages the association of shader presets
+/// An object that manages the association of shader presets
 /// to system cores.
 public class SystemShaderPresetModel {
     let store: UserDefaults
@@ -41,7 +41,7 @@ public class SystemShaderPresetModel {
     
     @objc public var defaultPresetName: String {
         get {
-            if let name = store.string(forKey: makeGlobalKey()), self[name] != nil {
+            if let name = store.string(forKey: makeGlobalKey()), presets.exists(name) != nil {
                 return name
             }
             return "Pixellate"
@@ -74,11 +74,6 @@ public class SystemShaderPresetModel {
         
     // MARK: - Helpers
     
-    subscript(name: String) -> String? {
-        fatalError("Not implemented")
-    }
-    
     func makeGlobalKey() -> String { "videoShader.preset" }
-    
     func makeSystemKey(_ identifier: String) -> String { "videoShader.\(identifier).preset" }
 }

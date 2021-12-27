@@ -42,7 +42,7 @@ extension UserDefaults: ShaderPresetStore {
         string(forKey: Self.makeKey(name: name)) != nil
     }
     
-    public func presets(matching predicate: (ShaderPreset) -> Bool) -> [ShaderPreset] {
+    public func presets(matching predicate: (ShaderPresetData) -> Bool) -> [ShaderPresetData] {
         let r = ShaderPresetTextReader()
         return shaderPresetKeys.compactMap {
             guard let text = string(forKey: $0) else { return nil }
@@ -51,18 +51,18 @@ extension UserDefaults: ShaderPresetStore {
         .filter(predicate)
     }
     
-    public func findPresent(forName name: String) -> ShaderPreset? {
+    public func findPresent(forName name: String) -> ShaderPresetData? {
         fatalError("Not implemented")
     }
     
-    public func findPreset(forName name: String) -> ShaderPreset? {
+    public func findPreset(forName name: String) -> ShaderPresetData? {
         if let text = string(forKey: Self.makeKey(name: name)) {
             return try? ShaderPresetTextReader().read(text: text)
         }
         return nil
     }
     
-    public func save(_ preset: ShaderPreset) throws {
+    public func save(_ preset: ShaderPresetData) throws {
         let text = try ShaderPresetTextWriter().write(preset: preset, options: [.name, .shader])
         set(text, forKey: Self.makeKey(name: preset.name))
     }

@@ -24,25 +24,15 @@
 
 import Foundation
 
-public struct ShaderPreset: Hashable {
+public class ShaderPreset {
     public let name: String
-    public let shader: String
+    public let shader: OEShaderModel
     public var parameters: [String: Double]
-    public var isDefault: Bool { name == shader }
+    public var isDefault: Bool { name == shader.name }
     
-    public init(name: String, shader: String, parameters: [String: Double]) {
+    public init(name: String, shader: OEShaderModel, parameters: [String: Double]) {
         self.name       = name
         self.shader     = shader
         self.parameters = parameters
-    }
-    
-    public static func makeFrom(shader: String, params: [ShaderParamValue]) -> ShaderPreset {
-        ShaderPreset(
-            name: "Unnamed",
-            shader: shader,
-            parameters: Dictionary(uniqueKeysWithValues: params.compactMap { pv in
-                pv.isInitial ? nil : (pv.name, pv.value.doubleValue)
-            })
-        )
     }
 }

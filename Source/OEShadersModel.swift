@@ -209,6 +209,12 @@ public class OEShaderModel: NSObject {
         self.url    = url
     }
     
+    /// For testing
+    init(name: String) {
+        self.name = name
+        self.url  = URL(fileURLWithPath: "/shaders/\(name)")
+    }
+    
     public var defaultParameters: [ShaderParamValue] {
         ShaderParamValue.from(parameters: slangShader?.parameters ?? [])
     }

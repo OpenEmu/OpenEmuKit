@@ -29,22 +29,6 @@ public enum ShaderPresetWriteError: Error {
     case invalidCharacters
 }
 
-/*
- EBNF for shader preset
- 
- preset_id := '"' identifier '"'
- 
- shader_name := '"' identifier '"'
- 
- header := ( ( preset_id "," )? shader_name ':' )
- 
- parameter := identifier '=' double
- 
- parameters := parameter ( ',' parameter )*
- 
- preset := header? parameters
- */
-
 @frozen public struct ShaderPresetTextWriter {
     @frozen public struct Options: OptionSet {
         public let rawValue: Int
@@ -53,11 +37,11 @@ public enum ShaderPresetWriteError: Error {
             self.rawValue = rawValue
         }
         
-        public static let name      = Options(rawValue: 1 << 0)
-        public static let shader    = Options(rawValue: 1 << 1)
-        public static let sign      = Options(rawValue: 1 << 2)
+        public static let name      = Self(rawValue: 1 << 0)
+        public static let shader    = Self(rawValue: 1 << 1)
+        public static let sign      = Self(rawValue: 1 << 2)
         
-        public static let all: Options = [.name, .shader]
+        public static let all: Self = [.name, .shader]
     }
     
     static let invalidCharacters = #"'":@#|[]{}$%^&*()/\;<>!?`.,"#
@@ -72,7 +56,7 @@ public enum ShaderPresetWriteError: Error {
     
     public init() {}
     
-    public func write(preset c: ShaderPreset, options: Options = [.shader]) throws -> String {
+    public func write(preset c: ShaderPresetData, options: Options = [.shader]) throws -> String {
         var s = ""
         
         var wroteName = false
@@ -121,7 +105,6 @@ public enum ShaderPresetReadError: Error {
     case malformed
     case invalidSignature
 }
-
 @frozen public struct ShaderPresetTextReader {
     enum State {
         case key, value
@@ -138,7 +121,7 @@ public enum ShaderPresetReadError: Error {
         return Crypto.MD5.digest(string: parts[0]).prefix(3) == parts[1]
     }
     
-    public func read(text: String) throws -> ShaderPreset {
+    public func read(text: String) throws -> ShaderPresetData {
         // do we have a signature?
         var paramsEnd = text.endIndex
         if let idx = text.lastIndex(of: "@") {
@@ -164,11 +147,11 @@ public enum ShaderPresetReadError: Error {
         
         switch (name, shader) {
         case (.none, .none):
-            return ShaderPreset(name: "Unnamed", shader: "", parameters: params)
+            return ShaderPresetData(name: "Unnamed", shader: "", parameters: params)
         case (.none, .some(let shader)):
-            return ShaderPreset(name: "Unnamed", shader: shader, parameters: params)
+            return ShaderPresetData(name: "Unnamed", shader: shader, parameters: params)
         case (.some(let id), .some(let shader)):
-            return ShaderPreset(name: id, shader: shader, parameters: params)
+            return ShaderPresetData(name: id, shader: shader, parameters: params)
         default:
             throw ShaderPresetReadError.malformed
         }

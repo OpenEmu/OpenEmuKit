@@ -24,14 +24,31 @@
 
 import Foundation
 
-/// A ShaderPresetStore describes the behaviour required to
-/// persist shader presets.
-public protocol ShaderPresetStore {
-    // MARK: - Shader preset persistence functions
+public struct ShaderPresetData: Hashable {
+    public let name: String
+    public let shader: String
+    public var parameters: [String: Double]
+    public var isDefault: Bool { name == shader }
     
-    func presets(matching predicate: (ShaderPreset) -> Bool) -> [ShaderPreset]
-    func findPreset(forName name: String) -> ShaderPreset?
-    func save(_ preset: ShaderPreset) throws
-    func remove(_ name: String)
-    func exists(_ name: String) -> Bool
+    public init(name: String, shader: String, parameters: [String: Double]) {
+        self.name       = name
+        self.shader     = shader
+        self.parameters = parameters
+    }
+    
+    public init(preset: ShaderPreset) {
+        name = preset.name
+        shader = preset.shader.name
+        parameters = preset.parameters
+    }
+    
+    public static func makeFrom(shader: String, params: [ShaderParamValue]) -> Self {
+        Self(
+            name: "Unnamed",
+            shader: shader,
+            parameters: Dictionary(uniqueKeysWithValues: params.compactMap { pv in
+                pv.isInitial ? nil : (pv.name, pv.value.doubleValue)
+            })
+        )
+    }
 }

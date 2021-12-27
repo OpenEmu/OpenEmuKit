@@ -57,10 +57,10 @@ import Foundation
     
     /// Set the default shader for the specified system.
     /// - Parameters:
-    ///   - name: Name of the shader.
+    ///   - shader: The shader to assign to the system..
     ///   - identifier: The identifier of the system.
-    @objc public func setShaderName(_ name: String, forSystem identifier: String) {
-        store.set(name, forKey: makeSystemKey(identifier))
+    @objc public func setShader(_ shader: OEShaderModel, forSystem identifier: String) {
+        store.set(shader.name, forKey: makeSystemKey(identifier))
     }
     
     // MARK: - Internal methods
