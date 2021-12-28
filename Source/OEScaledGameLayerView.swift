@@ -53,6 +53,9 @@ import OpenEmuKitPrivate
     ///   - animated: `true` to animate the change in size.
     @objc public func setContentViewSize(_ size: NSSize, animated: Bool) {
         let size = size == .zero ? bounds.size : size
+        // do not animate size change if 'Reduce motion' accessibility setting is enabled
+        let reduceMotion = NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+        let animated = reduceMotion ? false : animated
         
         guard let view = contentView else { return }
         if contentViewConstraints.isEmpty {
