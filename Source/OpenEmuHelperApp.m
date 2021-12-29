@@ -279,12 +279,12 @@ static os_log_t LOG_DISPLAY;
     [CATransaction commit];
 }
 
-- (void)setShaderURL:(NSURL *)url parameters:(NSDictionary<NSString *, NSNumber *> *)parameters completionHandler:(void (^)(BOOL success, NSError * _Nullable error))block
+- (void)setShaderURL:(NSURL *)url parameters:(NSDictionary<NSString *, NSNumber *> *)parameters completionHandler:(void (^)(NSError * _Nullable error))block
 {
     [_gameCore performBlock:^{
         NSError *err = nil;
-        BOOL success = [self setShaderURL:url parameters:parameters error:&err];
-        block(success, err);
+        [self setShaderURL:url parameters:parameters error:&err];
+        block(err);
     }];
 }
 

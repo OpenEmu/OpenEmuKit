@@ -126,11 +126,11 @@ NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
     [_gameCoreHelper setBackingScaleFactor:newScaleFactor];
 }
 
-- (void)setShaderURL:(NSURL *)url parameters:(NSDictionary<NSString *, NSNumber *> *)parameters completionHandler:(void (^)(BOOL success, NSError * _Nullable error))block
+- (void)setShaderURL:(NSURL *)url parameters:(NSDictionary<NSString *, NSNumber *> *)parameters completionHandler:(void (^)(NSError * _Nullable error))block
 {
-    [_gameCoreHelper setShaderURL:url parameters:parameters completionHandler:^(BOOL success, NSError *error) {
+    [_gameCoreHelper setShaderURL:url parameters:parameters completionHandler:^(NSError *error) {
         CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, ^{
-            block(success, error);
+            block(error);
         });
     }];
 }

@@ -31,7 +31,7 @@ class ShaderPresetModelTests: XCTestCase {
     struct ShadersModel: OpenEmuKit.ShadersModel {
         let shaders: [String: OEShaderModel]
         
-        init(models: [OEShaderModel]) {
+        init(models: OEShaderModel...) {
             shaders = Dictionary(uniqueKeysWithValues: models.map { ($0.name, $0) })
         }
         
@@ -64,12 +64,12 @@ class ShaderPresetModelTests: XCTestCase {
         try! store.save(ShaderPresetData(name: "id3", shader: "MAME", parameters: [:]))
         try! store.save(ShaderPresetData(name: "id4", shader: "Retro", parameters: [:]))
 
-        let shaders = ShadersModel(models: [
+        let shaders = ShadersModel(models:
             OEShaderModel(name: "CRT"),
             OEShaderModel(name: "MAME"),
             OEShaderModel(name: "NTSC"),
-            OEShaderModel(name: "Retro"),
-        ])
+            OEShaderModel(name: "Retro")
+        )
         presets = ShaderPresetModel(store: store, shaders: shaders)
     }
     

@@ -33,14 +33,6 @@ protocol ShadersModel {
     subscript(name: String) -> OEShaderModel? { get }
 }
 
-struct OEShadersModelAdapter: ShadersModel {
-    let inner: OEShadersModel
-    
-    subscript(name: String) -> OEShaderModel? {
-        inner[name]
-    }
-}
-
 public class ShaderPresetModel {
     public enum Error: LocalizedError {
         case shaderDoesNotExist
@@ -117,12 +109,12 @@ public class ShaderPresetModel {
     
     /// Return the shader preset matching the specified name.
     ///
-    /// - Important:
+    /// - Note:
     /// This function returns `nil` if a preset is found
     /// but no valid shader is installed.
     ///
     /// - Parameter name: The name of the preset to locate.
-    /// - Returns: A matching preset.
+    /// - Returns: A matching preset or `nil`.
     public func findPreset(forName name: String) -> ShaderPreset? {
         queue.sync {
             self.getPreset(name)
@@ -178,4 +170,13 @@ public protocol ShaderPresetStore {
     func save(_ preset: ShaderPresetData) throws
     func remove(_ name: String)
     func exists(_ name: String) -> Bool
+}
+
+/// An object that adapts ``OEShaderModel`` to the ``ShadersModel`` protocol.
+struct OEShadersModelAdapter: ShadersModel {
+    let inner: OEShadersModel
+    
+    subscript(name: String) -> OEShaderModel? {
+        inner[name]
+    }
 }

@@ -39,9 +39,11 @@ public class SystemShaderPresetModel {
     
     // MARK: - Public API
     
-    @objc public var defaultPresetName: String {
+    /// Gets or sets the name for the default preset.
+    public var defaultPresetName: String {
         get {
-            if let name = store.string(forKey: makeGlobalKey()), presets.exists(name) != nil {
+            if let name = store.string(forKey: makeGlobalKey()),
+               presets.exists(name) {
                 return name
             }
             return "Pixellate"
@@ -52,6 +54,11 @@ public class SystemShaderPresetModel {
         }
     }
     
+    /// Returns the default shader preset.
+    public var defaultPreset: ShaderPreset {
+        presets.defaultPresetForShader(shaders.defaultShader)
+    }
+    
     /// Set the shader preset for the specified system.
     /// - Parameters:
     ///   - preset: The preset to assign to the system.
@@ -60,18 +67,18 @@ public class SystemShaderPresetModel {
         store.set(preset.name, forKey: makeSystemKey(identifier))
     }
     
-    public func findPresetForSystem(_ identifier: String) -> ShaderPreset {
-        if let name = store.string(forKey: makeSystemKey(identifier)) {
-            if let preset = presets.findPreset(forName: name) {
-                return preset
-            }
-        }
-        // TODO: fallback to default preset
-        // let model = shaders.findShader(forSystem: identifier)
-        // return ShaderPreset(name: model.name, shader: model.name, parameters: model.parameters(forIdentifier: identifier) ?? [:])
-        fatalError("Not implemented")
-    }
+    /// Finds the shader preset assigned to the specified system.
+    /// - Parameter identifier: The identifier for the system.
+    /// - Returns: The shader preset assigned to the system.
+    public func findPresetForSystem(_ identifier: String) -> ShaderPreset? {
+        guard
+            let name = store.string(forKey: makeSystemKey(identifier)),
+            let preset = presets.findPreset(forName: name)
+        else { return nil }
         
+        return preset
+    }
+    
     // MARK: - Helpers
     
     func makeGlobalKey() -> String { "videoShader.preset" }

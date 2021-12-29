@@ -28,7 +28,6 @@ public struct ShaderPresetData: Hashable {
     public let name: String
     public let shader: String
     public var parameters: [String: Double]
-    public var isDefault: Bool { name == shader }
     
     public init(name: String, shader: String, parameters: [String: Double]) {
         self.name       = name

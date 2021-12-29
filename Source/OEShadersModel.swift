@@ -147,7 +147,7 @@ extension NSNotification.Name {
         return path.appendingPathComponent(userPathName, isDirectory: true).appendingPathComponent("Shaders", isDirectory: true)
     }
     
-    // MARK: - helpers
+    // MARK: - Helpers
     
     func makeGlobalKey() -> String { "videoShader" }
     
@@ -185,7 +185,6 @@ extension NSNotification.Name {
                                                         options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants])
             else { continue }
             if let slangp = files.first(where: { $0.pathExtension == "slangp" }) {
-                // we have a file!
                 res.append(slangp)
             }
         }
@@ -194,11 +193,9 @@ extension NSNotification.Name {
     }
 }
 
-@objc
-@objcMembers
-public class OEShaderModel: NSObject {
-    public var name: String
-    public var url: URL
+@objc public class OEShaderModel: NSObject {
+    @objc public var name: String
+    @objc public var url: URL
     
     private lazy var slangShader: SlangShader? = {
         try? SlangShader(fromURL: url)
@@ -209,13 +206,15 @@ public class OEShaderModel: NSObject {
         self.url    = url
     }
     
-    /// For testing
+    /// Testing initializer.
     init(name: String) {
         self.name = name
         self.url  = URL(fileURLWithPath: "/shaders/\(name)")
     }
     
-    public var defaultParameters: [ShaderParamValue] {
+    
+    /// Returns the default parameters for the shader.
+    @objc public var defaultParameters: [ShaderParamValue] {
         ShaderParamValue.from(parameters: slangShader?.parameters ?? [])
     }
     
@@ -227,7 +226,9 @@ public class OEShaderModel: NSObject {
         return "\(name) \(url.absoluteString)"
     }
     
-    public func readGroups() -> [ShaderParamGroupValue] {
+    /// Returns an array of the parameter groups for the shader.
+    /// - Returns: An array of the parameter groups for the shader.
+    @objc public func readGroups() -> [ShaderParamGroupValue] {
         guard let ss = slangShader else { return [] }
         
         if let groups = readGroupsModel() {

@@ -85,7 +85,7 @@ typedef NS_ENUM(NSUInteger, OEGameCoreEffectsMode) {
 
 #pragma mark - Shader management
 
-- (void)setShaderURL:(NSURL *)url parameters:(NSDictionary<NSString *, NSNumber *> * _Nullable)parameters completionHandler:(void (^)(BOOL success, NSError * _Nullable error))block;
+- (void)setShaderURL:(NSURL *)url parameters:(NSDictionary<NSString *, NSNumber *> * _Nullable)parameters completionHandler:(void (^)(NSError * _Nullable error))block;
 - (void)setShaderParameterValue:(CGFloat)value forKey:(NSString *)key;
 
 #pragma mark - Emulator control
