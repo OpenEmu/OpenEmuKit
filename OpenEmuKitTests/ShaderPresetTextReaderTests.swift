@@ -40,9 +40,19 @@ class ShaderPresetTextReaderTests: XCTestCase {
         expect(got) == ShaderPresetData(name: "Unnamed", shader: "CRT", parameters: ["a": 5, "b": 6])
     }
     
+    func testReadShaderParamsWithID() throws {
+        let got = try r.read(text: #""CRT":a=5.0;b=6.0"#, id: "id1")
+        expect(got) == ShaderPresetData(name: "Unnamed", shader: "CRT", parameters: ["a": 5, "b": 6], id: "id1")
+    }
+    
     func testReadNameShaderParams() throws {
         let got = try r.read(text: #""Name","CRT":a=5.0;b=6.0"#)
         expect(got) == ShaderPresetData(name: "Name", shader: "CRT", parameters: ["a": 5, "b": 6])
+    }
+
+    func testReadNameShaderParamsWithID() throws {
+        let got = try r.read(text: #""Name","CRT":a=5.0;b=6.0"#, id: "id1")
+        expect(got) == ShaderPresetData(name: "Name", shader: "CRT", parameters: ["a": 5, "b": 6], id: "id1")
     }
 
     func testReadParams() throws {
@@ -116,5 +126,11 @@ class ShaderPresetTextReaderTests: XCTestCase {
         expect {
             try r.read(text: #"a=5.0;b=6.0@346f"#)
         }.to(throwError(ShaderPresetReadError.invalidSignature))
+    }
+    
+    func testReadPerformance() {
+        measure(metrics: [XCTCPUMetric(), XCTMemoryMetric()]) {
+            _ = try? r.read(text: #""Name","CRT":a=5.0;b=6.0;c=2.2;d=1.1;e=1.1;f=1.1"#)
+        }
     }
 }

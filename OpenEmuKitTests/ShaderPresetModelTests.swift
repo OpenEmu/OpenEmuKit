@@ -57,12 +57,12 @@ class ShaderPresetModelTests: XCTestCase {
         defaults = UserDefaults(suiteName: path)
         defaults.removePersistentDomain(forName: path)
         
-        store = defaults
+        store = UserDefaultsPresetStore(store: defaults)
         // swiftlint:disable force_try
-        try! store.save(ShaderPresetData(name: "id1", shader: "CRT", parameters: [:]))
-        try! store.save(ShaderPresetData(name: "id2", shader: "MAME", parameters: [:]))
-        try! store.save(ShaderPresetData(name: "id3", shader: "MAME", parameters: [:]))
-        try! store.save(ShaderPresetData(name: "id4", shader: "Retro", parameters: [:]))
+        try! store.save(ShaderPresetData(name: "shader 1", shader: "CRT", parameters: [:], id: "id1"))
+        try! store.save(ShaderPresetData(name: "shader 2", shader: "MAME", parameters: [:], id: "id2"))
+        try! store.save(ShaderPresetData(name: "shader 3", shader: "MAME", parameters: [:], id: "id3"))
+        try! store.save(ShaderPresetData(name: "shader 4", shader: "Retro", parameters: [:], id: "id4"))
 
         let shaders = ShadersModel(models:
             OEShaderModel(name: "CRT"),
@@ -79,35 +79,52 @@ class ShaderPresetModelTests: XCTestCase {
     }
 
     func testCanFindPreset() {
-        expect(self.presets.findPreset(forName: "id1"))
+        expect(self.presets.findPreset(byID: "id1"))
+            .toNot(be(nil))
+        expect(self.presets.findPreset(byName: "shader 2"))
             .toNot(be(nil))
     }
     
     func testInstancesAreSame() {
-        let a = presets.findPreset(forName: "id1")
-        let b = presets.findPreset(forName: "id1")
-        expect(a) === b
+        expect(self.presets.findPreset(byID: "id2")) === presets.findPreset(byID: "id2")
+        expect(self.presets.findPreset(byName: "shader 1")) === presets.findPreset(byName: "shader 1")
     }
     
     func testFindPresets() {
-        expect(self.presets.findPresets(forShader: "MAME"))
+        expect(self.presets.findPresets(byShader: "MAME"))
             .to(haveCount(2), description: "expected two presets for MAME shader")
         
-        expect(self.presets.findPresets(forShader: "foo"))
+        expect(self.presets.findPresets(byShader: "foo"))
             .to(haveCount(0), description: "expected no presets for foo shader")
     }
     
     func testExists() {
-        expect(self.presets.exists("id1")) == true
-        expect(self.presets.exists("foo")) == false
+        expect(self.presets.exists(byID: "id2")) == true
+        expect(self.presets.exists(byID: "foo")) == false
+
+        expect(self.presets.exists(byName: "shader 1")) == true
+        expect(self.presets.exists(byName: "foo")) == false
     }
     
     func testRemovePreset() {
-        let a = presets.findPreset(forName: "id2")
+        let a = presets.findPreset(byID: "id2")
         expect(a).toNot(beNil())
         presets.removePreset(a!)
-        expect(self.presets.findPreset(forName: "id2")).to(beNil())
-        expect(self.presets.findPresets(forShader: "MAME"))
+        expect(self.presets.findPreset(byID: "id2")).to(beNil())
+        expect(self.presets.findPresets(byShader: "MAME"))
             .to(haveCount(1), description: "expected one preset for MAME shader")
+    }
+    
+    func testRenamePreset() throws {
+        guard let a = presets.findPreset(byID: "id2")
+        else {
+            XCTFail("Expected to find id2")
+            return
+        }
+        let oldName = a.name
+        a.name = "dummy name"
+        try presets.savePreset(a)
+        expect(self.presets.findPreset(byName: oldName)).to(beNil())
+        expect(self.presets.findPreset(byName: "dummy name")).toNot(beNil())
     }
 }

@@ -44,7 +44,7 @@ class ShaderPresetStoreTests: XCTestCase {
         defaults = UserDefaults(suiteName: path)
         defaults.removePersistentDomain(forName: path)
         
-        store = defaults
+        store = UserDefaultsPresetStore(store: defaults)
     }
     
     override func tearDown() {
@@ -57,11 +57,62 @@ class ShaderPresetStoreTests: XCTestCase {
         try store.save(ShaderPresetData(name: "id2", shader: "CRT", parameters: [:]))
         try store.save(ShaderPresetData(name: "id3", shader: "MAME", parameters: [:]))
         try store.save(ShaderPresetData(name: "id4", shader: "Pixellate", parameters: [:]))
-        let presets = store.presets(matching: { $0.shader == "CRT" })
-        let exp = [
-            ShaderPresetData(name: "id1", shader: "CRT", parameters: [:]),
-            ShaderPresetData(name: "id2", shader: "CRT", parameters: [:]),
-        ]
-        expect(presets).to(contain(exp))
+    
+        do {
+            let presets = store.findPresets(byShader: "CRT")
+            let exp = [
+                ShaderPresetData(name: "id1", shader: "CRT", parameters: [:]),
+                ShaderPresetData(name: "id2", shader: "CRT", parameters: [:]),
+            ]
+            expect(presets).to(contain(exp))
+        }
+        
+        // Test removing a preset
+        do {
+            let preset = store.findPreset(byID: "id1")!
+            store.remove(preset)
+            let presets = store.findPresets(byShader: "CRT")
+            let exp = [
+                ShaderPresetData(name: "id2", shader: "CRT", parameters: [:]),
+            ]
+            expect(presets).to(contain(exp))
+        }
+    }
+    
+    func testFailsForDuplicateName() {
+        let store = store!
+        expect {
+            try store.save(ShaderPresetData(name: "foo", shader: "CRT", parameters: [:], id: "id1"))
+            try store.save(ShaderPresetData(name: "foo", shader: "MAME", parameters: [:], id: "id2"))
+        }
+        .to(throwError(ShaderPresetStoreError.duplicateName))
+    }
+    
+    func testRenameShaderSucceeds() throws {
+        let store = store!
+        try store.save(ShaderPresetData(name: "shader a", shader: "CRT", parameters: [:], id: "id1"))
+        try store.save(ShaderPresetData(name: "shader b", shader: "CRT", parameters: [:], id: "id1"))
+        expect(store.findPreset(byName: "shader a")).to(beNil())
+        expect(store.findPreset(byName: "shader b")).toNot(beNil())
+    }
+    
+    func testRenameShaderFailsForDuplicateName() throws {
+        let store = store!
+        try store.save(ShaderPresetData(name: "shader a", shader: "CRT", parameters: [:], id: "id1"))
+        try store.save(ShaderPresetData(name: "shader b", shader: "CRT", parameters: [:], id: "id2"))
+        
+        expect {
+            try store.save(ShaderPresetData(name: "shader b", shader: "CRT", parameters: [:], id: "id1"))
+        }
+        .to(throwError(ShaderPresetStoreError.duplicateName))
+    }
+
+    func testFailsForModifiedShader() {
+        let store = store!
+        expect {
+            try store.save(ShaderPresetData(name: "foo", shader: "CRT", parameters: [:], id: "id1"))
+            try store.save(ShaderPresetData(name: "foo", shader: "MAME", parameters: [:], id: "id1"))
+        }
+        .to(throwError(ShaderPresetStoreError.shaderModified))
     }
 }

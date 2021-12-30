@@ -105,6 +105,7 @@ public enum ShaderPresetReadError: Error {
     case malformed
     case invalidSignature
 }
+
 @frozen public struct ShaderPresetTextReader {
     enum State {
         case key, value
@@ -121,7 +122,7 @@ public enum ShaderPresetReadError: Error {
         return Crypto.MD5.digest(string: parts[0]).prefix(3) == parts[1]
     }
     
-    public func read(text: String) throws -> ShaderPresetData {
+    public func read(text: String, id: String? = nil) throws -> ShaderPresetData {
         // do we have a signature?
         var paramsEnd = text.endIndex
         if let idx = text.lastIndex(of: "@") {
@@ -147,11 +148,11 @@ public enum ShaderPresetReadError: Error {
         
         switch (name, shader) {
         case (.none, .none):
-            return ShaderPresetData(name: "Unnamed", shader: "", parameters: params)
+            return ShaderPresetData(name: "Unnamed", shader: "", parameters: params, id: id)
         case (.none, .some(let shader)):
-            return ShaderPresetData(name: "Unnamed", shader: shader, parameters: params)
-        case (.some(let id), .some(let shader)):
-            return ShaderPresetData(name: id, shader: shader, parameters: params)
+            return ShaderPresetData(name: "Unnamed", shader: shader, parameters: params, id: id)
+        case (.some(let name), .some(let shader)):
+            return ShaderPresetData(name: name, shader: shader, parameters: params, id: id)
         default:
             throw ShaderPresetReadError.malformed
         }

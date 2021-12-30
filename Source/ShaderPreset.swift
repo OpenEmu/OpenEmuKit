@@ -24,15 +24,17 @@
 
 import Foundation
 
-public class ShaderPreset {
-    public let name: String
+public class ShaderPreset: Identifiable {
+    public let id: String
+    public var name: String
     public let shader: OEShaderModel
     public var parameters: [String: Double]
     public var isDefault: Bool { name == shader.name }
     
-    public init(name: String, shader: OEShaderModel, parameters: [String: Double]) {
+    public init(name: String, shader: OEShaderModel, parameters: [String: Double]? = nil, id: String? = nil) {
+        self.id         = id ?? UUID().uuidString
         self.name       = name
         self.shader     = shader
-        self.parameters = parameters
+        self.parameters = parameters ?? Dictionary(uniqueKeysWithValues: shader.defaultParameters.map { ($0.name, $0.value.doubleValue) })
     }
 }

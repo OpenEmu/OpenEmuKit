@@ -40,10 +40,10 @@ public class SystemShaderPresetModel {
     // MARK: - Public API
     
     /// Gets or sets the name for the default preset.
-    public var defaultPresetName: String {
+    public var defaultPresetByID: String {
         get {
             if let name = store.string(forKey: makeGlobalKey()),
-               presets.exists(name) {
+               presets.exists(byID: name) {
                 return name
             }
             return "Pixellate"
@@ -73,7 +73,7 @@ public class SystemShaderPresetModel {
     public func findPresetForSystem(_ identifier: String) -> ShaderPreset? {
         guard
             let name = store.string(forKey: makeSystemKey(identifier)),
-            let preset = presets.findPreset(forName: name)
+            let preset = presets.findPreset(byName: name)
         else { return nil }
         
         return preset

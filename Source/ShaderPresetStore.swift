@@ -24,33 +24,35 @@
 
 import Foundation
 
-public struct ShaderPresetData: Identifiable, Hashable {
-    public let id: String
-    public let name: String
-    public let shader: String
-    public var parameters: [String: Double]
+public enum ShaderPresetStoreError: Error {
+    /// A preset with the same name already exists
+    case duplicateName
     
-    public init(name: String, shader: String, parameters: [String: Double], id: String? = nil) {
-        self.id         = id ?? name
-        self.name       = name
-        self.shader     = shader
-        self.parameters = parameters
-    }
+    /// The preset shader was changed
+    case shaderModified
     
-    public init(preset: ShaderPreset) {
-        id          = preset.id
-        name        = preset.name
-        shader      = preset.shader.name
-        parameters  = preset.parameters
-    }
-    
-    public static func makeFrom(shader: String, params: [ShaderParamValue]) -> Self {
-        Self(
-            name: "Unnamed",
-            shader: shader,
-            parameters: Dictionary(uniqueKeysWithValues: params.compactMap { pv in
-                pv.isInitial ? nil : (pv.name, pv.value.doubleValue)
-            })
-        )
-    }
+    case writeError(ShaderPresetWriteError)
+}
+
+/// A ShaderPresetStore describes the behaviour required to
+/// persist ``ShaderPresetData``.
+public protocol ShaderPresetStore {
+    /// Returns an array of shader presets matching the specified shader name.
+    /// - Parameter name: The name of the shader to use to fetch the matching presets.
+    /// - Returns: An array of ``ShaderPresetData`` objects.
+    func findPresets(byShader name: String) -> [ShaderPresetData]
+
+    /// Returns the shader preset for the specified preset name.
+    /// - Parameter name: The name of the preset to find.
+    /// - Returns: A preset matching the specified name.
+    func findPreset(byName name: String) -> ShaderPresetData?
+
+    /// Returns the shader preset for the specified identifier.
+    /// - Parameter id: The identifier of the preset to find.
+    /// - Returns: A preset matching the specified identifier.
+    func findPreset(byID id: String) -> ShaderPresetData?
+    func save(_ preset: ShaderPresetData) throws
+    func remove(_ preset: ShaderPresetData)
+    func exists(byName name: String) -> Bool
+    func exists(byID id: String) -> Bool
 }
