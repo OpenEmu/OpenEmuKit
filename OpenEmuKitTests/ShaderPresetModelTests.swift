@@ -41,8 +41,8 @@ class ShaderPresetModelTests: XCTestCase {
     }
     
     private var defaults: UserDefaults!
-    private var store: ShaderPresetStore!
-    private var presets: ShaderPresetModel!
+    private var store: ShaderPresetStorage!
+    private var presets: ShaderPresetStore!
     
     private var path: String!
     
@@ -57,7 +57,7 @@ class ShaderPresetModelTests: XCTestCase {
         defaults = UserDefaults(suiteName: path)
         defaults.removePersistentDomain(forName: path)
         
-        store = UserDefaultsPresetStore(store: defaults)
+        store = UserDefaultsPresetStorage(store: defaults)
         // swiftlint:disable force_try
         try! store.save(ShaderPresetData(name: "shader 1", shader: "CRT", parameters: [:], id: "id1"))
         try! store.save(ShaderPresetData(name: "shader 2", shader: "MAME", parameters: [:], id: "id2"))
@@ -70,7 +70,7 @@ class ShaderPresetModelTests: XCTestCase {
             OEShaderModel(name: "NTSC"),
             OEShaderModel(name: "Retro")
         )
-        presets = ShaderPresetModel(store: store, shaders: shaders)
+        presets = ShaderPresetStore(store: store, shaders: shaders)
     }
     
     override func tearDown() {

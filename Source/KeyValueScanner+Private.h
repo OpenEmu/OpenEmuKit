@@ -1,4 +1,4 @@
-// Copyright (c) 2021, OpenEmu Team
+// Copyright (c) 2022, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -22,31 +22,21 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import Foundation
-import OpenEmuKitPrivate
+#import "KeyValueScanner.h"
 
-extension PScanner {
-    enum Error: Swift.Error {
-        case malformed
-    }
+typedef struct _KVScanner {
+    /* KVScanner state. */
+    int cs;
+    int act;
+    uint8_t const * ts;
+    uint8_t const * te;
+    uint8_t const * p;
+    uint8_t const * pe;
+    uint8_t const * eof;
+    bool done;
     
-    static func parse<T: StringProtocol>(text: T) throws -> [(ScannerToken, String)] {
-        let sc = Self()
-        defer { scanner_free(sc) }
-        
-        return try text.withFastUTF8IfAvailable { bp throws -> [(ScannerToken, String)] in
-            sc.setData(bp.baseAddress!, length: bp.count)
-            
-            var tokens = [(ScannerToken, String)]()
-            
-            while true {
-                let tok = sc.scan()
-                guard tok != .error else { throw Error.malformed }
-                guard tok != .eof else { break }
-                tokens.append((tok, String(sc.text)))
-            }
-            
-            return tokens
-        }
-    }
-}
+    uint8_t const * src;
+    size_t src_len;
+    
+    size_t len;
+} KVScanner;

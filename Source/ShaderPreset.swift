@@ -24,17 +24,28 @@
 
 import Foundation
 
-public class ShaderPreset: Identifiable {
+@objc public class ShaderPreset: NSObject, Identifiable {
     public let id: String
     public var name: String
     public let shader: OEShaderModel
     public var parameters: [String: Double]
-    public var isDefault: Bool { name == shader.name }
     
     public init(name: String, shader: OEShaderModel, parameters: [String: Double]? = nil, id: String? = nil) {
-        self.id         = id ?? UUID().uuidString
+        // generate an ID that is useful for us humans, but still unique enough
+        // that a user won't generate duplicates.
+        self.id         = id ?? "\(shader.name):\(UInt(Date().timeIntervalSince1970))"
         self.name       = name
         self.shader     = shader
-        self.parameters = parameters ?? Dictionary(uniqueKeysWithValues: shader.defaultParameters.map { ($0.name, $0.value.doubleValue) })
+        self.parameters = parameters ?? Dictionary(allParams: shader.defaultParameters)
+        super.init()
+    }
+}
+
+extension ShaderPresetData {
+    public init(preset: ShaderPreset) {
+        id          = preset.id
+        name        = preset.name
+        shader      = preset.shader.name
+        parameters  = preset.parameters
     }
 }

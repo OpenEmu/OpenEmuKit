@@ -1,4 +1,4 @@
-// Copyright (c) 2021, OpenEmu Team
+// Copyright (c) 2022, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -24,16 +24,34 @@
 
 import Foundation
 
-public struct ShaderPresetData: Identifiable, Hashable, Codable {
-    public let id: String
-    public let name: String
-    public let shader: String
-    public var parameters: [String: Double]
+struct PeekableIterator<Base: IteratorProtocol>: IteratorProtocol {
+    private var peeked: Base.Element??
+    private var iter: Base
     
-    public init(name: String, shader: String, parameters: [String: Double], id: String? = nil) {
-        self.id         = id ?? name
-        self.name       = name
-        self.shader     = shader
-        self.parameters = parameters
+    init(_ base: Base) {
+        iter = base
+    }
+    
+    mutating func peek() -> Base.Element? {
+        if peeked == nil {
+            peeked = iter.next()
+        }
+        return peeked!
+    }
+    
+    @discardableResult
+    mutating func next() -> Base.Element? {
+        if let val = peeked {
+            peeked = nil
+            return val
+        }
+        
+        return iter.next()
+    }
+}
+
+extension Sequence {
+    func makePeekableIterator() -> PeekableIterator<Self.Iterator> {
+        return PeekableIterator(makeIterator())
     }
 }

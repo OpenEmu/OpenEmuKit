@@ -24,35 +24,184 @@
 
 import Foundation
 
-public enum ShaderPresetStoreError: Error {
-    /// A preset with the same name already exists
-    case duplicateName
-    
-    /// The preset shader was changed
-    case shaderModified
-    
-    case writeError(ShaderPresetWriteError)
+extension NSNotification.Name {
+    /// Posted when a shader preset is updated.
+    public static let shaderPresetDidChange = NSNotification.Name("shaderPresetDidChange")
 }
 
-/// A ShaderPresetStore describes the behaviour required to
-/// persist ``ShaderPresetData``.
-public protocol ShaderPresetStore {
-    /// Returns an array of shader presets matching the specified shader name.
-    /// - Parameter name: The name of the shader to use to fetch the matching presets.
-    /// - Returns: An array of ``ShaderPresetData`` objects.
-    func findPresets(byShader name: String) -> [ShaderPresetData]
+/// A type that can lookup an ``OEShaderModel`` by name.
+protocol ShadersModel {
+    subscript(name: String) -> OEShaderModel? { get }
+}
 
-    /// Returns the shader preset for the specified preset name.
-    /// - Parameter name: The name of the preset to find.
-    /// - Returns: A preset matching the specified name.
-    func findPreset(byName name: String) -> ShaderPresetData?
+public class ShaderPresetStore {
+    public enum Error: LocalizedError {
+        case shaderDoesNotExist
+    }
+    
+    let store: ShaderPresetStorage
+    let shaders: ShadersModel
+    let queue = DispatchQueue(label: "org.openemu.shaderPresetModel", target: DispatchQueue.global(qos: .userInitiated))
+    
+    // Indices
+    var byID = [String: ShaderPreset]() // map id   → preset
+    var byName = [String: String]()     // map name → id
+    
+    /// tracks the persisted name of the shader
+    var idToName = [String: String]()
+    
+    public init(store: ShaderPresetStorage, shaders: OEShaderStore) {
+        self.store      = store
+        self.shaders    = OEShadersModelAdapter(inner: shaders)
+    }
+    
+    /// Initializer for testing
+    init(store: ShaderPresetStorage, shaders: ShadersModel) {
+        self.store      = store
+        self.shaders    = shaders
+    }
+    
+    /// Return the default preset for the matching shader.
+    /// - Parameter shader: The shader to retrieve the default preset.
+    /// - Returns: A matching preset.
+    public func defaultPresetForShader(_ shader: OEShaderModel) -> ShaderPreset {
+        if let preset = findPreset(byID: shader.name) {
+            return preset
+        }
+        
+        let data = ShaderPresetData(name: shader.name,
+                                    shader: shader.name,
+                                    parameters: Dictionary(allParams: shader.defaultParameters),
+                                    id: shader.name)
+        
+        return queue.sync {
+            makePreset(data: data, shader: shader)
+        }
+    }
+    
+    public func savePreset(_ preset: ShaderPreset) throws {
+        let data = ShaderPresetData(preset: preset)
+        try store.save(data)
+        
+        queue.async(flags: .barrier) {
+            if self.byID[data.id] == nil {
+                // new item
+                self.byID[data.id] = preset
+                self.byName[data.name] = data.id
+                self.idToName[data.id] = data.name
+            } else if let name = self.idToName[data.id], name != data.name {
+                self.byName.removeValue(forKey: name)
+                self.byName[data.name] = data.id
+                self.idToName[data.id] = data.name
+            }
+        }
+    }
+    
+    public func removePreset(_ preset: ShaderPreset) {
+        let data = ShaderPresetData(preset: preset)
+        store.remove(data)
+        queue.async(flags: .barrier) {
+            self.byID.removeValue(forKey: data.id)
+            if let name = self.idToName.removeValue(forKey: data.id) {
+                self.byName.removeValue(forKey: name)
+            }
+        }
+    }
+    
+    /// Find all presets that depend on the specified shader.
+    /// - Parameter name: Name of the shader.
+    /// - Returns: An array of matching shader presets.
+    public func findPresets(byShader name: String) -> [ShaderPreset] {
+        guard let shader = shaders[name] else { return [] }
+        
+        return queue.sync {
+            store.findPresets(byShader: name)
+                .map {
+                    byID[$0.id] ?? makePreset(data: $0, shader: shader)
+                }
+        }
+    }
+    
+    /// Return the shader preset matching the specified name.
+    ///
+    /// - Note:
+    /// This function returns `nil` if a preset is found
+    /// but no valid shader is installed.
+    ///
+    /// - Parameter name: The name of the preset to locate.
+    /// - Returns: A matching preset or `nil`.
+    public func findPreset(byName name: String) -> ShaderPreset? {
+        queue.sync {
+            getPreset(byName: name)
+        }
+    }
+    
+    public func findPreset(byID id: String) -> ShaderPreset? {
+        queue.sync {
+            getPreset(byID: id)
+        }
+    }
+    
+    /// Determines if a preset exists with the specified name.
+    /// - Parameter name: The unique name of the preset to search for.
+    /// - Returns: `true` if a preset exists.
+    public func exists(byName name: String) -> Bool {
+        store.exists(byName: name)
+    }
+    
+    /// Determines if a preset exists with the specified id.
+    /// - Parameter id: The unique identifier of the preset to search for.
+    /// - Returns: `true` if a preset exists.
+    public func exists(byID id: String) -> Bool {
+        store.exists(byID: id)
+    }
+    
+    // MARK: - Helpers
+    
+    /// Load the preset matching the specified identifier.
+    ///
+    /// - warning:
+    /// Must be called from dispatch queue only.
+    private func getPreset(byID id: String) -> ShaderPreset? {
+        if let loaded = byID[id] {
+            return loaded
+        }
+        
+        guard
+            let data = store.findPreset(byID: id),
+            let shader = shaders[data.shader]
+        else { return nil }
+        
+        return makePreset(data: data, shader: shader)
+    }
+    
+    private func getPreset(byName name: String) -> ShaderPreset? {
+        if let id = byName[name] {
+            return getPreset(byID: id)
+        }
+        
+        guard
+            let data   = store.findPreset(byName: name),
+            let shader = shaders[data.shader]
+        else { return nil }
+        
+        return makePreset(data: data, shader: shader)
+    }
+    
+    private func makePreset(data: ShaderPresetData, shader: OEShaderModel) -> ShaderPreset {
+        let preset = ShaderPreset(name: data.name, shader: shader, parameters: data.parameters, id: data.id)
+        byID[data.id]     = preset
+        byName[data.name] = preset.id
+        idToName[data.id] = preset.name
+        return preset
+    }
+}
 
-    /// Returns the shader preset for the specified identifier.
-    /// - Parameter id: The identifier of the preset to find.
-    /// - Returns: A preset matching the specified identifier.
-    func findPreset(byID id: String) -> ShaderPresetData?
-    func save(_ preset: ShaderPresetData) throws
-    func remove(_ preset: ShaderPresetData)
-    func exists(byName name: String) -> Bool
-    func exists(byID id: String) -> Bool
+/// An object that adapts ``OEShaderModel`` to the ``ShadersModel`` protocol.
+struct OEShadersModelAdapter: ShadersModel {
+    let inner: OEShaderStore
+    
+    subscript(name: String) -> OEShaderModel? {
+        inner[name]
+    }
 }

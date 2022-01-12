@@ -1,6 +1,4 @@
-
-/* #line 1 "ShaderPresetScanner.rl" */
-// Copyright (c) 2021, OpenEmu Team
+// Copyright (c) 2022, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -25,21 +23,29 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 @import Foundation;
-#import "ShaderPresetScanner+Private.h"
 
-PScanner scanner_create()
-{
-    return calloc(1, sizeof(Scanner));
-}
+typedef NS_ENUM(NSUInteger, KVToken) {
+    KVTokenNone                 ,
+    KVTokenError                ,
+    KVTokenEOF                  NS_SWIFT_NAME(eof),
+    KVTokenIdentifier           ,
+    KVTokenSystemIdentifier     ,
+    KVTokenFloat                ,
+    KVTokenString               ,
+};
 
-void scanner_free(PScanner ps)
-{
-    free(ps);
-}
+NS_ASSUME_NONNULL_BEGIN
 
-NSString * scanner_text(PScanner ps)
-{
-    Scanner *s = (Scanner *)ps;
-    if (s->len == 0) return @"";
-    return [[NSString alloc] initWithBytesNoCopy:(void *)s->ts length:s->len encoding:NSASCIIStringEncoding freeWhenDone:NO];
-}
+typedef struct KVScanner * PKVScanner __attribute__((__swift_wrapper__(struct)));
+
+extern PKVScanner   kv_scanner_create(void)
+                    NS_SWIFT_NAME(PKVScanner.init());
+extern void         kv_scanner_free(PKVScanner s);
+extern void         kv_scanner_init( PKVScanner s, uint8_t const * src, size_t src_len )
+                    NS_SWIFT_NAME(PKVScanner.setData(self:_:length:));
+extern KVToken      kv_scanner_scan( PKVScanner s )
+                    NS_SWIFT_NAME(PKVScanner.scan(self:));
+extern NSString *   kv_scanner_text(PKVScanner ps)
+                    NS_SWIFT_NAME(getter:PKVScanner.text(self:));
+
+NS_ASSUME_NONNULL_END

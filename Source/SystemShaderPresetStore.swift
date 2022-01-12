@@ -26,12 +26,12 @@ import Foundation
 
 /// An object that manages the association of shader presets
 /// to system cores.
-public class SystemShaderPresetModel {
+public class SystemShaderPresetStore {
     let store: UserDefaults
-    let presets: ShaderPresetModel
-    let shaders: OEShadersModel
+    let presets: ShaderPresetStore
+    let shaders: OEShaderStore
     
-    public init(store: UserDefaults, presets: ShaderPresetModel, shaders: OEShadersModel) {
+    public init(store: UserDefaults, presets: ShaderPresetStore, shaders: OEShaderStore) {
         self.store      = store
         self.presets    = presets
         self.shaders    = shaders
@@ -42,9 +42,8 @@ public class SystemShaderPresetModel {
     /// Gets or sets the name for the default preset.
     public var defaultPresetByID: String {
         get {
-            if let name = store.string(forKey: makeGlobalKey()),
-               presets.exists(byID: name) {
-                return name
+            if let id = store.string(forKey: makeGlobalKey()), presets.exists(byID: id) {
+                return id
             }
             return "Pixellate"
         }
@@ -64,7 +63,13 @@ public class SystemShaderPresetModel {
     ///   - preset: The preset to assign to the system.
     ///   - identifier: The identifier of the system.
     public func setPreset(_ preset: ShaderPreset, forSystem identifier: String) {
-        store.set(preset.name, forKey: makeSystemKey(identifier))
+        store.set(preset.id, forKey: makeSystemKey(identifier))
+    }
+    
+    /// Removes the preset assigned to the specified system.
+    /// - Parameter identifier: The system identifier to clear the preset.
+    public func resetPresetForSystem(_ identifier: String) {
+        store.removeObject(forKey: makeSystemKey(identifier))
     }
     
     /// Finds the shader preset assigned to the specified system.
@@ -72,8 +77,8 @@ public class SystemShaderPresetModel {
     /// - Returns: The shader preset assigned to the system.
     public func findPresetForSystem(_ identifier: String) -> ShaderPreset? {
         guard
-            let name = store.string(forKey: makeSystemKey(identifier)),
-            let preset = presets.findPreset(byName: name)
+            let id = store.string(forKey: makeSystemKey(identifier)),
+            let preset = presets.findPreset(byID: id)
         else { return nil }
         
         return preset

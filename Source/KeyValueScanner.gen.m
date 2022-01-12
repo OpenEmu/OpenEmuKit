@@ -1,6 +1,6 @@
 
-/* #line 1 "ShaderPresetScanner.rl" */
-// Copyright (c) 2021, OpenEmu Team
+/* #line 1 "KeyValueScanner.rl" */
+// Copyright (c) 2022, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -27,121 +27,118 @@
 // ****
 // Generated with
 //
-// ragel -L -C ShaderPresetScanner.rl -o ShaderPresetScanner.gen.m
+// ragel -L -C KeyValueScanner.rl -o KeyValueScanner.gen.m
 //
 // ****
 
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "ShaderPresetScanner+Private.h"
+#include "KeyValueScanner+Private.h"
 
 
-/* #line 41 "ShaderPresetScanner.gen.m" */
-static const char _Scanner_actions[] = {
-	0, 1, 0, 1, 1, 1, 4, 1, 
-	5, 2, 0, 1, 2, 1, 2, 2, 
-	1, 3
+/* #line 41 "KeyValueScanner.gen.m" */
+static const char _KVScanner_actions[] = {
+	0, 1, 0, 2, 1, 2, 2, 1, 
+	3, 2, 1, 4, 2, 1, 5, 3, 
+	0, 1, 2
 };
 
-static const char _Scanner_key_offsets[] = {
-	0, 0, 6, 8, 10, 12, 13, 15, 
-	17, 18, 23, 31, 33, 33, 33, 37
+static const char _KVScanner_key_offsets[] = {
+	0, 0, 6, 14, 15, 17, 19, 19, 
+	27, 29, 30, 34
 };
 
-static const char _Scanner_trans_keys[] = {
-	34, 95, 65, 90, 97, 122, 34, 92, 
-	34, 92, 44, 58, 34, 34, 92, 34, 
-	92, 58, 95, 65, 90, 97, 122, 61, 
-	95, 48, 57, 65, 90, 97, 122, 48, 
-	57, 46, 59, 48, 57, 59, 48, 57, 
-	0
+static const char _KVScanner_trans_keys[] = {
+	36, 95, 65, 90, 97, 122, 61, 95, 
+	48, 57, 65, 90, 97, 122, 34, 34, 
+	92, 34, 92, 61, 95, 48, 57, 65, 
+	90, 97, 122, 48, 57, 59, 46, 59, 
+	48, 57, 59, 48, 57, 0
 };
 
-static const char _Scanner_single_lengths[] = {
-	0, 2, 2, 2, 2, 1, 2, 2, 
-	1, 1, 2, 0, 0, 0, 2, 1
+static const char _KVScanner_single_lengths[] = {
+	0, 2, 2, 1, 2, 2, 0, 2, 
+	0, 1, 2, 1
 };
 
-static const char _Scanner_range_lengths[] = {
-	0, 2, 0, 0, 0, 0, 0, 0, 
-	0, 2, 3, 1, 0, 0, 1, 1
+static const char _KVScanner_range_lengths[] = {
+	0, 2, 3, 0, 0, 0, 0, 3, 
+	1, 0, 1, 1
 };
 
-static const char _Scanner_index_offsets[] = {
-	0, 0, 5, 8, 11, 14, 16, 19, 
-	22, 24, 28, 34, 36, 37, 38, 42
+static const char _KVScanner_index_offsets[] = {
+	0, 0, 5, 11, 13, 16, 19, 20, 
+	26, 28, 30, 34
 };
 
-static const char _Scanner_trans_targs[] = {
-	2, 10, 10, 10, 0, 4, 13, 3, 
-	4, 13, 3, 5, 9, 0, 6, 0, 
-	8, 12, 7, 8, 12, 7, 9, 0, 
-	10, 10, 10, 0, 11, 10, 10, 10, 
-	10, 0, 14, 0, 7, 3, 15, 9, 
-	14, 0, 9, 15, 0, 0
+static const char _KVScanner_trans_targs[] = {
+	2, 7, 7, 7, 0, 3, 2, 2, 
+	2, 2, 0, 4, 0, 9, 6, 5, 
+	9, 6, 5, 5, 8, 7, 7, 7, 
+	7, 0, 10, 0, 1, 0, 11, 1, 
+	10, 0, 1, 11, 0, 0
 };
 
-static const char _Scanner_trans_actions[] = {
-	0, 1, 1, 1, 0, 9, 1, 1, 
-	3, 0, 0, 5, 7, 0, 0, 0, 
-	9, 1, 1, 3, 0, 0, 7, 0, 
-	1, 1, 1, 0, 12, 0, 0, 0, 
-	0, 0, 1, 0, 0, 0, 0, 15, 
-	0, 0, 15, 0, 0, 0
+static const char _KVScanner_trans_actions[] = {
+	1, 1, 1, 1, 0, 9, 0, 0, 
+	0, 0, 0, 0, 0, 15, 1, 1, 
+	3, 0, 0, 0, 6, 0, 0, 0, 
+	0, 0, 1, 0, 0, 0, 0, 12, 
+	0, 0, 12, 0, 0, 0
 };
 
-static const char _Scanner_eof_actions[] = {
+static const char _KVScanner_eof_actions[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 15, 15
+	0, 0, 12, 12
 };
 
-static const int Scanner_start = 1;
-static const int Scanner_first_final = 14;
-static const int Scanner_error = 0;
+static const int KVScanner_start = 1;
+static const int KVScanner_first_final = 9;
+static const int KVScanner_error = 0;
 
-static const int Scanner_en_main = 1;
-
-
-/* #line 40 "ShaderPresetScanner.rl" */
+static const int KVScanner_en_main = 1;
 
 
-void scanner_init( PScanner ps, uint8_t const * src, size_t src_len )
+/* #line 40 "KeyValueScanner.rl" */
+
+
+void kv_scanner_init( PKVScanner ps, uint8_t const * src, size_t src_len )
 {
-    Scanner *s  = (Scanner *)ps;
-    memset (s, 0, sizeof(Scanner));
+    KVScanner *s  = (KVScanner *)ps;
+    memset (s, 0, sizeof(KVScanner));
     s->src      = src;
     s->src_len  = src_len;
     s->p        = src;
     s->pe       = src + src_len;
     s->eof      = s->pe;
     
-/* #line 120 "ShaderPresetScanner.gen.m" */
+/* #line 117 "KeyValueScanner.gen.m" */
 	{
-	 s->cs = Scanner_start;
+	 s->cs = KVScanner_start;
 	}
 
-/* #line 52 "ShaderPresetScanner.rl" */
+/* #line 52 "KeyValueScanner.rl" */
 }
 
 #define ret_tok( _tok ) token = _tok;
 
-ScannerToken scanner_scan( PScanner ps )
+KVToken kv_scanner_scan( PKVScanner ps )
 {
-    Scanner *s = (Scanner *)ps;
-    ScannerToken token = ScannerTokenNone;
+    KVScanner *s = (KVScanner *)ps;
+    KVToken token = KVTokenNone;
     
     while ( !s->done ) {
         // Check for EOF
         if ( s->p >= s->pe ) {
             s->len  = 0;
-            token   = ScannerTokenEOF;
+            token   = KVTokenEOF;
             s->done = true;
             break;
         }
         
         
-/* #line 145 "ShaderPresetScanner.gen.m" */
+/* #line 142 "KeyValueScanner.gen.m" */
 	{
 	int _klen;
 	unsigned int _trans;
@@ -154,10 +151,10 @@ ScannerToken scanner_scan( PScanner ps )
 	if (  s->cs == 0 )
 		goto _out;
 _resume:
-	_keys = _Scanner_trans_keys + _Scanner_key_offsets[ s->cs];
-	_trans = _Scanner_index_offsets[ s->cs];
+	_keys = _KVScanner_trans_keys + _KVScanner_key_offsets[ s->cs];
+	_trans = _KVScanner_index_offsets[ s->cs];
 
-	_klen = _Scanner_single_lengths[ s->cs];
+	_klen = _KVScanner_single_lengths[ s->cs];
 	if ( _klen > 0 ) {
 		const char *_lower = _keys;
 		const char *_mid;
@@ -180,7 +177,7 @@ _resume:
 		_trans += _klen;
 	}
 
-	_klen = _Scanner_range_lengths[ s->cs];
+	_klen = _KVScanner_range_lengths[ s->cs];
 	if ( _klen > 0 ) {
 		const char *_lower = _keys;
 		const char *_mid;
@@ -203,42 +200,42 @@ _resume:
 	}
 
 _match:
-	 s->cs = _Scanner_trans_targs[_trans];
+	 s->cs = _KVScanner_trans_targs[_trans];
 
-	if ( _Scanner_trans_actions[_trans] == 0 )
+	if ( _KVScanner_trans_actions[_trans] == 0 )
 		goto _again;
 
-	_acts = _Scanner_actions + _Scanner_trans_actions[_trans];
+	_acts = _KVScanner_actions + _KVScanner_trans_actions[_trans];
 	_nacts = (unsigned int) *_acts++;
 	while ( _nacts-- > 0 )
 	{
 		switch ( *_acts++ )
 		{
 	case 0:
-/* #line 77 "ShaderPresetScanner.rl" */
+/* #line 77 "KeyValueScanner.rl" */
 	{ /* action: token_start */ s->ts = s->p; }
 	break;
 	case 1:
-/* #line 78 "ShaderPresetScanner.rl" */
+/* #line 78 "KeyValueScanner.rl" */
 	{ /* action: token_end   */ s->te = s->p; }
 	break;
 	case 2:
-/* #line 85 "ShaderPresetScanner.rl" */
-	{ ret_tok( ScannerTokenIdentifier ); {( s->p)++; goto _out; } }
+/* #line 81 "KeyValueScanner.rl" */
+	{ ret_tok( KVTokenString ); {( s->p)++; goto _out; } }
 	break;
 	case 3:
-/* #line 89 "ShaderPresetScanner.rl" */
-	{ ret_tok( ScannerTokenFloat ); {( s->p)++; goto _out; } }
+/* #line 85 "KeyValueScanner.rl" */
+	{ ret_tok( KVTokenIdentifier ); {( s->p)++; goto _out; } }
 	break;
 	case 4:
-/* #line 101 "ShaderPresetScanner.rl" */
-	{ ret_tok( ScannerTokenName   ); {( s->p)++; goto _out; } }
+/* #line 89 "KeyValueScanner.rl" */
+	{ ret_tok( KVTokenSystemIdentifier ); {( s->p)++; goto _out; } }
 	break;
 	case 5:
-/* #line 102 "ShaderPresetScanner.rl" */
-	{ ret_tok( ScannerTokenShader ); {( s->p)++; goto _out; } }
+/* #line 93 "KeyValueScanner.rl" */
+	{ ret_tok( KVTokenFloat ); {( s->p)++; goto _out; } }
 	break;
-/* #line 242 "ShaderPresetScanner.gen.m" */
+/* #line 239 "KeyValueScanner.gen.m" */
 		}
 	}
 
@@ -250,19 +247,19 @@ _again:
 	_test_eof: {}
 	if ( ( s->p) == ( s->eof) )
 	{
-	const char *__acts = _Scanner_actions + _Scanner_eof_actions[ s->cs];
+	const char *__acts = _KVScanner_actions + _KVScanner_eof_actions[ s->cs];
 	unsigned int __nacts = (unsigned int) *__acts++;
 	while ( __nacts-- > 0 ) {
 		switch ( *__acts++ ) {
 	case 1:
-/* #line 78 "ShaderPresetScanner.rl" */
+/* #line 78 "KeyValueScanner.rl" */
 	{ /* action: token_end   */ s->te = s->p; }
 	break;
-	case 3:
-/* #line 89 "ShaderPresetScanner.rl" */
-	{ ret_tok( ScannerTokenFloat ); {( s->p)++; goto _out; } }
+	case 5:
+/* #line 93 "KeyValueScanner.rl" */
+	{ ret_tok( KVTokenFloat ); {( s->p)++; goto _out; } }
 	break;
-/* #line 266 "ShaderPresetScanner.gen.m" */
+/* #line 263 "KeyValueScanner.gen.m" */
 		}
 	}
 	}
@@ -270,20 +267,20 @@ _again:
 	_out: {}
 	}
 
-/* #line 109 "ShaderPresetScanner.rl" */
+/* #line 109 "KeyValueScanner.rl" */
 
         
-        if ( s->cs == Scanner_error )
+        if ( s->cs == KVScanner_error )
         {
-            return ScannerTokenError;
+            return KVTokenError;
         }
         
-        if ( token != ScannerTokenNone )
+        if ( token != KVTokenNone )
         {
             s->len = s->te - s->ts;
             return token;
         }
     }
     
-    return ScannerTokenEOF;
+    return KVTokenEOF;
 }

@@ -24,12 +24,12 @@
 
 import Foundation
 
-public class UserDefaultsPresetStore: ShaderPresetStore {
-    static let presetPrefix     = "videoShader.user.preset.data."
-    static let presetPrefixLen  = presetPrefix.count
+public class UserDefaultsPresetStorage: ShaderPresetStorage {
+    static let presetPrefix = "videoShader.user.preset.data."
 
     let store: UserDefaults
-    let queue: DispatchQueue = DispatchQueue(label: "org.openemu.userDefaultsPresetStore", attributes: .concurrent)
+    let queue: DispatchQueue = DispatchQueue(label: "org.openemu.userDefaultsPresetStore", attributes: .concurrent,
+                                             target: DispatchQueue.global(qos: .userInitiated))
     
     var indexByName: [String: String] = [:]
     var indexByShader: [String: [String]] = [:]
@@ -51,8 +51,8 @@ public class UserDefaultsPresetStore: ShaderPresetStore {
         }
     }
     
-    static func makeKey(_ name: String) -> String {
-        "\(Self.presetPrefix)\(name)"
+    static func makeKey(_ id: String) -> String {
+        id.hasPrefix(Self.presetPrefix) ? id : "\(Self.presetPrefix)\(id)"
     }
     
     public func exists(byName name: String) -> Bool {
@@ -95,14 +95,14 @@ public class UserDefaultsPresetStore: ShaderPresetStore {
     public func save(_ preset: ShaderPresetData) throws {
         try queue.sync(flags: .barrier) {
             if let existing = indexByName[preset.name], existing != preset.id {
-                throw ShaderPresetStoreError.duplicateName
+                throw ShaderPresetStorageError.duplicateName
             }
             
             let existing = load(preset.id)
             
             if let existing = existing, existing.shader != preset.shader {
                 // verify the shader hasn't changed
-                throw ShaderPresetStoreError.shaderModified
+                throw ShaderPresetStorageError.shaderModified
             }
             
             do {
@@ -125,15 +125,15 @@ public class UserDefaultsPresetStore: ShaderPresetStore {
                     indexByShader[preset.shader] = idsByShader
                 }
             } catch let error as ShaderPresetWriteError {
-                throw ShaderPresetStoreError.writeError(error)
+                throw ShaderPresetStorageError.writeError(error)
             }
         }
     }
     
     public func remove(_ preset: ShaderPresetData) {
-        guard let existing = load(preset.id) else { return }
-        
         queue.sync(flags: .barrier) {
+            guard let existing = load(preset.id) else { return }
+            
             store.removeObject(forKey: Self.makeKey(existing.id))
             
             //

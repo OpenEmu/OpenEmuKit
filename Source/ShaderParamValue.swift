@@ -29,32 +29,32 @@ import OpenEmuShaders
     @objc dynamic public var index: Int
     @objc dynamic public var name: String
     @objc dynamic public var desc: String
-    @objc dynamic public var value: NSNumber {
-        didSet {
-            if step.doubleValue > 0.0 {
-                let d = 1.0 / step.doubleValue
-                let v = (value.doubleValue * d) / d
-                value = v.toPrecision(4) as NSNumber
-            }
-        }
-    }
+    @objc dynamic public var value: NSNumber
     @objc dynamic public var initial: NSNumber
     @objc dynamic public var minimum: NSNumber
     @objc dynamic public var maximum: NSNumber
     @objc dynamic public var step: NSNumber
     @objc public var isInitial: Bool {
-        value.doubleValue.isApproximatelyEqual(to: initial.doubleValue)
+        value.doubleValue.isApproximatelyEqual(to: initial.doubleValue, relativeTolerance: 0.001)
     }
-
+    
     init(parameter p: ShaderParameter, at index: Int) {
         self.index = index
-        name    = p.name
-        desc    = p.desc
-        value   = p.initial as NSNumber
-        initial = p.initial as NSNumber
-        minimum = p.minimum as NSNumber
-        maximum = p.maximum as NSNumber
-        step    = p.step    as NSNumber
+        name       = p.name
+        desc       = p.desc
+        value      = Double(p.initial) as NSNumber
+        initial    = Double(p.initial) as NSNumber
+        minimum    = Double(p.minimum) as NSNumber
+        maximum    = Double(p.maximum) as NSNumber
+        step       = Double(p.step)    as NSNumber
+    }
+    
+    public func reset() {
+        value = initial
+    }
+    
+    public static func reset(_ param: ShaderParamValue) {
+        param.reset()
     }
     
     public static func from(parameters params: [ShaderParameter]) -> [ShaderParamValue] {
@@ -82,8 +82,24 @@ import OpenEmuShaders
     }
 }
 
-fileprivate extension Double {
+extension Double {
     func toPrecision(_ i: Self) -> Self {
         (pow(10, i) * self).rounded(.awayFromZero) / pow(10, i)
+    }
+}
+
+extension Dictionary where Dictionary.Key == String, Dictionary.Value == Double {
+    
+    /// Creates a new dictionary from the array of parameters.
+    /// - Parameter params: An array of shader parameters to use to create the dictionary.
+    public init(allParams params: [ShaderParamValue]) {
+        self.init(uniqueKeysWithValues: params.map { ($0.name, $0.value.doubleValue) })
+    }
+    
+    /// Creates a new dictionary from the array of parameters, excluding those that are assigned
+    /// their initial value.
+    /// - Parameter params: An array of shader parameters to use to create the dictionary.
+    public init(changedParams params: [ShaderParamValue]) {
+        self.init(uniqueKeysWithValues: params.compactMap { $0.isInitial ? nil : ($0.name, $0.value.doubleValue) })
     }
 }

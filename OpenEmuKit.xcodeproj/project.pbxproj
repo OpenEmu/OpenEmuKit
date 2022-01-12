@@ -7,28 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0507FA77270E3F3600A81795 /* ShaderPresetScanner.rl in Resources */ = {isa = PBXBuildFile; fileRef = 0507FA76270E3F3600A81795 /* ShaderPresetScanner.rl */; };
-		0507FA79270E40C400A81795 /* ShaderPresetScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 0507FA78270E40C400A81795 /* ShaderPresetScanner.m */; };
-		0507FA7E270E451300A81795 /* ShaderPresetScannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0507FA7D270E451300A81795 /* ShaderPresetScannerTests.swift */; };
-		0507FA7F270E456500A81795 /* ShaderPresetScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = 0507FA7A270E426700A81795 /* ShaderPresetScanner.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		0507FA85270FABB100A81795 /* ShaderPresetScanner.gen.m in Sources */ = {isa = PBXBuildFile; fileRef = 0507FA84270FABB100A81795 /* ShaderPresetScanner.gen.m */; };
-		0507FA892712420B00A81795 /* ShaderPresetScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0507FA882712420B00A81795 /* ShaderPresetScanner.swift */; };
 		0518D6E424F2BA4B0037101D /* OEGameStartupInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 0518D6E224F2BA4B0037101D /* OEGameStartupInfo.m */; };
 		0518D6E524F2BA4B0037101D /* OEGameStartupInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 0518D6E324F2BA4B0037101D /* OEGameStartupInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0518D6E824F32DD10037101D /* NSEvent+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0518D6E724F32DD10037101D /* NSEvent+Combine.swift */; };
-		05201D652777C8CC0028CBE0 /* ShaderPresetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05201D642777C8CC0028CBE0 /* ShaderPresetModel.swift */; };
-		05201D672777EA910028CBE0 /* OESystemShadersModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05201D662777EA910028CBE0 /* OESystemShadersModel.swift */; };
+		05201D652777C8CC0028CBE0 /* ShaderPresetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05201D642777C8CC0028CBE0 /* ShaderPresetStore.swift */; };
+		05201D672777EA910028CBE0 /* OESystemShaderStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05201D662777EA910028CBE0 /* OESystemShaderStore.swift */; };
 		05201D692779642F0028CBE0 /* ShaderPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05201D682779642F0028CBE0 /* ShaderPreset.swift */; };
 		05201D6B277A6A6A0028CBE0 /* ShaderPresetModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05201D6A277A6A6A0028CBE0 /* ShaderPresetModelTests.swift */; };
-		05201D6F277D316E0028CBE0 /* UserDefaultsPresetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05201D6E277D316E0028CBE0 /* UserDefaultsPresetStore.swift */; };
-		05201D73277D82920028CBE0 /* ShaderPresetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05201D72277D82920028CBE0 /* ShaderPresetStore.swift */; };
+		05201D6F277D316E0028CBE0 /* UserDefaultsPresetStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05201D6E277D316E0028CBE0 /* UserDefaultsPresetStorage.swift */; };
+		05201D73277D82920028CBE0 /* ShaderPresetStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05201D72277D82920028CBE0 /* ShaderPresetStorage.swift */; };
+		0524372B278D7F0C004DE02C /* ShaderPresetTextEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0524372A278D7F0C004DE02C /* ShaderPresetTextEncoding.swift */; };
+		0524372D278D8171004DE02C /* PeekableIterator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0524372C278D8171004DE02C /* PeekableIterator.swift */; };
+		0524372F278E1874004DE02C /* ShaderPresetTextReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0524372E278E1874004DE02C /* ShaderPresetTextReaderTests.swift */; };
+		05243731278E1C69004DE02C /* ShaderPresetTextWriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05243730278E1C69004DE02C /* ShaderPresetTextWriterTests.swift */; };
 		0530C3B32512DF680050F90F /* OEScaledGameLayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0530C3B22512DF680050F90F /* OEScaledGameLayerView.swift */; };
 		0547C2032707E59C00D386D3 /* ShaderPresetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547C2022707E59C00D386D3 /* ShaderPresetTests.swift */; };
-		0547C2052707E62B00D386D3 /* ShaderPresetTextReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547C2042707E62B00D386D3 /* ShaderPresetTextReaderTests.swift */; };
-		0547C2072707E63200D386D3 /* ShaderPresetTextWriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547C2062707E63200D386D3 /* ShaderPresetTextWriterTests.swift */; };
 		0547C20C2707F60500D386D3 /* Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547C20B2707F60500D386D3 /* Crypto.swift */; };
 		0547C210270A61C200D386D3 /* DataProtocol+HexString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547C20F270A61C200D386D3 /* DataProtocol+HexString.swift */; };
-		0547FD9824E7717E005C1FFC /* OEShadersModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547FD9724E7717E005C1FFC /* OEShadersModel.swift */; };
+		0547FD9824E7717E005C1FFC /* OEShaderStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547FD9724E7717E005C1FFC /* OEShaderStore.swift */; };
 		0547FDCA24E84498005C1FFC /* NSXPCConnection+HelperApp.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FDC824E84498005C1FFC /* NSXPCConnection+HelperApp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0547FDCB24E84498005C1FFC /* NSXPCConnection+HelperApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 0547FDC924E84498005C1FFC /* NSXPCConnection+HelperApp.m */; };
 		0547FDCE24E850EB005C1FFC /* NSXPCListener+HelperApp.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FDCC24E850EB005C1FFC /* NSXPCListener+HelperApp.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -37,13 +33,19 @@
 		0547FDD324E85783005C1FFC /* OEXPCGameCoreManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0547FDD124E85783005C1FFC /* OEXPCGameCoreManager.m */; };
 		0547FDDF24E8622B005C1FFC /* OpenEmuXPCHelperApp.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FDDD24E8622B005C1FFC /* OpenEmuXPCHelperApp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0547FDE024E8622B005C1FFC /* OpenEmuXPCHelperApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 0547FDDE24E8622B005C1FFC /* OpenEmuXPCHelperApp.m */; };
+		054A2C07278CDA2600A2F241 /* KeyValueScanner.rl in Resources */ = {isa = PBXBuildFile; fileRef = 054A2C06278CDA2600A2F241 /* KeyValueScanner.rl */; };
+		054A2C0A278CDA5A00A2F241 /* KeyValueScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = 054A2C09278CDA5A00A2F241 /* KeyValueScanner.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		054A2C0C278CDA6A00A2F241 /* KeyValueScanner+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 054A2C0B278CDA6A00A2F241 /* KeyValueScanner+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		054A2C0E278CDA7800A2F241 /* KeyValueScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 054A2C0D278CDA7800A2F241 /* KeyValueScanner.m */; };
+		054A2C10278CDA8600A2F241 /* KeyValueScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054A2C0F278CDA8600A2F241 /* KeyValueScanner.swift */; };
+		054A2C12278CDCA000A2F241 /* KeyValueScanner.gen.m in Sources */ = {isa = PBXBuildFile; fileRef = 054A2C11278CDCA000A2F241 /* KeyValueScanner.gen.m */; };
+		054A2C14278CDDEB00A2F241 /* KeyValueScannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054A2C13278CDDEB00A2F241 /* KeyValueScannerTests.swift */; };
 		054A774925B2399100F2F3D6 /* ShaderParameterGroupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054A774825B2399100F2F3D6 /* ShaderParameterGroupModel.swift */; };
-		05614DD7271CC52300C61A13 /* ShaderPresetTextEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05614DD6271CC52300C61A13 /* ShaderPresetTextEncoding.swift */; };
 		05713219259C33B9001CB13A /* NSFileManager+ExtendedAttributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 05713217259C33B9001CB13A /* NSFileManager+ExtendedAttributes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0571321A259C33B9001CB13A /* NSFileManager+ExtendedAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = 05713218259C33B9001CB13A /* NSFileManager+ExtendedAttributes.m */; };
 		0578484B25C1392400A842E7 /* ShaderCompilerOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578484A25C1392300A842E7 /* ShaderCompilerOptions.swift */; };
 		05AAD98726758240004466E3 /* XPCDebugSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AAD98626758240004466E3 /* XPCDebugSupport.swift */; };
-		05B078172735DA2300F1E302 /* SystemShaderPresetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B078162735DA2300F1E302 /* SystemShaderPresetModel.swift */; };
+		05B078172735DA2300F1E302 /* SystemShaderPresetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B078162735DA2300F1E302 /* SystemShaderPresetStore.swift */; };
 		05B0781B273882C600F1E302 /* GameHelperMetalLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B0781A273882C600F1E302 /* GameHelperMetalLayer.swift */; };
 		05B48723266309600049A5F6 /* OEGameCoreManager+Synchronous.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B48721266309600049A5F6 /* OEGameCoreManager+Synchronous.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		05B48724266309600049A5F6 /* OEGameCoreManager+Synchronous.m in Sources */ = {isa = PBXBuildFile; fileRef = 05B48722266309600049A5F6 /* OEGameCoreManager+Synchronous.m */; };
@@ -122,13 +124,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0507FA76270E3F3600A81795 /* ShaderPresetScanner.rl */ = {isa = PBXFileReference; lastKnownFileType = text; path = ShaderPresetScanner.rl; sourceTree = "<group>"; };
-		0507FA78270E40C400A81795 /* ShaderPresetScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShaderPresetScanner.m; sourceTree = "<group>"; };
-		0507FA7A270E426700A81795 /* ShaderPresetScanner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderPresetScanner.h; sourceTree = "<group>"; };
-		0507FA7D270E451300A81795 /* ShaderPresetScannerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShaderPresetScannerTests.swift; sourceTree = "<group>"; };
-		0507FA84270FABB100A81795 /* ShaderPresetScanner.gen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShaderPresetScanner.gen.m; sourceTree = "<group>"; };
-		0507FA86270FAF5800A81795 /* ShaderPresetScanner+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ShaderPresetScanner+Private.h"; sourceTree = "<group>"; };
-		0507FA882712420B00A81795 /* ShaderPresetScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderPresetScanner.swift; sourceTree = "<group>"; };
 		050A9A0924F9B26C00321847 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		050A9A0B24F9B2B800321847 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		050A9A0C24F9B2E900321847 /* QuartzCoreSPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QuartzCoreSPI.h; sourceTree = "<group>"; };
@@ -137,22 +132,24 @@
 		0518D6E224F2BA4B0037101D /* OEGameStartupInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OEGameStartupInfo.m; sourceTree = "<group>"; };
 		0518D6E324F2BA4B0037101D /* OEGameStartupInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEGameStartupInfo.h; sourceTree = "<group>"; };
 		0518D6E724F32DD10037101D /* NSEvent+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSEvent+Combine.swift"; sourceTree = "<group>"; };
-		05201D642777C8CC0028CBE0 /* ShaderPresetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderPresetModel.swift; sourceTree = "<group>"; };
-		05201D662777EA910028CBE0 /* OESystemShadersModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OESystemShadersModel.swift; sourceTree = "<group>"; };
+		05201D642777C8CC0028CBE0 /* ShaderPresetStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderPresetStore.swift; sourceTree = "<group>"; };
+		05201D662777EA910028CBE0 /* OESystemShaderStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OESystemShaderStore.swift; sourceTree = "<group>"; };
 		05201D682779642F0028CBE0 /* ShaderPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderPreset.swift; sourceTree = "<group>"; };
 		05201D6A277A6A6A0028CBE0 /* ShaderPresetModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderPresetModelTests.swift; sourceTree = "<group>"; };
-		05201D6E277D316E0028CBE0 /* UserDefaultsPresetStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsPresetStore.swift; sourceTree = "<group>"; };
-		05201D72277D82920028CBE0 /* ShaderPresetStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderPresetStore.swift; sourceTree = "<group>"; };
+		05201D6E277D316E0028CBE0 /* UserDefaultsPresetStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsPresetStorage.swift; sourceTree = "<group>"; };
+		05201D72277D82920028CBE0 /* ShaderPresetStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderPresetStorage.swift; sourceTree = "<group>"; };
+		0524372A278D7F0C004DE02C /* ShaderPresetTextEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShaderPresetTextEncoding.swift; sourceTree = "<group>"; };
+		0524372C278D8171004DE02C /* PeekableIterator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeekableIterator.swift; sourceTree = "<group>"; };
+		0524372E278E1874004DE02C /* ShaderPresetTextReaderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShaderPresetTextReaderTests.swift; sourceTree = "<group>"; };
+		05243730278E1C69004DE02C /* ShaderPresetTextWriterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShaderPresetTextWriterTests.swift; sourceTree = "<group>"; };
 		0530C3B22512DF680050F90F /* OEScaledGameLayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OEScaledGameLayerView.swift; sourceTree = "<group>"; };
 		0533EA6624CDFD030095146E /* XADMaster.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XADMaster.framework; path = ../OpenEmu/XADMaster.framework; sourceTree = "<group>"; };
 		0547C2022707E59C00D386D3 /* ShaderPresetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShaderPresetTests.swift; sourceTree = "<group>"; };
-		0547C2042707E62B00D386D3 /* ShaderPresetTextReaderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShaderPresetTextReaderTests.swift; sourceTree = "<group>"; };
-		0547C2062707E63200D386D3 /* ShaderPresetTextWriterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShaderPresetTextWriterTests.swift; sourceTree = "<group>"; };
 		0547C2092707E96400D386D3 /* .swift-format.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ".swift-format.json"; sourceTree = "<group>"; };
 		0547C20A2707E96400D386D3 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		0547C20B2707F60500D386D3 /* Crypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto.swift; sourceTree = "<group>"; };
 		0547C20F270A61C200D386D3 /* DataProtocol+HexString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DataProtocol+HexString.swift"; sourceTree = "<group>"; };
-		0547FD9724E7717E005C1FFC /* OEShadersModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OEShadersModel.swift; sourceTree = "<group>"; };
+		0547FD9724E7717E005C1FFC /* OEShaderStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OEShaderStore.swift; sourceTree = "<group>"; };
 		0547FDC824E84498005C1FFC /* NSXPCConnection+HelperApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSXPCConnection+HelperApp.h"; sourceTree = "<group>"; };
 		0547FDC924E84498005C1FFC /* NSXPCConnection+HelperApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSXPCConnection+HelperApp.m"; sourceTree = "<group>"; };
 		0547FDCC24E850EB005C1FFC /* NSXPCListener+HelperApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSXPCListener+HelperApp.h"; sourceTree = "<group>"; };
@@ -161,13 +158,19 @@
 		0547FDD124E85783005C1FFC /* OEXPCGameCoreManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OEXPCGameCoreManager.m; sourceTree = "<group>"; };
 		0547FDDD24E8622B005C1FFC /* OpenEmuXPCHelperApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenEmuXPCHelperApp.h; sourceTree = "<group>"; };
 		0547FDDE24E8622B005C1FFC /* OpenEmuXPCHelperApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OpenEmuXPCHelperApp.m; sourceTree = "<group>"; };
+		054A2C06278CDA2600A2F241 /* KeyValueScanner.rl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = KeyValueScanner.rl; sourceTree = "<group>"; };
+		054A2C09278CDA5A00A2F241 /* KeyValueScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyValueScanner.h; sourceTree = "<group>"; };
+		054A2C0B278CDA6A00A2F241 /* KeyValueScanner+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "KeyValueScanner+Private.h"; sourceTree = "<group>"; };
+		054A2C0D278CDA7800A2F241 /* KeyValueScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyValueScanner.m; sourceTree = "<group>"; };
+		054A2C0F278CDA8600A2F241 /* KeyValueScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyValueScanner.swift; sourceTree = "<group>"; };
+		054A2C11278CDCA000A2F241 /* KeyValueScanner.gen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyValueScanner.gen.m; sourceTree = "<group>"; };
+		054A2C13278CDDEB00A2F241 /* KeyValueScannerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyValueScannerTests.swift; sourceTree = "<group>"; };
 		054A774825B2399100F2F3D6 /* ShaderParameterGroupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShaderParameterGroupModel.swift; sourceTree = "<group>"; };
-		05614DD6271CC52300C61A13 /* ShaderPresetTextEncoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderPresetTextEncoding.swift; sourceTree = "<group>"; };
 		05713217259C33B9001CB13A /* NSFileManager+ExtendedAttributes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+ExtendedAttributes.h"; sourceTree = "<group>"; };
 		05713218259C33B9001CB13A /* NSFileManager+ExtendedAttributes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+ExtendedAttributes.m"; sourceTree = "<group>"; };
 		0578484A25C1392300A842E7 /* ShaderCompilerOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShaderCompilerOptions.swift; sourceTree = "<group>"; };
 		05AAD98626758240004466E3 /* XPCDebugSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPCDebugSupport.swift; sourceTree = "<group>"; };
-		05B078162735DA2300F1E302 /* SystemShaderPresetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemShaderPresetModel.swift; sourceTree = "<group>"; };
+		05B078162735DA2300F1E302 /* SystemShaderPresetStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemShaderPresetStore.swift; sourceTree = "<group>"; };
 		05B0781A273882C600F1E302 /* GameHelperMetalLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameHelperMetalLayer.swift; sourceTree = "<group>"; };
 		05B48721266309600049A5F6 /* OEGameCoreManager+Synchronous.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OEGameCoreManager+Synchronous.h"; sourceTree = "<group>"; };
 		05B48722266309600049A5F6 /* OEGameCoreManager+Synchronous.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OEGameCoreManager+Synchronous.m"; sourceTree = "<group>"; };
@@ -248,19 +251,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0507FA8727123A2A00A81795 /* Scanner */ = {
-			isa = PBXGroup;
-			children = (
-				0507FA7A270E426700A81795 /* ShaderPresetScanner.h */,
-				0507FA86270FAF5800A81795 /* ShaderPresetScanner+Private.h */,
-				0507FA78270E40C400A81795 /* ShaderPresetScanner.m */,
-				0507FA76270E3F3600A81795 /* ShaderPresetScanner.rl */,
-				0507FA84270FABB100A81795 /* ShaderPresetScanner.gen.m */,
-				0507FA882712420B00A81795 /* ShaderPresetScanner.swift */,
-			);
-			name = Scanner;
-			sourceTree = "<group>";
-		};
 		050A9A0A24F9B29300321847 /* OpenEmuKitPrivate */ = {
 			isa = PBXGroup;
 			children = (
@@ -300,6 +290,19 @@
 				0547FDCD24E850EB005C1FFC /* NSXPCListener+HelperApp.m */,
 			);
 			name = XPC;
+			sourceTree = "<group>";
+		};
+		054A2C08278CDA2C00A2F241 /* KeyValueScanner */ = {
+			isa = PBXGroup;
+			children = (
+				054A2C09278CDA5A00A2F241 /* KeyValueScanner.h */,
+				054A2C0B278CDA6A00A2F241 /* KeyValueScanner+Private.h */,
+				054A2C0D278CDA7800A2F241 /* KeyValueScanner.m */,
+				054A2C11278CDCA000A2F241 /* KeyValueScanner.gen.m */,
+				054A2C06278CDA2600A2F241 /* KeyValueScanner.rl */,
+				054A2C0F278CDA8600A2F241 /* KeyValueScanner.swift */,
+			);
+			name = KeyValueScanner;
 			sourceTree = "<group>";
 		};
 		05E6957524CA5D4200ACFB35 = {
@@ -488,6 +491,7 @@
 				05713217259C33B9001CB13A /* NSFileManager+ExtendedAttributes.h */,
 				05713218259C33B9001CB13A /* NSFileManager+ExtendedAttributes.m */,
 				05ED1CF8259D1FB200A2D400 /* NSFileManager+ExtendedAttributes.swift */,
+				0524372C278D8171004DE02C /* PeekableIterator.swift */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -503,19 +507,19 @@
 		05E6BA5924CCDFB200ACFB35 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
-				0507FA8727123A2A00A81795 /* Scanner */,
-				0547FD9724E7717E005C1FFC /* OEShadersModel.swift */,
-				05201D662777EA910028CBE0 /* OESystemShadersModel.swift */,
+				054A2C08278CDA2C00A2F241 /* KeyValueScanner */,
+				0547FD9724E7717E005C1FFC /* OEShaderStore.swift */,
+				05201D662777EA910028CBE0 /* OESystemShaderStore.swift */,
 				0578484A25C1392300A842E7 /* ShaderCompilerOptions.swift */,
 				05C40F8726F69B6F0072B722 /* ShaderParamValue.swift */,
 				054A774825B2399100F2F3D6 /* ShaderParameterGroupModel.swift */,
 				05201D682779642F0028CBE0 /* ShaderPreset.swift */,
 				05EEF0F12707C875008A03DC /* ShaderPresetData.swift */,
-				05201D642777C8CC0028CBE0 /* ShaderPresetModel.swift */,
-				05B078162735DA2300F1E302 /* SystemShaderPresetModel.swift */,
-				05201D72277D82920028CBE0 /* ShaderPresetStore.swift */,
-				05614DD6271CC52300C61A13 /* ShaderPresetTextEncoding.swift */,
-				05201D6E277D316E0028CBE0 /* UserDefaultsPresetStore.swift */,
+				05201D642777C8CC0028CBE0 /* ShaderPresetStore.swift */,
+				05B078162735DA2300F1E302 /* SystemShaderPresetStore.swift */,
+				05201D72277D82920028CBE0 /* ShaderPresetStorage.swift */,
+				0524372A278D7F0C004DE02C /* ShaderPresetTextEncoding.swift */,
+				05201D6E277D316E0028CBE0 /* UserDefaultsPresetStorage.swift */,
 			);
 			name = Shaders;
 			sourceTree = "<group>";
@@ -525,10 +529,10 @@
 			children = (
 				0547C2022707E59C00D386D3 /* ShaderPresetTests.swift */,
 				05201D6A277A6A6A0028CBE0 /* ShaderPresetModelTests.swift */,
-				0507FA7D270E451300A81795 /* ShaderPresetScannerTests.swift */,
+				054A2C13278CDDEB00A2F241 /* KeyValueScannerTests.swift */,
 				05EEF1012707C986008A03DC /* ShaderPresetStoreTests.swift */,
-				0547C2042707E62B00D386D3 /* ShaderPresetTextReaderTests.swift */,
-				0547C2062707E63200D386D3 /* ShaderPresetTextWriterTests.swift */,
+				0524372E278E1874004DE02C /* ShaderPresetTextReaderTests.swift */,
+				05243730278E1C69004DE02C /* ShaderPresetTextWriterTests.swift */,
 			);
 			path = OpenEmuKitTests;
 			sourceTree = "<group>";
@@ -541,7 +545,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				05E6BA4C24CCD7DB00ACFB35 /* OEThreadGameCoreManager.h in Headers */,
-				0507FA7F270E456500A81795 /* ShaderPresetScanner.h in Headers */,
 				05E6B9E024CCD43A00ACFB35 /* OpenEmuHelperApp.h in Headers */,
 				05E6BA0B24CCD50100ACFB35 /* OEGameCoreHelper.h in Headers */,
 				05E6B9FB24CCD46900ACFB35 /* OEGameRenderer.h in Headers */,
@@ -557,6 +560,7 @@
 				05E6BA1F24CCD71D00ACFB35 /* OESystemPlugin.h in Headers */,
 				05E6BA0724CCD49600ACFB35 /* OEGameHelperMetalLayer.h in Headers */,
 				0547FDCE24E850EB005C1FFC /* NSXPCListener+HelperApp.h in Headers */,
+				054A2C0C278CDA6A00A2F241 /* KeyValueScanner+Private.h in Headers */,
 				05E6BA2924CCD75900ACFB35 /* OEAudioUnit.h in Headers */,
 				05E6BA3C24CCD79600ACFB35 /* OEThreadProxy.h in Headers */,
 				05B48723266309600049A5F6 /* OEGameCoreManager+Synchronous.h in Headers */,
@@ -564,6 +568,7 @@
 				05E6B9FE24CCD46900ACFB35 /* OEMTLGameRenderer.h in Headers */,
 				05E6BA2024CCD71D00ACFB35 /* OECorePlugin.h in Headers */,
 				05E6B9FC24CCD46900ACFB35 /* OEOpenGL3GameRenderer.h in Headers */,
+				054A2C0A278CDA5A00A2F241 /* KeyValueScanner.h in Headers */,
 				05E6BA4924CCD7DB00ACFB35 /* OEGameCoreManager_Internal.h in Headers */,
 				05E6958424CA5D4200ACFB35 /* OpenEmuKit.h in Headers */,
 				05E6BA0624CCD49600ACFB35 /* OECoreVideoTexture.h in Headers */,
@@ -671,7 +676,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0507FA77270E3F3600A81795 /* ShaderPresetScanner.rl in Resources */,
+				054A2C07278CDA2600A2F241 /* KeyValueScanner.rl in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -709,10 +714,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0507FA85270FABB100A81795 /* ShaderPresetScanner.gen.m in Sources */,
 				0547FDD324E85783005C1FFC /* OEXPCGameCoreManager.m in Sources */,
 				0547FDE024E8622B005C1FFC /* OpenEmuXPCHelperApp.m in Sources */,
-				0507FA79270E40C400A81795 /* ShaderPresetScanner.m in Sources */,
 				05E6BA4B24CCD7DB00ACFB35 /* OEGameCoreManager.m in Sources */,
 				0518D6E424F2BA4B0037101D /* OEGameStartupInfo.m in Sources */,
 				05EEF0F22707C875008A03DC /* ShaderPresetData.swift in Sources */,
@@ -721,41 +724,44 @@
 				054A774925B2399100F2F3D6 /* ShaderParameterGroupModel.swift in Sources */,
 				05201D692779642F0028CBE0 /* ShaderPreset.swift in Sources */,
 				05C40F8A26F6A72F0072B722 /* ApproximatelyEqual.swift in Sources */,
-				05201D652777C8CC0028CBE0 /* ShaderPresetModel.swift in Sources */,
-				0507FA892712420B00A81795 /* ShaderPresetScanner.swift in Sources */,
+				05201D652777C8CC0028CBE0 /* ShaderPresetStore.swift in Sources */,
 				0547C20C2707F60500D386D3 /* Crypto.swift in Sources */,
 				0547C210270A61C200D386D3 /* DataProtocol+HexString.swift in Sources */,
 				05E6B9F824CCD46900ACFB35 /* OEMTLGameRenderer.m in Sources */,
 				05E6BA2A24CCD75900ACFB35 /* OEAudioUnit.mm in Sources */,
 				05E6BA3E24CCD79600ACFB35 /* OEThreadProxy.m in Sources */,
 				05E6BA3D24CCD79600ACFB35 /* OELogging.m in Sources */,
-				05201D672777EA910028CBE0 /* OESystemShadersModel.swift in Sources */,
+				05201D672777EA910028CBE0 /* OESystemShaderStore.swift in Sources */,
 				05AAD98726758240004466E3 /* XPCDebugSupport.swift in Sources */,
 				0571321A259C33B9001CB13A /* NSFileManager+ExtendedAttributes.m in Sources */,
 				05ED1CFC259D43E800A2D400 /* LaunchControl.swift in Sources */,
-				0547FD9824E7717E005C1FFC /* OEShadersModel.swift in Sources */,
-				05201D73277D82920028CBE0 /* ShaderPresetStore.swift in Sources */,
+				0547FD9824E7717E005C1FFC /* OEShaderStore.swift in Sources */,
+				05201D73277D82920028CBE0 /* ShaderPresetStorage.swift in Sources */,
+				0524372D278D8171004DE02C /* PeekableIterator.swift in Sources */,
 				05B0781B273882C600F1E302 /* GameHelperMetalLayer.swift in Sources */,
 				05E6BA1D24CCD71D00ACFB35 /* OESystemPlugin.m in Sources */,
 				0547FDCF24E850EB005C1FFC /* NSXPCListener+HelperApp.m in Sources */,
+				054A2C12278CDCA000A2F241 /* KeyValueScanner.gen.m in Sources */,
 				05C40F8826F69B6F0072B722 /* ShaderParamValue.swift in Sources */,
+				0524372B278D7F0C004DE02C /* ShaderPresetTextEncoding.swift in Sources */,
 				05B48724266309600049A5F6 /* OEGameCoreManager+Synchronous.m in Sources */,
+				054A2C10278CDA8600A2F241 /* KeyValueScanner.swift in Sources */,
 				05EA2F2224FFD16B00569EBA /* OEIntegralWindowResizingDelegate.swift in Sources */,
 				0578484B25C1392400A842E7 /* ShaderCompilerOptions.swift in Sources */,
 				05E6B9FA24CCD46900ACFB35 /* OEOpenGL3GameRenderer.m in Sources */,
 				05E6BA4724CCD7DB00ACFB35 /* OEThreadGameCoreManager.m in Sources */,
 				05E6BA3024CCD77600ACFB35 /* OEGameLayerView.swift in Sources */,
-				05201D6F277D316E0028CBE0 /* UserDefaultsPresetStore.swift in Sources */,
+				05201D6F277D316E0028CBE0 /* UserDefaultsPresetStorage.swift in Sources */,
 				0547FDCB24E84498005C1FFC /* NSXPCConnection+HelperApp.m in Sources */,
 				05E6BA1E24CCD71D00ACFB35 /* OEPlugin.m in Sources */,
-				05614DD7271CC52300C61A13 /* ShaderPresetTextEncoding.swift in Sources */,
 				05E6B9E124CCD43A00ACFB35 /* OpenEmuHelperApp.m in Sources */,
 				05E6BA2224CCD71D00ACFB35 /* OECorePlugin.m in Sources */,
 				05E6BA0524CCD49600ACFB35 /* OECoreVideoTexture.m in Sources */,
+				054A2C0E278CDA7800A2F241 /* KeyValueScanner.m in Sources */,
 				05E6B9FD24CCD46900ACFB35 /* OEOpenGL2GameRenderer.m in Sources */,
 				05D828DB24E98A8E00BB975E /* OEXPCMatchMaker.swift in Sources */,
 				0530C3B32512DF680050F90F /* OEScaledGameLayerView.swift in Sources */,
-				05B078172735DA2300F1E302 /* SystemShaderPresetModel.swift in Sources */,
+				05B078172735DA2300F1E302 /* SystemShaderPresetStore.swift in Sources */,
 				05ED1CF9259D1FB200A2D400 /* NSFileManager+ExtendedAttributes.swift in Sources */,
 				0518D6E824F32DD10037101D /* NSEvent+Combine.swift in Sources */,
 			);
@@ -766,10 +772,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				05EEF1022707C986008A03DC /* ShaderPresetStoreTests.swift in Sources */,
-				0547C2072707E63200D386D3 /* ShaderPresetTextWriterTests.swift in Sources */,
-				0547C2052707E62B00D386D3 /* ShaderPresetTextReaderTests.swift in Sources */,
-				0507FA7E270E451300A81795 /* ShaderPresetScannerTests.swift in Sources */,
+				05243731278E1C69004DE02C /* ShaderPresetTextWriterTests.swift in Sources */,
+				0524372F278E1874004DE02C /* ShaderPresetTextReaderTests.swift in Sources */,
 				0547C2032707E59C00D386D3 /* ShaderPresetTests.swift in Sources */,
+				054A2C14278CDDEB00A2F241 /* KeyValueScannerTests.swift in Sources */,
 				05201D6B277A6A6A0028CBE0 /* ShaderPresetModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

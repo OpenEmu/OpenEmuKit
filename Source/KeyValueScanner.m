@@ -1,4 +1,5 @@
-// Copyright (c) 2021, OpenEmu Team
+
+// Copyright (c) 2022, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -23,30 +24,21 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 @import Foundation;
+#import "KeyValueScanner+Private.h"
 
-typedef NS_ENUM(NSUInteger, ScannerToken) {
-    ScannerTokenNone        ,
-    ScannerTokenError       ,
-    ScannerTokenEOF         NS_SWIFT_NAME(eof),
-    ScannerTokenName        ,
-    ScannerTokenShader      ,
-    ScannerTokenIdentifier  ,
-    ScannerTokenFloat       ,
-    ScannerTokenString      ,
-};
+PKVScanner kv_scanner_create()
+{
+    return calloc(1, sizeof(KVScanner));
+}
 
-NS_ASSUME_NONNULL_BEGIN
+void kv_scanner_free(PKVScanner ps)
+{
+    free(ps);
+}
 
-typedef struct Scanner * PScanner __attribute__((__swift_wrapper__(struct)));
-
-extern PScanner     scanner_create(void)
-                    NS_SWIFT_NAME(PScanner.init());
-extern void         scanner_free(PScanner s);
-extern void         scanner_init( PScanner s, uint8_t const * src, size_t src_len )
-                    NS_SWIFT_NAME(PScanner.setData(self:_:length:));
-extern ScannerToken scanner_scan( PScanner s )
-                    NS_SWIFT_NAME(PScanner.scan(self:));
-extern NSString *   scanner_text(PScanner ps)
-                    NS_SWIFT_NAME(getter:PScanner.text(self:));
-
-NS_ASSUME_NONNULL_END
+NSString * kv_scanner_text(PKVScanner ps)
+{
+    KVScanner *s = (KVScanner *)ps;
+    if (s->len == 0) return @"";
+    return [[NSString alloc] initWithBytesNoCopy:(void *)s->ts length:s->len encoding:NSUTF8StringEncoding freeWhenDone:NO];
+}

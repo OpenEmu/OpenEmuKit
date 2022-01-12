@@ -25,12 +25,12 @@
 import Foundation
 
 /// The main object used for managing shaders and parameters assigned to a system.
-@objc public class OESystemShadersModel: NSObject {
+@objc public class OESystemShaderStore: NSObject {
     private let store: UserDefaults
-    private let shaders: OEShadersModel
+    private let shaders: OEShaderStore
     
     @available(*, deprecated, message: "Use ShaderPreset APIs")
-    public init(store: UserDefaults, shaders: OEShadersModel) {
+    public init(store: UserDefaults, shaders: OEShaderStore) {
         self.store      = store
         self.shaders    = shaders
         

@@ -1,4 +1,4 @@
-// Copyright (c) 2021, OpenEmu Team
+// Copyright (c) 2022, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -25,24 +25,24 @@
 // ****
 // Generated with
 //
-// ragel -L -C ShaderPresetScanner.rl -o ShaderPresetScanner.gen.m
+// ragel -L -C KeyValueScanner.rl -o KeyValueScanner.gen.m
 //
 // ****
 
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "ShaderPresetScanner+Private.h"
+#include "KeyValueScanner+Private.h"
 
 %%{
-    machine Scanner;
+    machine KVScanner;
     write data;
 }%%
 
-void scanner_init( PScanner ps, uint8_t const * src, size_t src_len )
+void kv_scanner_init( PKVScanner ps, uint8_t const * src, size_t src_len )
 {
-    Scanner *s  = (Scanner *)ps;
-    memset (s, 0, sizeof(Scanner));
+    KVScanner *s  = (KVScanner *)ps;
+    memset (s, 0, sizeof(KVScanner));
     s->src      = src;
     s->src_len  = src_len;
     s->p        = src;
@@ -53,22 +53,22 @@ void scanner_init( PScanner ps, uint8_t const * src, size_t src_len )
 
 #define ret_tok( _tok ) token = _tok;
 
-ScannerToken scanner_scan( PScanner ps )
+KVToken kv_scanner_scan( PKVScanner ps )
 {
-    Scanner *s = (Scanner *)ps;
-    ScannerToken token = ScannerTokenNone;
+    KVScanner *s = (KVScanner *)ps;
+    KVToken token = KVTokenNone;
     
     while ( !s->done ) {
         // Check for EOF
         if ( s->p >= s->pe ) {
             s->len  = 0;
-            token   = ScannerTokenEOF;
+            token   = KVTokenEOF;
             s->done = true;
             break;
         }
         
         %%{
-            machine Scanner;
+            machine KVScanner;
             access s->;
             variable p s->p;
             variable pe s->pe;
@@ -78,47 +78,47 @@ ScannerToken scanner_scan( PScanner ps )
             action token_end   { /* action: token_end   */ s->te = s->p; }
             
             string =
-                '"' %token_start ( [^\\"] | '\\' any ) * %token_end '"'
+                '"' %token_start ( [^\\"] | '\\' any ) * %token_end %{ ret_tok( KVTokenString ); fbreak; } '"'
                 ;
             
             identifier =
-                ( [a-zA-Z_] >token_start ( alnum | [_] )* )  %token_end %{ ret_tok( ScannerTokenIdentifier ); fbreak; }
+                ( [a-zA-Z_] >token_start ( alnum | [_] )* )  %token_end %{ ret_tok( KVTokenIdentifier ); fbreak; }
                 ;
-                
+
+            reserved_identifier =
+                ( '$' >token_start ( alnum | [_] )* )  %token_end %{ ret_tok( KVTokenSystemIdentifier ); fbreak; }
+                ;
+
             float =
-                ( digit+ >token_start ( '.' digit* )? )      %token_end %{ ret_tok( ScannerTokenFloat ); fbreak; }
+                ( digit+ >token_start ( '.' digit* )? )      %token_end %{ ret_tok( KVTokenFloat ); fbreak; }
                 ;
                 
-            parameter =
-                identifier '=' float
+            key_value =
+                ( reserved_identifier '=' string ) |
+                (          identifier '=' float )
                 ;
                 
-            parameters =
-                parameter ( ';' parameter )*
+            key_values =
+                key_value ( ';' key_value )*
                 ;
             
-            header =
-                ( string ',' )? @{ ret_tok( ScannerTokenName   ); fbreak; }
-                ( string ':' )  @{ ret_tok( ScannerTokenShader ); fbreak; }
-                ;
-                
-            main := header? parameters
+            main := key_values
                 ;
             
             write exec;
         }%%
         
-        if ( s->cs == Scanner_error )
+        if ( s->cs == KVScanner_error )
         {
-            return ScannerTokenError;
+            return KVTokenError;
         }
         
-        if ( token != ScannerTokenNone )
+        if ( token != KVTokenNone )
         {
             s->len = s->te - s->ts;
             return token;
         }
     }
     
-    return ScannerTokenEOF;
+    return KVTokenEOF;
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2021, OpenEmu Team
+// Copyright (c) 2022, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -44,7 +44,16 @@ public enum ShaderPresetWriteError: Error {
         public static let all: Self = [.name, .shader]
     }
     
-    static let invalidCharacters = #"'":@#|[]{}$%^&*()/\;<>!?`.,"#
+    static var formatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 4
+        formatter.decimalSeparator = "."
+        formatter.groupingSeparator = ""
+        return formatter
+    }
+    
+    static let invalidCharacters   = #"#""#
     static let invalidCharacterSet = CharacterSet(charactersIn: invalidCharacters)
     
     /// A boolean value to determine if a string is a valid identifier.
@@ -59,34 +68,29 @@ public enum ShaderPresetWriteError: Error {
     public func write(preset c: ShaderPresetData, options: Options = [.shader]) throws -> String {
         var s = ""
         
-        var wroteName = false
+        var first = true
         if options.contains(.name) {
             guard Self.isValidIdentifier(c.name) else { throw ShaderPresetWriteError.invalidCharacters }
-            
-            wroteName = true
-            s.append("\"\(c.name)\"")
+            first = false
+            s.append("$name=\"\(c.name)\"")
         }
         
-        if options.contains(.shader) || wroteName {
+        if options.contains(.shader) {
             guard Self.isValidIdentifier(c.shader) else { throw ShaderPresetWriteError.invalidCharacters }
-            
-            if wroteName {
-                s.append(",")
+            if !first {
+                s.append(";")
+            } else {
+                first = false
             }
-            s.append("\"\(c.shader)\"")
-        }
-        
-        if options.contains(.name) || options.contains(.shader) {
-            s.append(":")
+            s.append("$shader=\"\(c.shader)\"")
         }
         
         // Sort the keys for a consistent output
-        var first = true
         for key in c.parameters.keys.sorted() {
             if !first {
                 s.append(";")
             }
-            s.append("\(key)=\(c.parameters[key]!)")
+            s.append("\(key)=\(Self.formatter.string(from: c.parameters[key]! as NSNumber)!)")
             first = false
         }
         
@@ -133,97 +137,54 @@ public enum ShaderPresetReadError: Error {
             }
         }
         
-        guard let tokens = try? PScanner.parse(text: text[..<paramsEnd])
+        guard let tokens = try? PKVScanner.parse(text: text[..<paramsEnd])
         else { throw ShaderPresetReadError.malformed }
         
         var name: String?
         var shader: String?
-        
-        var tokIter = tokens.makePeekableIterator()
-        if let (tok, _) = tokIter.peek(), tok == .name || tok == .shader {
-            (name, shader) = parseHeader(&tokIter)
+        var params = [String: Double]()
+
+        var iter = tokens.makePeekableIterator()
+        while let (tok, key) = iter.peek(), tok == .identifier || tok == .systemIdentifier {
+            iter.next()
+            
+            if tok == .identifier {
+                guard
+                    let (tok, val) = iter.peek(),
+                    tok == .float
+                else { break }
+                iter.next()
+                params[key] = Double(val)
+                continue
+            }
+            
+            // tok == .reserveIdentifier
+            guard
+                let (tok, val) = iter.peek(),
+                tok == .string
+            else { break }
+            iter.next()
+            
+            switch key {
+            case "$name":
+                name = val
+            case "$shader":
+                shader = val
+            default:
+                break
+            }
+            
         }
-        
-        let params = parseParams(&tokIter)
         
         switch (name, shader) {
         case (.none, .none):
-            return ShaderPresetData(name: "Unnamed", shader: "", parameters: params, id: id)
+            return ShaderPresetData(name: "Unnamed shader preset", shader: "", parameters: params, id: id)
         case (.none, .some(let shader)):
-            return ShaderPresetData(name: "Unnamed", shader: shader, parameters: params, id: id)
+            return ShaderPresetData(name: "Unnamed shader preset", shader: shader, parameters: params, id: id)
         case (.some(let name), .some(let shader)):
             return ShaderPresetData(name: name, shader: shader, parameters: params, id: id)
         default:
             throw ShaderPresetReadError.malformed
         }
-    }
-    
-    func parseHeader(_ iter: inout PeekableIterator<Array<(ScannerToken, String)>.Iterator>) -> (String?, String?) {
-        var id: String?
-        var shader: String?
-        
-        if let (tok, text) = iter.peek(), tok == .name {
-            iter.next()
-            id = text
-        }
-        
-        if let (tok, text) = iter.peek(), tok == .shader {
-            iter.next()
-            shader = text
-        }
-        
-        return (id, shader)
-    }
-    
-    func parseParams(_ iter: inout PeekableIterator<Array<(ScannerToken, String)>.Iterator>) -> [String: Double] {
-        var res = [String: Double]()
-        while true {
-            guard
-                let (tok, param) = iter.peek(),
-                tok == .identifier
-            else { break }
-            iter.next()
-            
-            guard
-                let (tok, val) = iter.peek(),
-                tok == .float
-            else { break }
-            iter.next()
-            
-            res[param] = Double(val)
-        }
-        return res
-    }
-}
-
-struct PeekableIterator<Base: IteratorProtocol>: IteratorProtocol {
-    private var peeked: Base.Element??
-    private var iter: Base
-    
-    init(_ base: Base) {
-        iter = base
-    }
-    
-    mutating func peek() -> Base.Element? {
-        if peeked == nil {
-            peeked = iter.next()
-        }
-        return peeked!
-    }
-    
-    @discardableResult
-    mutating func next() -> Base.Element? {
-        if let val = peeked {
-            peeked = nil
-            return val
-        }
-        
-        return iter.next()
-    }
-}
-
-extension Sequence {
-    func makePeekableIterator() -> PeekableIterator<Self.Iterator> {
-        return PeekableIterator(makeIterator())
     }
 }

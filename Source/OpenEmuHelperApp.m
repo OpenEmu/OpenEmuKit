@@ -78,6 +78,8 @@
     NSURL                                   *_shader;
     NSDictionary<NSString *, NSNumber *>    *_shaderParameters;
     
+    NSURL *_currentShader;
+    
     NSMutableDictionary<OEDeviceHandlerPlaceholder *, NSMutableArray<void(^)(void)> *> *_pendingDeviceHandlerBindings;
     
     CAContext             *_gameVideoCAContext;
@@ -295,7 +297,16 @@ static os_log_t LOG_DISPLAY;
 
 - (BOOL)setShaderURL:(NSURL *)url parameters:(NSDictionary<NSString *, NSNumber *> *)parameters error:(NSError **)error
 {
-    BOOL success = [_filterChain setShaderFromURL:url options:[self makeOptions] error:error];
+    BOOL success = YES;
+    if (![_currentShader isEqual:url])
+    {
+        success = [_filterChain setShaderFromURL:url options:[self makeOptions] error:error];
+        if (success)
+        {
+            _currentShader = url;
+        }
+    }
+    
     if (success)
     {
         __block __auto_type filter = _filterChain;

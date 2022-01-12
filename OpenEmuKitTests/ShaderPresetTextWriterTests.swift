@@ -35,17 +35,22 @@ class ShaderPresetTextWriterTests: XCTestCase {
     
     func testWriteDefaultOptions() throws {
         let got = try w.write(preset: .init(name: "foo", shader: "CRT", parameters: ["a": 5, "b": 6]))
-        expect(got) == #""CRT":a=5.0;b=6.0"#
+        expect(got) == #"$shader="CRT";a=5;b=6"#
     }
     
+    func testWriteAllOptions() throws {
+        let got = try w.write(preset: .init(name: "foo", shader: "CRT", parameters: ["a": 5, "b": 6.3]), options: [.all])
+        expect(got) == #"$name="foo";$shader="CRT";a=5;b=6.3"#
+    }
+
     func testWriteParametersNoOptions() throws {
         let got = try w.write(preset: .init(name: "foo", shader: "CRT", parameters: ["a": 5, "b": 6]), options: [])
-        expect(got) == #"a=5.0;b=6.0"#
+        expect(got) == #"a=5;b=6"#
     }
 
     func testWriteNoParametersDefaultOptions() throws {
         let got = try w.write(preset: .init(name: "foo", shader: "CRT", parameters: [:]))
-        expect(got) == #""CRT":"#
+        expect(got) == #"$shader="CRT""#
     }
     
     func testWriteNoParametersAndOptions() throws {
@@ -57,7 +62,7 @@ class ShaderPresetTextWriterTests: XCTestCase {
     
     func testWriteWithSignature() throws {
         let got = try w.write(preset: .init(name: "foo", shader: "CRT", parameters: ["a": 5, "b": 6]), options: [.shader, .sign])
-        expect(got) == #""CRT":a=5.0;b=6.0@d80"#
+        expect(got) == #"$shader="CRT";a=5;b=6@509"#
     }
     
     // MARK: - invalid characters in identifiers
@@ -85,6 +90,13 @@ class ShaderPresetTextWriterTests: XCTestCase {
     func testIsNotAValidIdentifier() {
         for ch in invalidCharacters {
             expect(ShaderPresetTextWriter.isValidIdentifier("tt\(ch)tt")).toNot(beTrue())
+        }
+    }
+    
+    func testWritePerformance() {
+        let preset = ShaderPresetData(name: "foo", shader: "CRT", parameters: ["a": 5, "b": 6.3])
+        measure {
+            _ = try? w.write(preset: preset, options: [.all])
         }
     }
 }

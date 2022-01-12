@@ -31,7 +31,7 @@ extension NSNotification.Name {
 }
 
 /// The main object used for accessing system and user-installed shaders.
-@objc public class OEShadersModel: NSObject {
+@objc public class OEShaderStore: NSObject {
     private let store: UserDefaults
     private let userPathName: String
     private let bundle: Bundle
@@ -211,7 +211,6 @@ extension NSNotification.Name {
         self.name = name
         self.url  = URL(fileURLWithPath: "/shaders/\(name)")
     }
-    
     
     /// Returns the default parameters for the shader.
     @objc public var defaultParameters: [ShaderParamValue] {

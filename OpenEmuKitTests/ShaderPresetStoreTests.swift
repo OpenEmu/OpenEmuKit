@@ -26,10 +26,10 @@ import XCTest
 import Nimble
 @testable import OpenEmuKit
 
-class ShaderPresetStoreTests: XCTestCase {
+class UserDefaultsPresetStorageTests: XCTestCase {
     
     private var defaults: UserDefaults!
-    private var store: ShaderPresetStore!
+    private var store: UserDefaultsPresetStorage!
     
     private var path: String!
     
@@ -44,7 +44,7 @@ class ShaderPresetStoreTests: XCTestCase {
         defaults = UserDefaults(suiteName: path)
         defaults.removePersistentDomain(forName: path)
         
-        store = UserDefaultsPresetStore(store: defaults)
+        store = UserDefaultsPresetStorage(store: defaults)
     }
     
     override func tearDown() {
@@ -85,7 +85,7 @@ class ShaderPresetStoreTests: XCTestCase {
             try store.save(ShaderPresetData(name: "foo", shader: "CRT", parameters: [:], id: "id1"))
             try store.save(ShaderPresetData(name: "foo", shader: "MAME", parameters: [:], id: "id2"))
         }
-        .to(throwError(ShaderPresetStoreError.duplicateName))
+        .to(throwError(ShaderPresetStorageError.duplicateName))
     }
     
     func testRenameShaderSucceeds() throws {
@@ -104,7 +104,7 @@ class ShaderPresetStoreTests: XCTestCase {
         expect {
             try store.save(ShaderPresetData(name: "shader b", shader: "CRT", parameters: [:], id: "id1"))
         }
-        .to(throwError(ShaderPresetStoreError.duplicateName))
+        .to(throwError(ShaderPresetStorageError.duplicateName))
     }
 
     func testFailsForModifiedShader() {
@@ -113,6 +113,6 @@ class ShaderPresetStoreTests: XCTestCase {
             try store.save(ShaderPresetData(name: "foo", shader: "CRT", parameters: [:], id: "id1"))
             try store.save(ShaderPresetData(name: "foo", shader: "MAME", parameters: [:], id: "id1"))
         }
-        .to(throwError(ShaderPresetStoreError.shaderModified))
+        .to(throwError(ShaderPresetStorageError.shaderModified))
     }
 }
