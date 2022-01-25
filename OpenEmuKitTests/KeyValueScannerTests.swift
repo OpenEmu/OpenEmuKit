@@ -33,13 +33,25 @@ class KeyValueScannerTests: XCTestCase {
     // MARK: - Valid Input
     
     func testIsValidWithAllParts() {
-        let str = #"$name="The Name";$shader="MAME HLSL";ccvalue=3.5795;chromaa_y=0.3401"#
+        let str = #"$name="The Name";$shader="MAME HLSL";ccvalue=3.5795;chromaa_y=0.3401;neg=-1.1;pos=+0.3"#
         let (tokens, text) = parse(text: str)
         
-        let expTok: [KVToken] = [.systemIdentifier, .string, .systemIdentifier, .string, .identifier, .float, .identifier, .float]
+        let expTok: [KVToken] = [
+            .systemIdentifier, .string, .systemIdentifier, .string,
+            .identifier, .float,
+            .identifier, .float,
+            .identifier, .float,
+            .identifier, .float,
+        ]
         expect(tokens).to(equal(expTok))
         
-        let expText: [String] = ["$name", "The Name", "$shader", "MAME HLSL", "ccvalue", "3.5795", "chromaa_y", "0.3401"]
+        let expText: [String] = [
+            "$name", "The Name", "$shader", "MAME HLSL",
+            "ccvalue", "3.5795",
+            "chromaa_y", "0.3401",
+            "neg", "-1.1",
+            "pos", "+0.3",
+        ]
         expect(text).to(equal(expText))
     }
     

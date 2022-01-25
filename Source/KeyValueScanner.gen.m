@@ -46,55 +46,61 @@ static const char _KVScanner_actions[] = {
 
 static const char _KVScanner_key_offsets[] = {
 	0, 0, 6, 14, 15, 17, 19, 19, 
-	27, 29, 30, 34
+	27, 31, 33, 34, 38
 };
 
 static const char _KVScanner_trans_keys[] = {
 	36, 95, 65, 90, 97, 122, 61, 95, 
 	48, 57, 65, 90, 97, 122, 34, 34, 
 	92, 34, 92, 61, 95, 48, 57, 65, 
-	90, 97, 122, 48, 57, 59, 46, 59, 
-	48, 57, 59, 48, 57, 0
+	90, 97, 122, 43, 45, 48, 57, 48, 
+	57, 59, 46, 59, 48, 57, 59, 48, 
+	57, 0
 };
 
 static const char _KVScanner_single_lengths[] = {
 	0, 2, 2, 1, 2, 2, 0, 2, 
-	0, 1, 2, 1
+	2, 0, 1, 2, 1
 };
 
 static const char _KVScanner_range_lengths[] = {
 	0, 2, 3, 0, 0, 0, 0, 3, 
-	1, 0, 1, 1
+	1, 1, 0, 1, 1
 };
 
 static const char _KVScanner_index_offsets[] = {
 	0, 0, 5, 11, 13, 16, 19, 20, 
-	26, 28, 30, 34
+	26, 30, 32, 34, 38
+};
+
+static const char _KVScanner_indicies[] = {
+	0, 2, 2, 2, 1, 4, 3, 3, 
+	3, 3, 1, 5, 1, 7, 8, 6, 
+	10, 11, 9, 9, 13, 12, 12, 12, 
+	12, 1, 14, 14, 15, 1, 16, 1, 
+	17, 1, 18, 19, 16, 1, 19, 18, 
+	1, 0
 };
 
 static const char _KVScanner_trans_targs[] = {
-	2, 7, 7, 7, 0, 3, 2, 2, 
-	2, 2, 0, 4, 0, 9, 6, 5, 
-	9, 6, 5, 5, 8, 7, 7, 7, 
-	7, 0, 10, 0, 1, 0, 11, 1, 
-	10, 0, 1, 11, 0, 0
+	2, 0, 7, 2, 3, 4, 5, 10, 
+	6, 5, 10, 6, 7, 8, 9, 11, 
+	11, 1, 12, 1
 };
 
 static const char _KVScanner_trans_actions[] = {
-	1, 1, 1, 1, 0, 9, 0, 0, 
-	0, 0, 0, 0, 0, 15, 1, 1, 
-	3, 0, 0, 0, 6, 0, 0, 0, 
-	0, 0, 1, 0, 0, 0, 0, 12, 
-	0, 0, 12, 0, 0, 0
+	1, 0, 1, 0, 9, 0, 1, 15, 
+	1, 0, 3, 0, 0, 6, 1, 1, 
+	0, 0, 0, 12
 };
 
 static const char _KVScanner_eof_actions[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 12, 12
+	0, 0, 0, 12, 12
 };
 
 static const int KVScanner_start = 1;
-static const int KVScanner_first_final = 9;
+static const int KVScanner_first_final = 10;
 static const int KVScanner_error = 0;
 
 static const int KVScanner_en_main = 1;
@@ -113,7 +119,7 @@ void kv_scanner_init( PKVScanner ps, uint8_t const * src, size_t src_len )
     s->pe       = src + src_len;
     s->eof      = s->pe;
     
-/* #line 117 "KeyValueScanner.gen.m" */
+/* #line 123 "KeyValueScanner.gen.m" */
 	{
 	 s->cs = KVScanner_start;
 	}
@@ -138,7 +144,7 @@ KVToken kv_scanner_scan( PKVScanner ps )
         }
         
         
-/* #line 142 "KeyValueScanner.gen.m" */
+/* #line 148 "KeyValueScanner.gen.m" */
 	{
 	int _klen;
 	unsigned int _trans;
@@ -200,6 +206,7 @@ _resume:
 	}
 
 _match:
+	_trans = _KVScanner_indicies[_trans];
 	 s->cs = _KVScanner_trans_targs[_trans];
 
 	if ( _KVScanner_trans_actions[_trans] == 0 )
@@ -235,7 +242,7 @@ _match:
 /* #line 93 "KeyValueScanner.rl" */
 	{ ret_tok( KVTokenFloat ); {( s->p)++; goto _out; } }
 	break;
-/* #line 239 "KeyValueScanner.gen.m" */
+/* #line 246 "KeyValueScanner.gen.m" */
 		}
 	}
 
@@ -259,7 +266,7 @@ _again:
 /* #line 93 "KeyValueScanner.rl" */
 	{ ret_tok( KVTokenFloat ); {( s->p)++; goto _out; } }
 	break;
-/* #line 263 "KeyValueScanner.gen.m" */
+/* #line 270 "KeyValueScanner.gen.m" */
 		}
 	}
 	}

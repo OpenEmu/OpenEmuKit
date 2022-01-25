@@ -36,8 +36,8 @@ class ShaderPresetTextReaderTests: XCTestCase {
     // MARK: - Without signature
     
     func testReadShaderParams() throws {
-        let got = try r.read(text: #"$shader="CRT";a=5.0;b=6"#)
-        expect(got) == ShaderPresetData(name: "Unnamed shader preset", shader: "CRT", parameters: ["a": 5, "b": 6])
+        let got = try r.read(text: #"$shader="CRT";a=5.0;b=6;neg=-1.1;pos=+3.2"#)
+        expect(got) == ShaderPresetData(name: "Unnamed shader preset", shader: "CRT", parameters: ["a": 5, "b": 6, "neg": -1.1, "pos": 3.2])
     }
     
     func testReadShaderParamsWithID() throws {

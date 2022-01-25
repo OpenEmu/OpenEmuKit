@@ -90,7 +90,7 @@ KVToken kv_scanner_scan( PKVScanner ps )
                 ;
 
             float =
-                ( digit+ >token_start ( '.' digit* )? ) %token_end %{ ret_tok( KVTokenFloat ); fbreak; }
+                ( [+\-]? >token_start digit+ ( '.' digit* )? ) %token_end %{ ret_tok( KVTokenFloat ); fbreak; }
                 ;
                 
             key_value =
