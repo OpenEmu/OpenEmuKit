@@ -32,7 +32,7 @@ import Foundation
     
     public init(name: String, shader: OEShaderModel, parameters: [String: Double]? = nil, id: String? = nil) {
         // generate an ID that is useful for us humans, but still unique enough
-        // that a user won't generate duplicates.
+        // that a client won't generate duplicates.
         self.id         = id ?? "\(shader.name):\(UInt(Date().timeIntervalSince1970))"
         self.name       = name
         self.shader     = shader

@@ -116,6 +116,8 @@ NSNotificationName const OESystemPluginDidRegisterNotification = @"OESystemPlugi
     if((self = [super initWithFileAtPath:aPath name:aName error:outError]))
     {
         _systemIdentifier = [[self infoDictionary] objectForKey:OESystemIdentifier];
+        NSAssert(_systemIdentifier != nil, @"Info.plist missing value for required key: %@", OESystemIdentifier);
+        
         _responderClass   = [[self controller] responderClass];
 
         NSString *iconPath = [[self bundle] pathForResource:[[self infoDictionary] objectForKey:@"CFIconName"] ofType:@"icns"];

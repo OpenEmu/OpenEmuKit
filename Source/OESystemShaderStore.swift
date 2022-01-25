@@ -29,7 +29,6 @@ import Foundation
     private let store: UserDefaults
     private let shaders: OEShaderStore
     
-    @available(*, deprecated, message: "Use ShaderPreset APIs")
     public init(store: UserDefaults, shaders: OEShaderStore) {
         self.store      = store
         self.shaders    = shaders
@@ -37,24 +36,20 @@ import Foundation
         super.init()
     }
     
-    @available(*, deprecated, message: "Use ShaderPreset APIs")
     @objc public func shader(withShader shader: OEShaderModel, forSystem identifier: String) -> OESystemShaderModel {
         OESystemShaderModel(shader: shader, identifier: identifier, store: store)
     }
     
-    @available(*, deprecated, message: "Use ShaderPreset APIs")
     @objc public func shader(forSystem identifier: String) -> OESystemShaderModel {
         findSystemShader(identifier)
     }
     
     /// Returns the name of the shader for the specified system, falling back to the default shader if none is set.
-    @available(*, deprecated, message: "Use ShaderPreset APIs")
     @objc public func shaderName(forSystem identifier: String) -> String {
         findShader(forSystem: identifier).name
     }
     
     /// Reset to the default shader for the specified system.
-    @available(*, deprecated, message: "Use ShaderPreset APIs")
     @objc public func resetShader(forSystem identifier: String) {
         store.removeObject(forKey: makeSystemKey(identifier))
     }
@@ -63,7 +58,6 @@ import Foundation
     /// - Parameters:
     ///   - shader: The shader to assign to the system..
     ///   - identifier: The identifier of the system.
-    @available(*, deprecated, message: "Use ShaderPreset APIs")
     @objc public func setShader(_ shader: OEShaderModel, forSystem identifier: String) {
         store.set(shader.name, forKey: makeSystemKey(identifier))
     }

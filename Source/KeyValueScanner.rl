@@ -82,20 +82,20 @@ KVToken kv_scanner_scan( PKVScanner ps )
                 ;
             
             identifier =
-                ( [a-zA-Z_] >token_start ( alnum | [_] )* )  %token_end %{ ret_tok( KVTokenIdentifier ); fbreak; }
+                ( [a-zA-Z_] >token_start ( alnum | [_] )* ) %token_end %{ ret_tok( KVTokenIdentifier ); fbreak; }
                 ;
 
-            reserved_identifier =
-                ( '$' >token_start ( alnum | [_] )* )  %token_end %{ ret_tok( KVTokenSystemIdentifier ); fbreak; }
+            system_identifier =
+                ( '$' >token_start ( alnum | [_] )* ) %token_end %{ ret_tok( KVTokenSystemIdentifier ); fbreak; }
                 ;
 
             float =
-                ( digit+ >token_start ( '.' digit* )? )      %token_end %{ ret_tok( KVTokenFloat ); fbreak; }
+                ( digit+ >token_start ( '.' digit* )? ) %token_end %{ ret_tok( KVTokenFloat ); fbreak; }
                 ;
                 
             key_value =
-                ( reserved_identifier '=' string ) |
-                (          identifier '=' float )
+                ( system_identifier '=' string ) |
+                (        identifier '=' float  )
                 ;
                 
             key_values =
