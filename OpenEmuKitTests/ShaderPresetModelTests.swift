@@ -81,13 +81,10 @@ class ShaderPresetModelTests: XCTestCase {
     func testCanFindPreset() {
         expect(self.presets.findPreset(byID: "id1"))
             .toNot(be(nil))
-        expect(self.presets.findPreset(byName: "shader 2"))
-            .toNot(be(nil))
     }
     
     func testInstancesAreSame() {
         expect(self.presets.findPreset(byID: "id2")) === presets.findPreset(byID: "id2")
-        expect(self.presets.findPreset(byName: "shader 1")) === presets.findPreset(byName: "shader 1")
     }
     
     func testFindPresets() {
@@ -101,9 +98,6 @@ class ShaderPresetModelTests: XCTestCase {
     func testExists() {
         expect(self.presets.exists(byID: "id2")) == true
         expect(self.presets.exists(byID: "foo")) == false
-
-        expect(self.presets.exists(byName: "shader 1")) == true
-        expect(self.presets.exists(byName: "foo")) == false
     }
     
     func testRemovePreset() {
@@ -121,10 +115,10 @@ class ShaderPresetModelTests: XCTestCase {
             XCTFail("Expected to find id2")
             return
         }
-        let oldName = a.name
         a.name = "dummy name"
         try presets.savePreset(a)
-        expect(self.presets.findPreset(byName: oldName)).to(beNil())
-        expect(self.presets.findPreset(byName: "dummy name")).toNot(beNil())
+        guard let b = presets.findPreset(byID: "id2")
+        else { return XCTFail("Expected to find id2") }
+        expect(b.name).to(equal("dummy name"))
     }
 }

@@ -45,10 +45,6 @@ public class ShaderPresetStore {
     
     // Indices
     var byID = [String: ShaderPreset]() // map id   → preset
-    var byName = [String: String]()     // map name → id
-    
-    /// tracks the persisted name of the shader
-    var idToName = [String: String]()
     
     public init(store: ShaderPresetStorage, shaders: OEShaderStore) {
         self.store      = store
@@ -87,12 +83,6 @@ public class ShaderPresetStore {
             if self.byID[data.id] == nil {
                 // new item
                 self.byID[data.id] = preset
-                self.byName[data.name] = data.id
-                self.idToName[data.id] = data.name
-            } else if let name = self.idToName[data.id], name != data.name {
-                self.byName.removeValue(forKey: name)
-                self.byName[data.name] = data.id
-                self.idToName[data.id] = data.name
             }
         }
     }
@@ -102,9 +92,6 @@ public class ShaderPresetStore {
         store.remove(data)
         queue.async(flags: .barrier) {
             self.byID.removeValue(forKey: data.id)
-            if let name = self.idToName.removeValue(forKey: data.id) {
-                self.byName.removeValue(forKey: name)
-            }
         }
     }
     
@@ -122,31 +109,10 @@ public class ShaderPresetStore {
         }
     }
     
-    /// Return the shader preset matching the specified name.
-    ///
-    /// - Note:
-    /// This function returns `nil` if a preset is found
-    /// but no valid shader is installed.
-    ///
-    /// - Parameter name: The name of the preset to locate.
-    /// - Returns: A matching preset or `nil`.
-    public func findPreset(byName name: String) -> ShaderPreset? {
-        queue.sync {
-            getPreset(byName: name)
-        }
-    }
-    
     public func findPreset(byID id: String) -> ShaderPreset? {
         queue.sync {
             getPreset(byID: id)
         }
-    }
-    
-    /// Determines if a preset exists with the specified name.
-    /// - Parameter name: The unique name of the preset to search for.
-    /// - Returns: `true` if a preset exists.
-    public func exists(byName name: String) -> Bool {
-        store.exists(byName: name)
     }
     
     /// Determines if a preset exists with the specified id.
@@ -175,24 +141,10 @@ public class ShaderPresetStore {
         return makePreset(data: data, shader: shader)
     }
     
-    private func getPreset(byName name: String) -> ShaderPreset? {
-        if let id = byName[name] {
-            return getPreset(byID: id)
-        }
-        
-        guard
-            let data   = store.findPreset(byName: name),
-            let shader = shaders[data.shader]
-        else { return nil }
-        
-        return makePreset(data: data, shader: shader)
-    }
-    
     private func makePreset(data: ShaderPresetData, shader: OEShaderModel) -> ShaderPreset {
-        let preset = ShaderPreset(name: data.name, shader: shader, parameters: data.parameters, id: data.id)
-        byID[data.id]     = preset
-        byName[data.name] = preset.id
-        idToName[data.id] = preset.name
+        let createdAt = data.createdAt != nil ? Date(timeIntervalSince1970: data.createdAt!) : Date()
+        let preset = ShaderPreset(name: data.name, shader: shader, parameters: data.parameters, id: data.id, createdAt: createdAt)
+        byID[data.id] = preset
         return preset
     }
 }

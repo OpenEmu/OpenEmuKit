@@ -25,9 +25,6 @@
 import Foundation
 
 public enum ShaderPresetStorageError: Error {
-    /// A preset with the same name already exists
-    case duplicateName
-    
     /// The preset shader was changed
     case shaderModified
     
@@ -42,17 +39,11 @@ public protocol ShaderPresetStorage {
     /// - Returns: An array of ``ShaderPresetData`` objects.
     func findPresets(byShader name: String) -> [ShaderPresetData]
 
-    /// Returns the shader preset for the specified preset name.
-    /// - Parameter name: The name of the preset to find.
-    /// - Returns: A preset matching the specified name.
-    func findPreset(byName name: String) -> ShaderPresetData?
-
     /// Returns the shader preset for the specified identifier.
     /// - Parameter id: The identifier of the preset to find.
     /// - Returns: A preset matching the specified identifier.
     func findPreset(byID id: String) -> ShaderPresetData?
     func save(_ preset: ShaderPresetData) throws
     func remove(_ preset: ShaderPresetData)
-    func exists(byName name: String) -> Bool
     func exists(byID id: String) -> Bool
 }

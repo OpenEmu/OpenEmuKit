@@ -79,34 +79,6 @@ class UserDefaultsPresetStorageTests: XCTestCase {
         }
     }
     
-    func testFailsForDuplicateName() {
-        let store = store!
-        expect {
-            try store.save(ShaderPresetData(name: "foo", shader: "CRT", parameters: [:], id: "id1"))
-            try store.save(ShaderPresetData(name: "foo", shader: "MAME", parameters: [:], id: "id2"))
-        }
-        .to(throwError(ShaderPresetStorageError.duplicateName))
-    }
-    
-    func testRenameShaderSucceeds() throws {
-        let store = store!
-        try store.save(ShaderPresetData(name: "shader a", shader: "CRT", parameters: [:], id: "id1"))
-        try store.save(ShaderPresetData(name: "shader b", shader: "CRT", parameters: [:], id: "id1"))
-        expect(store.findPreset(byName: "shader a")).to(beNil())
-        expect(store.findPreset(byName: "shader b")).toNot(beNil())
-    }
-    
-    func testRenameShaderFailsForDuplicateName() throws {
-        let store = store!
-        try store.save(ShaderPresetData(name: "shader a", shader: "CRT", parameters: [:], id: "id1"))
-        try store.save(ShaderPresetData(name: "shader b", shader: "CRT", parameters: [:], id: "id2"))
-        
-        expect {
-            try store.save(ShaderPresetData(name: "shader b", shader: "CRT", parameters: [:], id: "id1"))
-        }
-        .to(throwError(ShaderPresetStorageError.duplicateName))
-    }
-
     func testFailsForModifiedShader() {
         let store = store!
         expect {

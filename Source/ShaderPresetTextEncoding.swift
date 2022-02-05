@@ -27,6 +27,7 @@ import OpenEmuKitPrivate
 
 public enum ShaderPresetWriteError: Error {
     case invalidCharacters
+    case missingCreatedAt
 }
 
 @frozen public struct ShaderPresetTextWriter {
@@ -39,7 +40,8 @@ public enum ShaderPresetWriteError: Error {
         
         public static let name      = Self(rawValue: 1 << 0)
         public static let shader    = Self(rawValue: 1 << 1)
-        public static let sign      = Self(rawValue: 1 << 2)
+        public static let createdAt = Self(rawValue: 1 << 2)
+        public static let sign      = Self(rawValue: 1 << 3)
         
         public static let all: Self = [.name, .shader]
     }
@@ -83,6 +85,16 @@ public enum ShaderPresetWriteError: Error {
                 first = false
             }
             s.append("$shader=\"\(c.shader)\"")
+        }
+        
+        if options.contains(.createdAt) {
+            guard let createdAt = c.createdAt else { throw ShaderPresetWriteError.missingCreatedAt }
+            if !first {
+                s.append(";")
+            } else {
+                first = false
+            }
+            s.append("$createdAt=\"\(UInt64(createdAt))\"")
         }
         
         // Sort the keys for a consistent output
@@ -140,8 +152,9 @@ public enum ShaderPresetReadError: Error {
         guard let tokens = try? PKVScanner.parse(text: text[..<paramsEnd])
         else { throw ShaderPresetReadError.malformed }
         
-        var name: String?
-        var shader: String?
+        var name   = "Unnamed shader preset"
+        var shader = ""
+        var createdAt: TimeInterval?
         var params = [String: Double]()
 
         var iter = tokens.makePeekableIterator()
@@ -170,21 +183,13 @@ public enum ShaderPresetReadError: Error {
                 name = val
             case "$shader":
                 shader = val
+            case "$createdAt":
+                createdAt = TimeInterval(val)
             default:
                 break
             }
-            
         }
         
-        switch (name, shader) {
-        case (.none, .none):
-            return ShaderPresetData(name: "Unnamed shader preset", shader: "", parameters: params, id: id)
-        case (.none, .some(let shader)):
-            return ShaderPresetData(name: "Unnamed shader preset", shader: shader, parameters: params, id: id)
-        case (.some(let name), .some(let shader)):
-            return ShaderPresetData(name: name, shader: shader, parameters: params, id: id)
-        default:
-            throw ShaderPresetReadError.malformed
-        }
+        return ShaderPresetData(name: name, shader: shader, parameters: params, id: id, createdAt: createdAt)
     }
 }

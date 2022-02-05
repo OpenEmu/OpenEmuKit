@@ -29,11 +29,13 @@ public struct ShaderPresetData: Identifiable, Hashable, Codable {
     public let name: String
     public let shader: String
     public var parameters: [String: Double]
+    public let createdAt: TimeInterval?
     
-    public init(name: String, shader: String, parameters: [String: Double], id: String? = nil) {
+    public init(name: String, shader: String, parameters: [String: Double], id: String? = nil, createdAt: TimeInterval? = nil) {
         self.id         = id ?? name
         self.name       = name
         self.shader     = shader
         self.parameters = parameters
+        self.createdAt  = createdAt
     }
 }

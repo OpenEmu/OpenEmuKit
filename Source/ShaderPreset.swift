@@ -29,15 +29,27 @@ import Foundation
     public var name: String
     public let shader: OEShaderModel
     public var parameters: [String: Double]
+    public let createdAt: Date
     
-    public init(name: String, shader: OEShaderModel, parameters: [String: Double]? = nil, id: String? = nil) {
+    public init(name: String, shader: OEShaderModel, parameters: [String: Double]? = nil, id: String? = nil, createdAt: Date = Date()) {
         // generate an ID that is useful for us humans, but still unique enough
         // that a client won't generate duplicates.
         self.id         = id ?? "\(shader.name):\(UInt(Date().timeIntervalSince1970))"
         self.name       = name
         self.shader     = shader
         self.parameters = parameters ?? Dictionary(allParams: shader.defaultParameters)
+        self.createdAt  = createdAt
         super.init()
+    }
+}
+
+extension ShaderPreset: Comparable {
+    public static func < (lhs: ShaderPreset, rhs: ShaderPreset) -> Bool {
+        let res = lhs.name.localizedCompare(rhs.name)
+        if res == .orderedSame {
+            return lhs.createdAt < rhs.createdAt
+        }
+        return res == .orderedAscending
     }
 }
 
@@ -47,5 +59,6 @@ extension ShaderPresetData {
         name        = preset.name
         shader      = preset.shader.name
         parameters  = preset.parameters
+        createdAt   = preset.createdAt.timeIntervalSince1970
     }
 }

@@ -31,7 +31,6 @@ public class UserDefaultsPresetStorage: ShaderPresetStorage {
     let queue: DispatchQueue = DispatchQueue(label: "org.openemu.userDefaultsPresetStore", attributes: .concurrent,
                                              target: DispatchQueue.global(qos: .userInitiated))
     
-    var indexByName: [String: String] = [:]
     var indexByShader: [String: [String]] = [:]
     
     public init(store: UserDefaults) {
@@ -40,10 +39,8 @@ public class UserDefaultsPresetStorage: ShaderPresetStorage {
         // populate indices
         queue.async(flags: .barrier) {
             // Collect all the shader preset keys
-            let keys = store.dictionaryRepresentation().keys.filter { $0.hasPrefix(Self.presetPrefix) }
+            let keys    = store.dictionaryRepresentation().keys.filter { $0.hasPrefix(Self.presetPrefix) }
             let presets = keys.compactMap(self.load(_:))
-            
-            self.indexByName = Dictionary(uniqueKeysWithValues: presets.map { ($0.name, $0.id) })
             
             // Groups presets by shader and then remaps the values from [ShaderPresetData] → [\.id]
             self.indexByShader = Dictionary(grouping: presets, by: { $0.shader })
@@ -55,34 +52,15 @@ public class UserDefaultsPresetStorage: ShaderPresetStorage {
         id.hasPrefix(Self.presetPrefix) ? id : "\(Self.presetPrefix)\(id)"
     }
     
-    public func exists(byName name: String) -> Bool {
-        queue.sync {
-            indexByName[name] != nil
-        }
-    }
-    
     public func exists(byID id: String) -> Bool {
         queue.sync {
             store.string(forKey: Self.makeKey(id)) != nil
         }
     }
     
-    public func presets(matching predicate: (ShaderPresetData) -> Bool) -> [ShaderPresetData] {
-        queue.sync {
-            indexByName.values.compactMap(load(_:)).filter(predicate)
-        }
-    }
-    
     public func findPresets(byShader name: String) -> [ShaderPresetData] {
         queue.sync {
             indexByShader[name]?.compactMap(load(_:)) ?? []
-        }
-    }
-    
-    public func findPreset(byName name: String) -> ShaderPresetData? {
-        queue.sync {
-            guard let id = indexByName[name] else { return nil }
-            return load(id)
         }
     }
     
@@ -94,10 +72,6 @@ public class UserDefaultsPresetStorage: ShaderPresetStorage {
     
     public func save(_ preset: ShaderPresetData) throws {
         try queue.sync(flags: .barrier) {
-            if let existing = indexByName[preset.name], existing != preset.id {
-                throw ShaderPresetStorageError.duplicateName
-            }
-            
             let existing = load(preset.id)
             
             if let existing = existing, existing.shader != preset.shader {
@@ -105,21 +79,18 @@ public class UserDefaultsPresetStorage: ShaderPresetStorage {
                 throw ShaderPresetStorageError.shaderModified
             }
             
+            // Ensure created at is set
+            let createdAt = existing?.createdAt ?? preset.createdAt ?? Date().timeIntervalSince1970
+            let preset    = ShaderPresetData(name: preset.name, shader: preset.shader, parameters: preset.parameters, id: preset.id, createdAt: createdAt)
+            
             do {
-                let text = try ShaderPresetTextWriter().write(preset: preset, options: [.name, .shader])
+                let text = try ShaderPresetTextWriter().write(preset: preset, options: [.name, .shader, .createdAt])
                 store.set(text, forKey: Self.makeKey(preset.id))
                 
                 //
                 // Update indices
                 //
-                if let existing = existing {
-                    if existing.name != preset.name {
-                        // Preset was renamed
-                        indexByName[existing.name] = nil
-                        indexByName[preset.name] = preset.id
-                    }
-                } else {
-                    indexByName[preset.name] = preset.id
+                if existing == nil {
                     var idsByShader = indexByShader[preset.shader] ?? []
                     idsByShader.append(preset.id)
                     indexByShader[preset.shader] = idsByShader
@@ -139,7 +110,6 @@ public class UserDefaultsPresetStorage: ShaderPresetStorage {
             //
             // Update indices
             //
-            indexByName.removeValue(forKey: existing.name)
             if
                 var idsByShader = indexByShader[existing.shader],
                 let index = idsByShader.firstIndex(of: existing.id)
