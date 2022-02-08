@@ -33,6 +33,7 @@
 }
 
 @dynamic controller;
+@dynamic allPlugins;
 
 static NSArray *_cachedRequiredFiles = nil;
 

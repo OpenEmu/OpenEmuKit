@@ -39,6 +39,8 @@
 @property(readonly) NSArray *requiredFiles;
 @property(readonly) NSDictionary *coreOptions;
 
+@property(class, readonly) NSArray <OECorePlugin *> *allPlugins;
+
 + (OECorePlugin *)corePluginWithBundleAtPath:(NSString *)bundlePath;
 + (OECorePlugin *)corePluginWithBundleIdentifier:(NSString *)identifier;
 + (NSArray<OECorePlugin *> *)corePluginsForSystemIdentifier:(NSString *)systemIdentifier;

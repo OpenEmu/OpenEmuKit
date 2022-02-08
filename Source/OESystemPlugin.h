@@ -45,6 +45,8 @@ extern NSNotificationName const OESystemPluginDidRegisterNotification;
 
 @property(strong, readonly) Class     responderClass;
 
+@property(class, readonly) NSArray <OESystemPlugin *> *allPlugins;
+
 + (NSArray *)supportedTypeExtensions;
 - (NSArray *)supportedTypeExtensions;
 + (NSArray *)supportedSystemTypes;

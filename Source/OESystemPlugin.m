@@ -30,6 +30,7 @@
 
 @implementation OESystemPlugin
 @dynamic controller;
+@dynamic allPlugins;
 
 static NSMutableDictionary *_pluginsBySystemIdentifiers = nil;
 static NSArray *_cachedSupportedTypeExtensions = nil;
