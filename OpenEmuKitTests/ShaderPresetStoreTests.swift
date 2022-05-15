@@ -61,10 +61,10 @@ class UserDefaultsPresetStorageTests: XCTestCase {
         do {
             let presets = store.findPresets(byShader: "CRT")
             let exp = [
-                ShaderPresetData(name: "id1", shader: "CRT", parameters: [:]),
-                ShaderPresetData(name: "id2", shader: "CRT", parameters: [:]),
+                "id1",
+                "id2",
             ]
-            expect(presets).to(contain(exp))
+            expect(presets.map(\.id)).to(contain(exp))
         }
         
         // Test removing a preset
@@ -72,10 +72,8 @@ class UserDefaultsPresetStorageTests: XCTestCase {
             let preset = store.findPreset(byID: "id1")!
             store.remove(preset)
             let presets = store.findPresets(byShader: "CRT")
-            let exp = [
-                ShaderPresetData(name: "id2", shader: "CRT", parameters: [:]),
-            ]
-            expect(presets).to(contain(exp))
+            let exp = [ "id2" ]
+            expect(presets.map(\.id)).to(contain(exp))
         }
     }
     

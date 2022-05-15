@@ -604,7 +604,10 @@ static os_log_t LOG_DISPLAY;
 {
     __block OEFilterChain *chain = _filterChain;
     [_gameCore performBlock:^{
-        block(chain.captureOutputImage);
+        __auto_type imgRef = chain.createCGImageFromOutput;
+        __auto_type img    = [[NSBitmapImageRep alloc] initWithCGImage:imgRef];
+        CGImageRelease(imgRef);
+        block(img);
     }];
 }
 
@@ -612,7 +615,10 @@ static os_log_t LOG_DISPLAY;
 {
     __block OEFilterChain *chain = _filterChain;
     [_gameCore performBlock:^{
-        block(chain.captureSourceImage);
+        __auto_type imgRef = chain.createCGImageFromSource;
+        __auto_type img    = [[NSBitmapImageRep alloc] initWithCGImage:imgRef];
+        CGImageRelease(imgRef);
+        block(img);
     }];
 }
 
