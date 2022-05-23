@@ -40,6 +40,20 @@ public enum Crypto {
         }
     }
     
+    public struct SHA1 {
+        public static func digest<T: DataProtocol>(data: T) -> String {
+            var digest = [UInt8](repeating: 0, count: Int(CC_SHA1_DIGEST_LENGTH))
+            data.withContiguousStorageIfAvailable {
+                _ = CC_SHA1($0.baseAddress, CC_LONG($0.count), &digest)
+            }
+            return digest.hexString
+        }
+        
+        public static func digest<T: StringProtocol>(string: T) -> String {
+            string.withFastUTF8IfAvailable { digest(data: $0) }
+        }
+    }
+    
     public struct SHA256 {
         public static func digest<T: DataProtocol>(data: T) -> String {
             var digest = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
