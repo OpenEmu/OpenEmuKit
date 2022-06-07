@@ -35,8 +35,6 @@ typedef void(^OEStartupCompletionHandler)(NSError * _Nullable);
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString * const OEGameCoreErrorDomain;
-
 typedef NS_ERROR_ENUM(OEGameCoreErrorDomain, OEGameCoreManagerErrorCodes)
 {
     OEHelperAppNotRunningError     = -3,

@@ -27,7 +27,7 @@
 @import Cocoa;
 @import OpenEmuBase;
 
-NS_ERROR_ENUM(OEGameCoreErrorDomain) {
+typedef NS_ERROR_ENUM(OEGameCoreErrorDomain, OEGameCorePluginErrorCodes) {
     OEGameCorePluginAlreadyLoadedError = -1000,
     OEGameCorePluginInvalidError       = -1001,
     OEGameCorePluginOutOfSupportError  = -1002,

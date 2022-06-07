@@ -31,8 +31,6 @@
 #import "OESystemPlugin.h"
 #import "OEGameStartupInfo.h"
 
-NSString * const OEGameCoreErrorDomain = @"OEGameCoreErrorDomain";
-
 @implementation OEGameCoreManager
 
 - (instancetype)initWithStartupInfo:(OEGameStartupInfo *)startupInfo
