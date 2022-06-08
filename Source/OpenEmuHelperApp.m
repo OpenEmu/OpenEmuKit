@@ -85,7 +85,8 @@
     CAContext             *_gameVideoCAContext;
     
     OEGameHelperMetalLayer  *_videoLayer;
-    OEFilterChain           *_filterChain;
+    FilterChain             *_filterChain;
+    Screenshot              *_screenshot;
     dispatch_semaphore_t    _inflightSemaphore;
     id<MTLCaptureScope>     _scope;
     id<MTLDevice>           _device;
@@ -148,7 +149,8 @@ static os_log_t LOG_DISPLAY;
     _scope             = [[MTLCaptureManager sharedCaptureManager] newCaptureScopeWithDevice:_device];
     _commandQueue      = [_device newCommandQueue];
     _clearColor        = MTLClearColorMake(0, 0, 0, 1);
-    _filterChain       = [[OEFilterChain alloc] initWithDevice:_device];
+    _filterChain       = [[FilterChain alloc] initWithDevice:_device error:nil];
+    _screenshot        = [[Screenshot alloc] initWithDevice:_device];
     
     [self updateScreenSize];
     [self updateGameRenderer];
@@ -602,22 +604,22 @@ static os_log_t LOG_DISPLAY;
 
 - (void)captureOutputImageWithCompletionHandler:(void (^)(NSBitmapImageRep *image))block
 {
-    __block OEFilterChain *chain = _filterChain;
+    __block Screenshot    *ss    = _screenshot;
+    __block FilterChain *chain = _filterChain;
     [_gameCore performBlock:^{
-        __auto_type imgRef = chain.createCGImageFromOutput;
+        __auto_type imgRef = [ss getCGImageFromOutputWithFilterChain:chain];
         __auto_type img    = [[NSBitmapImageRep alloc] initWithCGImage:imgRef];
-        CGImageRelease(imgRef);
         block(img);
     }];
 }
 
 - (void)captureSourceImageWithCompletionHandler:(void (^)(NSBitmapImageRep *image))block
 {
-    __block OEFilterChain *chain = _filterChain;
+    __block Screenshot    *ss    = _screenshot;
+    __block FilterChain *chain = _filterChain;
     [_gameCore performBlock:^{
-        __auto_type imgRef = chain.createCGImageFromSource;
+        __auto_type imgRef = [ss getCGImageFromSourceWithFilterChain:chain];
         __auto_type img    = [[NSBitmapImageRep alloc] initWithCGImage:imgRef];
-        CGImageRelease(imgRef);
         block(img);
     }];
 }

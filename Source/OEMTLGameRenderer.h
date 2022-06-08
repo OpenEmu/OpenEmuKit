@@ -27,15 +27,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class OEFilterChain;
-
 @interface OEMTLGameRenderer : NSObject <OEGameRenderer>
 
 /*! @brief Specifies whether rendering is synchronized with the display */
 @property (nonatomic, readwrite) bool displaySyncEnabled;
 @property (nonatomic) OEIntSize surfaceSize;
 
-- (instancetype)initWithFilterChain:(OEFilterChain *)filterChain;
+- (instancetype)initWithFilterChain:(FilterChain *)filterChain;
 
 @end
 

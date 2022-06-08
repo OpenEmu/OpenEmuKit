@@ -42,7 +42,7 @@ class GameHelperMetalLayer: CAMetalLayer {
         super.init(coder: coder)
     }
     
-    // TODO: Set this to match the final pixel format of OEFilterChain whenever the shader changes.
+    // TODO: Set this to match the final pixel format of FilterChain whenever the shader changes.
     
     override var pixelFormat: MTLPixelFormat {
         didSet {

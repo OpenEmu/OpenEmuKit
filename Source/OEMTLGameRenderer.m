@@ -34,14 +34,14 @@ OEMTLPixelFormat GLToRPixelFormat(GLenum pixelFormat, GLenum pixelType);
 
 @implementation OEMTLGameRenderer
 {
-    OEPixelBuffer *_buffer;
-    OEFilterChain *_filterChain;
+    PixelBuffer *_buffer;
+    FilterChain *_filterChain;
 }
 
 @synthesize gameCore = _gameCore;
 @synthesize presentationFramebuffer;
 
-- (id)initWithFilterChain:(OEFilterChain *)filterChain
+- (id)initWithFilterChain:(FilterChain *)filterChain
 {
     if (!(self = [super init])) {
         return nil;
