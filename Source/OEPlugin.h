@@ -33,25 +33,13 @@ typedef NS_ERROR_ENUM(OEGameCoreErrorDomain, OEGameCorePluginErrorCodes) {
     OEGameCorePluginOutOfSupportError  = -1002,
 };
 
-@interface NSObject (OEPlugin)
-@property(class, readonly) BOOL isPluginClass;
-@end
-
 @interface OEPlugin : NSObject <NSCopying>
 
-@property(class, readonly) NSSet <Class> *pluginClasses;
-
 + (void)registerPluginClass;
-+ (void)registerPluginClass:(Class)pluginClass;
-
-// Subclass hook to perform checks or setups of the controller.
-- (id)newPluginControllerWithClass:(Class)bundleClass;
 
 @property(readonly) NSString *path;
 @property(readonly) NSString *name;
 
-// Properties only available when dealing with bundle-based plugins.
-@property(readonly) id controller; // Main Class of the bundle, can be nil.
 @property(readonly) NSString *displayName;
 @property(readonly) NSBundle *bundle;
 @property(readonly) NSDictionary *infoDictionary;
@@ -60,26 +48,17 @@ typedef NS_ERROR_ENUM(OEGameCoreErrorDomain, OEGameCorePluginErrorCodes) {
 
 // All plugins should be retrieved with this method
 // Ensuring a plugin is loaded only once
-+ (instancetype)pluginWithName:(NSString *)aName; // Do not call on OEPlugin, only call on subclasses.
-+ (instancetype)pluginWithName:(NSString *)aName type:(Class)pluginType;
-+ (instancetype)pluginWithFileAtPath:(NSString *)aPath type:(Class)aType;
-+ (instancetype)pluginWithFileAtPath:(NSString *)aPath type:(Class)aType forceReload:(BOOL)reload;
-+ (instancetype)pluginWithFileAtPath:(NSString *)aPath type:(Class)aType forceReload:(BOOL)reload error:(NSError *__autoreleasing *)outError;
++ (instancetype)pluginWithBundleAtPath:(NSString *)aPath type:(Class)aType;
++ (instancetype)pluginWithBundleAtPath:(NSString *)aPath type:(Class)aType forceReload:(BOOL)reload error:(NSError *__autoreleasing *)outError;
 + (instancetype)pluginWithBundle:(NSBundle *)aBundle type:(Class)aType forceReload:(BOOL)reload;
 + (NSArray *)pluginsForType:(Class)aType;
-@property(class, readonly) NSArray <__kindof OEPlugin *> *allPlugins;
-@property(class, readonly) NSArray <NSString *> *allPluginNames;
 
-// Designated initializer for plugin files that do not use bundles.
 - (instancetype)init NS_UNAVAILABLE;
-- (instancetype)initWithFileAtPath:(NSString *)aPath name:(NSString *)aName error:(NSError *__autoreleasing *)outError NS_DESIGNATED_INITIALIZER;
-- (instancetype)initWithFileAtPath:(NSString *)aPath name:(NSString *)aName;
+- (instancetype)initWithBundleAtPath:(NSString *)aPath name:(NSString *)aName error:(NSError *__autoreleasing *)outError NS_DESIGNATED_INITIALIZER;
 - (instancetype)initWithBundle:(NSBundle *)aBundle;
 
-@property(class, readonly) NSString *pluginType;
 @property(class, readonly) NSString *pluginFolder;
 @property(class, readonly) NSString *pluginExtension;
-+ (Class)typeForExtension:(NSString *)anExtension;
 
 @property (readonly, getter=isDeprecated) BOOL deprecated;
 // When YES, the plugin is automatically removed

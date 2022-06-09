@@ -29,11 +29,11 @@
 
 @class OESystemController;
 
-extern NSNotificationName const OESystemPluginDidRegisterNotification;
+extern NSNotificationName const OESystemPluginDidRegisterNotification NS_SWIFT_NAME(OESystemPlugin.didRegisterNotification);
 
 @interface OESystemPlugin : OEPlugin
 
-@property(weak, readonly) OESystemController *controller;
+@property(readonly) OESystemController *controller;
 
 @property(strong, readonly) NSString *systemIdentifier;
 @property(strong, readonly) NSString *systemName;

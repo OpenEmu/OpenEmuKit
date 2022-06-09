@@ -29,8 +29,7 @@
 #import <OpenEmuSystem/OpenEmuSystem.h>
 
 @implementation OESystemPlugin
-@dynamic controller;
-@dynamic allPlugins;
+@synthesize controller = _controller;
 
 static NSMutableDictionary *_pluginsBySystemIdentifiers = nil;
 static NSArray *_cachedSupportedTypeExtensions = nil;
@@ -44,8 +43,32 @@ NSNotificationName const OESystemPluginDidRegisterNotification = @"OESystemPlugi
     if(self == [OESystemPlugin class])
     {
         _pluginsBySystemIdentifiers = [[NSMutableDictionary alloc] init];
-        [self registerPluginClass:self];
     }
+}
+
+- (OESystemController *)controller
+{
+    if (_controller == nil)
+    {
+        Class principalClass = [[self bundle] principalClass];
+        _controller = [self newPluginControllerWithClass:principalClass];
+    }
+    return _controller;
+}
+
++ (NSArray <OESystemPlugin *> *)allPlugins
+{
+    return [OEPlugin pluginsForType:self];
+}
+
++ (NSString *)pluginFolder
+{
+    return @"Systems";
+}
+
++ (NSString *)pluginExtension
+{
+    return @"oesystemplugin";
 }
 
 + (OESystemPlugin *)systemPluginForIdentifier:(NSString *)gameSystemIdentifier;
@@ -109,12 +132,12 @@ NSNotificationName const OESystemPluginDidRegisterNotification = @"OESystemPlugi
 
 + (OESystemPlugin *)systemPluginWithBundleAtPath:(NSString *)bundlePath;
 {
-    return [self pluginWithFileAtPath:bundlePath type:self];
+    return [self pluginWithBundleAtPath:bundlePath type:self];
 }
 
-- (id)initWithFileAtPath:(NSString *)aPath name:(NSString *)aName error:(NSError *__autoreleasing *)outError
+- (instancetype)initWithBundleAtPath:(NSString *)aPath name:(NSString *)aName error:(NSError *__autoreleasing *)outError
 {
-    if((self = [super initWithFileAtPath:aPath name:aName error:outError]))
+    if((self = [super initWithBundleAtPath:aPath name:aName error:outError]))
     {
         _systemIdentifier = [[self infoDictionary] objectForKey:OESystemIdentifier];
         NSAssert(_systemIdentifier != nil, @"Info.plist missing value for required key: %@", OESystemIdentifier);

@@ -28,18 +28,38 @@
 #import <OpenEmuBase/OpenEmuBase.h>
 
 @implementation OECorePlugin
-{
-    Class _gameCoreClass;
-}
-
-@dynamic controller;
-@dynamic allPlugins;
+@synthesize controller = _controller, gameCoreClass = _gameCoreClass;
 
 static NSArray *_cachedRequiredFiles = nil;
 
+- (OEGameCoreController *)controller
+{
+    if (_controller == nil)
+    {
+        Class principalClass = [[self bundle] principalClass];
+        _controller = [self newPluginControllerWithClass:principalClass];
+    }
+    return _controller;
+}
+
++ (NSArray <OECorePlugin *> *)allPlugins
+{
+    return [OEPlugin pluginsForType:self];
+}
+
++ (NSString *)pluginFolder
+{
+    return @"Cores";
+}
+
++ (NSString *)pluginExtension
+{
+    return @"oecoreplugin";
+}
+
 + (OECorePlugin *)corePluginWithBundleAtPath:(NSString *)bundlePath
 {
-    return [self pluginWithFileAtPath:bundlePath type:self];
+    return [self pluginWithBundleAtPath:bundlePath type:self];
 }
 
 + (OECorePlugin *)corePluginWithBundleIdentifier:(NSString *)identifier
@@ -78,9 +98,9 @@ static NSArray *_cachedRequiredFiles = nil;
     return _cachedRequiredFiles;
 }
 
-- (id)initWithFileAtPath:(NSString *)aPath name:(NSString *)aName error:(NSError *__autoreleasing *)outError
+- (instancetype)initWithBundleAtPath:(NSString *)aPath name:(NSString *)aName error:(NSError *__autoreleasing *)outError
 {
-    if((self = [super initWithFileAtPath:aPath name:aName error:outError]))
+    if((self = [super initWithBundleAtPath:aPath name:aName error:outError]))
     {
         // invalidate global cache
         _cachedRequiredFiles = nil;
@@ -91,10 +111,9 @@ static NSArray *_cachedRequiredFiles = nil;
 
 - (id)newPluginControllerWithClass:(Class)bundleClass
 {
-    if([bundleClass isSubclassOfClass:[OEGameCoreController class]])
-        return [[bundleClass alloc] initWithBundle:[self bundle]];
+    if(![bundleClass isSubclassOfClass:[OEGameCoreController class]]) return nil;
 
-    return nil;
+    return [[bundleClass alloc] initWithBundle:[self bundle]];
 }
 
 - (NSString *)bundleIdentifier

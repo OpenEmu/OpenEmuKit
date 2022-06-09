@@ -29,21 +29,11 @@
 #import "OELogging.h"
 #import "OpenEmuKitPrivate.h"
 
-@implementation NSObject (OEPlugin)
-+ (BOOL)isPluginClass
-{
-    return [self isSubclassOfClass:[OEPlugin class]];
-}
-@end
-
-NSInteger OE_compare(OEPlugin *obj1, OEPlugin *obj2, void *ctx);
+NSComparisonResult OE_compare(OEPlugin *obj1, OEPlugin *obj2, void *ctx);
 
 @implementation OEPlugin
-@synthesize controller = _controller;
 
 static NSMutableDictionary *_allPlugins              = nil;
-static NSMutableDictionary *_pluginFolders           = nil;
-static NSMutableDictionary *_needsReload             = nil;
 static NSMutableSet        *_allPluginClasses        = nil;
 static NSMutableDictionary *_pluginsForPathsByTypes  = nil;
 static NSMutableDictionary *_pluginsForNamesByTypes  = nil;
@@ -53,32 +43,18 @@ static NSMutableDictionary *_pluginsForNamesByTypes  = nil;
     if(self == [OEPlugin class])
     {
         _allPlugins             = [[NSMutableDictionary alloc] init];
-        _pluginFolders          = [[NSMutableDictionary alloc] init];
-        _needsReload            = [[NSMutableDictionary alloc] init];
         _allPluginClasses       = [[NSMutableSet alloc] init];
         _pluginsForPathsByTypes = [[NSMutableDictionary alloc] init];
         _pluginsForNamesByTypes = [[NSMutableDictionary alloc] init];
     }
-    else [self registerPluginClass:self];
-}
-
-+ (NSSet *)pluginClasses;
-{
-    return [_allPluginClasses copy];
 }
 
 + (void)registerPluginClass;
 {
+    NSAssert(![self isMemberOfClass:OEPlugin.class], @"+registerPluginClass must not be called on OEPlugin.");
     [_allPluginClasses addObject:self];
 
     [self pluginsForType:self];
-}
-
-+ (void)registerPluginClass:(Class)pluginClass;
-{
-    NSAssert1([pluginClass isPluginClass], @"Class %@ is not a subclass of OEPlugin.", pluginClass);
-
-    [pluginClass registerPluginClass];
 }
 
 + (NSString *)pluginType
@@ -88,44 +64,14 @@ static NSMutableDictionary *_pluginsForNamesByTypes  = nil;
 
 + (NSString *)pluginFolder
 {
-    NSString *ret = [_pluginFolders objectForKey:self];
-    if(ret == nil)
-    {
-        ret = [self pluginType];
-        NSRange c = [ret rangeOfCharacterFromSet:[NSCharacterSet lowercaseLetterCharacterSet]];
-        if(c.location != NSNotFound && c.location > 0)
-        {
-            ret = [ret substringFromIndex:c.location - 1];
-            if([ret hasSuffix:@"Plugin"])
-                ret = [ret substringToIndex:[ret length] - 6];
-        }
-        ret = [ret stringByAppendingString:@"s"];
-        [_pluginFolders setObject:ret forKey:(id<NSCopying>)self];
-    }
-    return ret;
+    NSAssert(NO, @"+pluginFolder must be overriden");
+    return nil;
 }
 
 + (NSString *)pluginExtension
 {
-    return [[self pluginType] lowercaseString];
-}
-
-+ (Class)typeForExtension:(NSString *)anExtension
-{
-    for(Class cls in _allPlugins)
-        if([[cls pluginExtension] isEqualToString:anExtension])
-            return cls;
-
-    NSInteger len = [anExtension length] - 8;
-    if(len > 0) return NSClassFromString([NSString stringWithFormat:@"OE%@Plugin",
-                                          [[anExtension substringWithRange:NSMakeRange(2, len)]
-                                           capitalizedString]]);
-    return Nil;
-}
-
-+ (BOOL)isPluginClass
-{
-    return YES;
+    NSAssert(NO, @"+pluginExtension must be overriden");
+    return nil;
 }
 
 + (NSMutableDictionary *)OE_pluginsForNamesOfType:(Class)cls createIfNeeded:(BOOL)create
@@ -170,7 +116,7 @@ static NSMutableDictionary *_pluginsForNamesByTypes  = nil;
     _displayName    = [_infoDictionary objectForKey:@"CFBundleName"] ? : [_infoDictionary objectForKey:@"CFBundleExecutable"];
 }
 
-- (id)initWithFileAtPath:(NSString *)aPath name:(NSString *)aName error:(NSError *__autoreleasing *)outError
+- (id)initWithBundleAtPath:(NSString *)aPath name:(NSString *)aName error:(NSError *__autoreleasing *)outError
 {
     if(aPath == nil && aName == nil) {
         if (outError) *outError = nil;
@@ -213,14 +159,9 @@ static NSMutableDictionary *_pluginsForNamesByTypes  = nil;
     return self;
 }
 
-- (id)initWithFileAtPath:(NSString *)aPath name:(NSString *)aName
-{
-    return [self initWithFileAtPath:aPath name:aName error:NULL];
-}
-
 - (id)initWithBundle:(NSBundle *)aBundle
 {
-    return [self initWithFileAtPath:[aBundle bundlePath] name:nil];
+    return [self initWithBundleAtPath:[aBundle bundlePath] name:nil error:NULL];
 }
 
 - (void)dealloc
@@ -228,58 +169,9 @@ static NSMutableDictionary *_pluginsForNamesByTypes  = nil;
     [_bundle unload];
 }
 
-- (id)controller
-{
-    if (_controller == nil)
-    {
-        Class principalClass = [[self bundle] principalClass];
-        _controller = [self newPluginControllerWithClass:principalClass];
-    }
-    return _controller;
-}
-
-- (id)newPluginControllerWithClass:(Class)bundleClass
-{
-    return [[bundleClass alloc] init];
-}
-
-static NSString *OE_pluginPathForNameType(NSString *aName, Class aType)
-{
-    NSString *folderName = [aType pluginFolder];
-    NSString *extension  = [aType pluginExtension];
-
-    NSString *openEmuSearchPath = [@"OpenEmu" stringByAppendingPathComponent:
-                                   [folderName stringByAppendingPathComponent:
-                                    [aName stringByAppendingPathExtension:extension]]];
-
-    NSString *ret = nil;
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-
-    NSFileManager *manager = [NSFileManager defaultManager];
-    for(NSString *path in paths)
-    {
-        NSString *tested = [path stringByAppendingPathComponent:openEmuSearchPath];
-        if([manager fileExistsAtPath:tested])
-        {
-            ret = tested;
-            break;
-        }
-    }
-
-    if(ret == nil) ret = [[NSBundle mainBundle] pathForResource:aName ofType:extension inDirectory:folderName];
-    return ret;
-}
-
-- (NSString *)details
-{
-    return _bundle != nil ? [NSString stringWithFormat:@"Version %@", [self version]] : nil;
-}
-
 - (NSString *)description
 {
-    return (  _bundle != nil
-            ? [NSString stringWithFormat:@"Type: %@, Bundle: %@, Version: %@", [[self class] pluginType], _displayName, _version]
-            : [NSString stringWithFormat:@"Type: %@, Path: %@", [[self class] pluginType], _path]);
+    return [NSString stringWithFormat:@"Type: %@, Bundle: %@, Version: %@, Path: %@", [[self class] pluginType], _displayName, _version, _path];
 }
 
 - (BOOL)isDeprecated
@@ -292,7 +184,7 @@ static NSString *OE_pluginPathForNameType(NSString *aName, Class aType)
     return NO;
 }
 
-NSInteger OE_compare(OEPlugin *obj1, OEPlugin *obj2, void *ctx)
+NSComparisonResult OE_compare(OEPlugin *obj1, OEPlugin *obj2, void *ctx)
 {
     return [[obj1 displayName] caseInsensitiveCompare:[obj2 displayName]];
 }
@@ -300,7 +192,7 @@ NSInteger OE_compare(OEPlugin *obj1, OEPlugin *obj2, void *ctx)
 + (NSArray *)pluginsForType:(Class)aType
 {
     NSArray *ret = nil;
-    if([aType isPluginClass] && [_allPluginClasses containsObject:aType])
+    if([aType isSubclassOfClass:OEPlugin.class] && [_allPluginClasses containsObject:aType])
     {
         NSMutableDictionary *plugins = [_allPlugins objectForKey:aType];
         if(plugins == nil)
@@ -312,11 +204,9 @@ NSInteger OE_compare(OEPlugin *obj1, OEPlugin *obj2, void *ctx)
 
             NSString *openEmuSearchPath = [@"OpenEmu" stringByAppendingPathComponent:folder];
 
-            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+            NSString *path = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES).firstObject;
             NSFileManager *manager = [NSFileManager defaultManager];
 
-            for(NSString *path in paths)
-            {
                 NSString *subpath = [path stringByAppendingPathComponent:openEmuSearchPath];
                 NSArray  *subpaths = [manager contentsOfDirectoryAtPath:subpath error:NULL];
                 for(NSString *bundlePath in subpaths)
@@ -324,14 +214,13 @@ NSInteger OE_compare(OEPlugin *obj1, OEPlugin *obj2, void *ctx)
                         // If a plugin fails to load, another plugin with the same name in deeper paths can take its spot
                         // Typical case: an old-style plugin in ~/Library should fail to load,
                         // and its new-style counter-part in /Library will take its place and load properly
-                        [self pluginWithFileAtPath:[subpath stringByAppendingPathComponent:bundlePath] type:aType forceReload:YES];
-            }
+                        [self pluginWithBundleAtPath:[subpath stringByAppendingPathComponent:bundlePath] type:aType forceReload:YES error:NULL];
 
             NSString *pluginFolderPath = [[[NSBundle mainBundle] builtInPlugInsPath] stringByAppendingPathComponent:folder];
-            paths = [manager contentsOfDirectoryAtPath:pluginFolderPath error:NULL];
+            NSArray *paths = [manager contentsOfDirectoryAtPath:pluginFolderPath error:NULL];
             for(NSString *path in paths)
                 if([extension isEqualToString:[path pathExtension]])
-                    [self pluginWithFileAtPath:[pluginFolderPath stringByAppendingPathComponent:path] type:aType];
+                    [self pluginWithBundleAtPath:[pluginFolderPath stringByAppendingPathComponent:path] type:aType];
 
             plugins = [_allPlugins objectForKey:aType];
         }
@@ -344,40 +233,14 @@ NSInteger OE_compare(OEPlugin *obj1, OEPlugin *obj2, void *ctx)
     return ret;
 }
 
-+ (NSArray *)allPlugins
-{
-    NSArray *ret = nil;
-    if(self == [OEPlugin class])
-    {
-        NSMutableArray *temp = [NSMutableArray array];
-        for(Class key in _allPlugins)
-            [temp addObjectsFromArray:[self pluginsForType:key]];
-
-        ret = [temp copy];
-    }
-    else ret = [self pluginsForType:self];
-
-    return ret;
-}
-
-+ (NSArray *)allPluginNames;
-{
-    return [[self allPlugins] valueForKey:@"name"];
-}
-
 + (instancetype)pluginWithBundle:(NSBundle *)aBundle type:(Class)aType forceReload:(BOOL)reload
 {
-    return [self pluginWithFileAtPath:[aBundle bundlePath] type:aType forceReload:reload];
+    return [self pluginWithBundleAtPath:[aBundle bundlePath] type:aType forceReload:reload error:NULL];
 }
 
-+ (instancetype)pluginWithFileAtPath:(NSString *)filePath type:(Class)aType forceReload:(BOOL)reload
++ (instancetype)pluginWithBundleAtPath:(NSString *)filePath type:(Class)aType forceReload:(BOOL)reload error:(NSError *__autoreleasing *)outError
 {
-    return [self pluginWithFileAtPath:filePath type:aType forceReload:reload error:NULL];
-}
-
-+ (instancetype)pluginWithFileAtPath:(NSString *)filePath type:(Class)aType forceReload:(BOOL)reload error:(NSError *__autoreleasing *)outError
-{
-    if(filePath == nil || ![aType isPluginClass]) {
+    if(filePath == nil || ![aType isSubclassOfClass:OEPlugin.class]) {
         if (outError) *outError = nil;
         return nil;
     }
@@ -406,17 +269,15 @@ NSInteger OE_compare(OEPlugin *obj1, OEPlugin *obj2, void *ctx)
     // No plugin with such name, attempt to actually load the file at the given path
     if(ret == nil)
     {
-        [OEPlugin willChangeValueForKey:@"allPlugins"];
         [aType willChangeValueForKey:@"allPlugins"];
 
-        ret = [[aType alloc] initWithFileAtPath:filePath name:pluginName error:outError];
+        ret = [[aType alloc] initWithBundleAtPath:filePath name:pluginName error:outError];
 
         // If ret is still nil at this point, it means the plugin can't be loaded (old-style version for example)
         if(ret == nil) ret = [NSNull null];
 
         [plugins setObject:ret forKey:pluginName];
         [aType didChangeValueForKey:@"allPlugins"];
-        [OEPlugin didChangeValueForKey:@"allPlugins"];
     }
 
     if(ret == [NSNull null]) ret = nil;
@@ -424,22 +285,9 @@ NSInteger OE_compare(OEPlugin *obj1, OEPlugin *obj2, void *ctx)
     return ret;
 }
 
-+ (instancetype)pluginWithFileAtPath:(NSString *)aPath type:(Class)aType
++ (instancetype)pluginWithBundleAtPath:(NSString *)aPath type:(Class)aType
 {
-    return [self pluginWithFileAtPath:aPath type:aType forceReload:NO];
-}
-
-+ (instancetype)pluginWithName:(NSString *)aName
-{
-    if(self == [OEPlugin class]) return nil;
-
-    return [self pluginWithName:aName type:self];
-}
-
-+ (instancetype)pluginWithName:(NSString *)aName type:(Class)aType
-{
-    return (    [self OE_pluginsForNamesOfType:aType createIfNeeded:NO][aName]
-            ? : [self pluginWithFileAtPath:OE_pluginPathForNameType(aName, aType) type:aType]);
+    return [self pluginWithBundleAtPath:aPath type:aType forceReload:NO error:NULL];
 }
 
 - (void)flushBundleCache
