@@ -173,14 +173,30 @@ NSNotificationName const OESystemPluginDidRegisterNotification = @"OESystemPlugi
 {
     /* system plugins are shipped inside the application bundle; all
      * plugins located in the application support directory must be removed. */
-    NSURL *bundlePath = [[[self bundle] bundleURL] baseURL];
+    NSURL *bundleURL = [[self bundle] bundleURL];
     NSFileManager *fm = [NSFileManager defaultManager];
     NSURL *systemsDirectory = [[fm URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] lastObject];
-    systemsDirectory = [systemsDirectory URLByAppendingPathComponent:@"OpenEmu/Systems"];
-    if ([systemsDirectory.path isEqual:bundlePath.path])
+    systemsDirectory = [systemsDirectory URLByAppendingPathComponent:@"OpenEmu" isDirectory:YES];
+    systemsDirectory = [systemsDirectory URLByAppendingPathComponent:[[self class] pluginFolder] isDirectory:YES];
+
+    if ([[self class] OE_URL:bundleURL isSubpathOfURL:systemsDirectory])
         return YES;
 
     return NO;
+}
+
++ (BOOL)OE_URL:(NSURL *)childURL isSubpathOfURL:(NSURL *)parentURL
+{
+    NSArray<NSString *> *parentPathComponents = parentURL.standardizedURL.pathComponents;
+    NSArray<NSString *> *childPathComponents = childURL.standardizedURL.pathComponents;
+
+    NSUInteger childPathCount = childPathComponents.count;
+
+    for (int i = 0; i < parentPathComponents.count; i++)
+        if (i >= childPathCount || parentPathComponents[i] != childPathComponents[i])
+            return NO;
+
+    return YES;
 }
 
 @end
