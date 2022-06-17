@@ -251,7 +251,7 @@ extension OSLog {
         _systemController = OESystemPlugin.systemPlugin(bundleAtPath: info.systemPluginPath)!.controller
         _systemResponder  = _systemController.newGameSystemResponder()
         
-        _gameController = OECorePlugin(bundleAtPath: info.corePluginPath).controller
+        _gameController = OECorePlugin.corePlugin(bundleAtPath: info.corePluginPath)!.controller
         gameCore = _gameController.newGameCore()
         
         let systemIdentifier = _systemController.systemIdentifier!

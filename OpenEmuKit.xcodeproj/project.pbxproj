@@ -67,9 +67,8 @@
 		05E6BA1324CCD56200ACFB35 /* OpenEmuSystem.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E6BA1224CCD56200ACFB35 /* OpenEmuSystem.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		05E6BA1D24CCD71D00ACFB35 /* OESystemPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E6BA1724CCD71600ACFB35 /* OESystemPlugin.swift */; };
 		05E6BA1E24CCD71D00ACFB35 /* OEPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 05E6BA1824CCD71800ACFB35 /* OEPlugin.m */; };
-		05E6BA2024CCD71D00ACFB35 /* OECorePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E6BA1A24CCD71B00ACFB35 /* OECorePlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		05E6BA2124CCD71D00ACFB35 /* OEPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E6BA1B24CCD71C00ACFB35 /* OEPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		05E6BA2224CCD71D00ACFB35 /* OECorePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 05E6BA1C24CCD71D00ACFB35 /* OECorePlugin.m */; };
+		05E6BA2224CCD71D00ACFB35 /* OECorePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E6BA1C24CCD71D00ACFB35 /* OECorePlugin.swift */; };
 		05E6BA3024CCD77600ACFB35 /* OEGameLayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E6BA2D24CCD77300ACFB35 /* OEGameLayerView.swift */; };
 		05E6BA3D24CCD79600ACFB35 /* OELogging.m in Sources */ = {isa = PBXBuildFile; fileRef = 05E6BA3724CCD79300ACFB35 /* OELogging.m */; };
 		05E6BA3E24CCD79600ACFB35 /* OEThreadProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 05E6BA3824CCD79500ACFB35 /* OEThreadProxy.m */; };
@@ -178,9 +177,8 @@
 		05E6BA1224CCD56200ACFB35 /* OpenEmuSystem.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OpenEmuSystem.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		05E6BA1724CCD71600ACFB35 /* OESystemPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OESystemPlugin.swift; sourceTree = "<group>"; };
 		05E6BA1824CCD71800ACFB35 /* OEPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OEPlugin.m; sourceTree = "<group>"; };
-		05E6BA1A24CCD71B00ACFB35 /* OECorePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OECorePlugin.h; sourceTree = "<group>"; };
 		05E6BA1B24CCD71C00ACFB35 /* OEPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEPlugin.h; sourceTree = "<group>"; };
-		05E6BA1C24CCD71D00ACFB35 /* OECorePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OECorePlugin.m; sourceTree = "<group>"; };
+		05E6BA1C24CCD71D00ACFB35 /* OECorePlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OECorePlugin.swift; sourceTree = "<group>"; };
 		05E6BA2D24CCD77300ACFB35 /* OEGameLayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OEGameLayerView.swift; sourceTree = "<group>"; };
 		05E6BA3624CCD79200ACFB35 /* OEThreadProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OEThreadProxy.h; sourceTree = "<group>"; };
 		05E6BA3724CCD79300ACFB35 /* OELogging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OELogging.m; sourceTree = "<group>"; };
@@ -410,8 +408,7 @@
 			children = (
 				05E6BA1B24CCD71C00ACFB35 /* OEPlugin.h */,
 				05E6BA1824CCD71800ACFB35 /* OEPlugin.m */,
-				05E6BA1A24CCD71B00ACFB35 /* OECorePlugin.h */,
-				05E6BA1C24CCD71D00ACFB35 /* OECorePlugin.m */,
+				05E6BA1C24CCD71D00ACFB35 /* OECorePlugin.swift */,
 				05E6BA1724CCD71600ACFB35 /* OESystemPlugin.swift */,
 			);
 			name = Plugins;
@@ -506,7 +503,6 @@
 				05E6BA3F24CCD79600ACFB35 /* OELogging.h in Headers */,
 				05E6BA2124CCD71D00ACFB35 /* OEPlugin.h in Headers */,
 				054A2C0C278CDA6A00A2F241 /* KeyValueScanner+Private.h in Headers */,
-				05E6BA2024CCD71D00ACFB35 /* OECorePlugin.h in Headers */,
 				054A2C0A278CDA5A00A2F241 /* KeyValueScanner.h in Headers */,
 				05E6958424CA5D4200ACFB35 /* OpenEmuKit.h in Headers */,
 			);
@@ -698,7 +694,7 @@
 				05201D6F277D316E0028CBE0 /* UserDefaultsPresetStorage.swift in Sources */,
 				0572A424287B89CD00AC32F8 /* OEGameStartupInfo.swift in Sources */,
 				05E6BA1E24CCD71D00ACFB35 /* OEPlugin.m in Sources */,
-				05E6BA2224CCD71D00ACFB35 /* OECorePlugin.m in Sources */,
+				05E6BA2224CCD71D00ACFB35 /* OECorePlugin.swift in Sources */,
 				0572A4132878D76C00AC32F8 /* GameRenderer.swift in Sources */,
 				0553DE2E27B5B83F0085512F /* String+Extensions.swift in Sources */,
 				054A2C0E278CDA7800A2F241 /* KeyValueScanner.m in Sources */,
