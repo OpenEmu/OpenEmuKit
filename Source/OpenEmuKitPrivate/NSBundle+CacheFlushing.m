@@ -1,4 +1,4 @@
-// Copyright (c) 2020, OpenEmu Team
+// Copyright (c) 2022, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -22,6 +22,20 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import "QuartzCoreSPI.h"
-#import "../KeyValueScanner.h"
 #import "NSBundle+CacheFlushing.h"
+@import CoreFoundation.CFBundle;
+
+extern void _CFBundleFlushBundleCaches(CFBundleRef bundle) __attribute__((weak_import));
+
+@implementation NSBundle (CacheFlushing)
+
+- (void)flushBundleCache
+{
+    if (_CFBundleFlushBundleCaches != NULL) {
+        CFBundleRef cfBundle = CFBundleCreate(NULL, (CFURLRef)self.bundleURL);
+        _CFBundleFlushBundleCaches(cfBundle);
+        CFRelease(cfBundle);
+    }
+}
+
+@end

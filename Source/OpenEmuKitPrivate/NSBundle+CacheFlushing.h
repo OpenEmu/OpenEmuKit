@@ -22,6 +22,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-@import CoreFoundation.CFBundle;
+@import Foundation.NSBundle;
 
-extern void _CFBundleFlushBundleCaches(CFBundleRef bundle) __attribute__((weak_import));
+@interface NSBundle (CacheFlushing)
+- (void)flushBundleCache;
+@end

@@ -444,15 +444,11 @@ NSInteger OE_compare(OEPlugin *obj1, OEPlugin *obj2, void *ctx)
 
 - (void)flushBundleCache
 {
-    if (_CFBundleFlushBundleCaches != NULL) {
-        CFBundleRef cfBundle = CFBundleCreate(nil, (CFURLRef)_bundle.bundleURL);
-        _CFBundleFlushBundleCaches(cfBundle);
-        CFRelease(cfBundle);
-        
-        _infoDictionary = _bundle.infoDictionary;
-        _version        = _infoDictionary[@"CFBundleVersion"];
-        _displayName    = _infoDictionary[@"CFBundleName"] ? : _infoDictionary[@"CFBundleExecutable"];
-    }
+    [_bundle flushBundleCache];
+    
+    _infoDictionary = _bundle.infoDictionary;
+    _version        = _infoDictionary[@"CFBundleVersion"];
+    _displayName    = _infoDictionary[@"CFBundleName"] ? : _infoDictionary[@"CFBundleExecutable"];
 }
 
 @end

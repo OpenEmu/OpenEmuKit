@@ -86,6 +86,7 @@
 		05EEF1022707C986008A03DC /* ShaderPresetStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05EEF1012707C986008A03DC /* ShaderPresetStoreTests.swift */; };
 		05EEF1052707CA9B008A03DC /* OpenEmuKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E6957F24CA5D4200ACFB35 /* OpenEmuKit.framework */; };
 		05EEF1082707D2ED008A03DC /* Nimble in Frameworks */ = {isa = PBXBuildFile; productRef = 05EEF1072707D2ED008A03DC /* Nimble */; };
+		8F3A1837285C9F88008A7AC9 /* NSBundle+CacheFlushing.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F3A1836285C9F0E008A7AC9 /* NSBundle+CacheFlushing.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -201,7 +202,8 @@
 		05EEF0F72707C96B008A03DC /* OpenEmuKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenEmuKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		05EEF1012707C986008A03DC /* ShaderPresetStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderPresetStoreTests.swift; sourceTree = "<group>"; };
 		05EEF1032707CA7A008A03DC /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/MacOSX.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		8F4AEABF27354776005C6246 /* CFBundle+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CFBundle+Private.h"; sourceTree = "<group>"; };
+		8F3A1836285C9F0E008A7AC9 /* NSBundle+CacheFlushing.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+CacheFlushing.m"; sourceTree = "<group>"; };
+		8F4AEABF27354776005C6246 /* NSBundle+CacheFlushing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+CacheFlushing.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -233,7 +235,8 @@
 			children = (
 				050A9A0B24F9B2B800321847 /* module.modulemap */,
 				050A9A1024F9C35B00321847 /* OpenEmuKitPrivate.h */,
-				8F4AEABF27354776005C6246 /* CFBundle+Private.h */,
+				8F4AEABF27354776005C6246 /* NSBundle+CacheFlushing.h */,
+				8F3A1836285C9F0E008A7AC9 /* NSBundle+CacheFlushing.m */,
 				050A9A0C24F9B2E900321847 /* QuartzCoreSPI.h */,
 			);
 			path = OpenEmuKitPrivate;
@@ -688,6 +691,7 @@
 				05AAD98726758240004466E3 /* XPCDebugSupport.swift in Sources */,
 				0571321A259C33B9001CB13A /* NSFileManager+ExtendedAttributes.m in Sources */,
 				05ED1CFC259D43E800A2D400 /* LaunchControl.swift in Sources */,
+				8F3A1837285C9F88008A7AC9 /* NSBundle+CacheFlushing.m in Sources */,
 				0547FD9824E7717E005C1FFC /* OEShaderStore.swift in Sources */,
 				05201D73277D82920028CBE0 /* ShaderPresetStorage.swift in Sources */,
 				0524372D278D8171004DE02C /* PeekableIterator.swift in Sources */,
