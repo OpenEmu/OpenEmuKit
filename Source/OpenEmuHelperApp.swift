@@ -248,7 +248,7 @@ extension OSLog {
         
         _shader = info.shader
         _shaderParameters = info.shaderParameters
-        _systemController = OESystemPlugin(bundleAtPath: info.systemPluginPath).controller
+        _systemController = OESystemPlugin.systemPlugin(bundleAtPath: info.systemPluginPath)!.controller
         _systemResponder  = _systemController.newGameSystemResponder()
         
         _gameController = OECorePlugin(bundleAtPath: info.corePluginPath).controller
