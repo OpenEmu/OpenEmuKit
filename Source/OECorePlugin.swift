@@ -36,10 +36,10 @@ public class OECorePlugin: OEPlugin {
     }
     
     @objc public class var allPlugins: [OECorePlugin] {
-        return OEPlugin.plugins(forType: Self.self) as? [OECorePlugin] ?? []
+        return plugins() as! [OECorePlugin]
     }
     
-    override public required init(bundleAtPath path: String, name: String?) throws {
+    required init(bundleAtPath path: String, name: String?) throws {
         try super.init(bundleAtPath: path, name: name)
         
         // invalidate global cache
@@ -47,7 +47,7 @@ public class OECorePlugin: OEPlugin {
     }
     
     public static func corePlugin(bundleAtPath bundlePath: String) -> OECorePlugin? {
-        return OEPlugin(bundleAtPath: bundlePath, type: Self.self) as? OECorePlugin
+        return try? plugin(bundleAtPath: bundlePath)
     }
     
     public static func corePlugin(bundleIdentifier identifier: String) -> OECorePlugin? {

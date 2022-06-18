@@ -40,10 +40,10 @@ public class OESystemPlugin: OEPlugin {
     }
     
     @objc public class var allPlugins: [OESystemPlugin] {
-        return OEPlugin.plugins(forType: Self.self) as? [OESystemPlugin] ?? []
+        return plugins() as! [OESystemPlugin]
     }
     
-    override public required init(bundleAtPath path: String, name: String?) throws {
+    required init(bundleAtPath path: String, name: String?) throws {
         try super.init(bundleAtPath: path, name: name)
         
         assert(infoDictionary[OESystemIdentifier] != nil, "Info.plist missing value for required key: \(OESystemIdentifier)")
@@ -63,7 +63,7 @@ public class OESystemPlugin: OEPlugin {
     }
     
     public static func systemPlugin(bundleAtPath bundlePath: String) -> OESystemPlugin? {
-        return OEPlugin(bundleAtPath: bundlePath, type: self) as? OESystemPlugin
+        return try? plugin(bundleAtPath: bundlePath)
     }
     
     public static func systemPlugin(forIdentifier identifier: String) -> OESystemPlugin? {
