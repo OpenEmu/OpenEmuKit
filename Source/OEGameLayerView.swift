@@ -171,7 +171,7 @@ public class OEGameLayerView: NSView, CALayerDelegate {
         let y = max(0, min(round(location.y * aspectCorrectedScreenSize.height / screenRect.height), aspectCorrectedScreenSize.height))
         let point = OEIntPoint(x: Int32(x), y: Int32(y))
         
-        return OEEvent(mouseEvent: event, withLocationInGameView: point)
+        return OEEvent(mouseEvent: event, locationInGameView: point)
     }
     
     public override func mouseDown(with event: NSEvent) {

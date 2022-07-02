@@ -266,9 +266,9 @@ extension OSLog {
             return // NO
         }
         
-        let aPath = info.romURL.standardizedFileURL.path
+        let url = info.romURL.standardizedFileURL
         
-        os_log(.info, log: .helper, "Load ROM at path %{public}@", aPath)
+        os_log(.info, log: .helper, "Load ROM at path %{public}@", url.path)
         
         _shader = info.shaderURL
         _shaderParameters = info.shaderParameters
@@ -288,7 +288,7 @@ extension OSLog {
         gameCore.systemIdentifier   = systemIdentifier
         gameCore.systemRegion       = info.systemRegion
         gameCore.displayModeInfo    = info.displayModeInfo ?? [:]
-        gameCore.rommd5             = info.romMD5
+        gameCore.romMD5             = info.romMD5
         gameCore.romHeader          = info.romHeader
         gameCore.romSerial          = info.romSerial
         
@@ -307,9 +307,9 @@ extension OSLog {
         
         os_log(.debug, log: .helper, "Loaded bundle.")
         
-        guard FileManager.default.isReadableFile(atPath: aPath)
+        guard FileManager.default.isReadableFile(atPath: url.path)
         else {
-            os_log(.error, log: .helper, "Unable to access file at path %{public}@", aPath)
+            os_log(.error, log: .helper, "Unable to access file at path %{public}@", url.path)
             gameCore = nil
             
             throw NSError(domain: OEGameCoreErrorDomain,
@@ -321,8 +321,8 @@ extension OSLog {
         }
         
         do {
-            try gameCore.loadFile(atPath: aPath)
-            os_log(.debug, log: .helper, "Loaded new ROM: %{public}@", aPath)
+            try gameCore.loadFile(at: url)
+            os_log(.debug, log: .helper, "Loaded new ROM: %{public}@", url.path)
             
             gameCoreOwner.setDiscCount(gameCore.discCount)
             if let displayModes = gameCore.displayModes {
@@ -481,13 +481,13 @@ extension OSLog {
     
     public func saveStateToFile(at fileURL: URL, completionHandler block: @escaping (Bool, Error?) -> Void) {
         gameCore.perform {
-            self.gameCore.saveStateToFile(atPath: fileURL.path, completionHandler: block)
+            self.gameCore.saveStateToFile(at: fileURL, completionHandler: block)
         }
     }
     
     public func loadStateFromFile(at fileURL: URL, completionHandler block: @escaping (Bool, Error?) -> Void) {
         gameCore.perform {
-            self.gameCore.loadStateFromFile(atPath: fileURL.path, completionHandler: block)
+            self.gameCore.loadStateFromFile(at: fileURL, completionHandler: block)
         }
     }
     
