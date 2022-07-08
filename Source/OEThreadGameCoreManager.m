@@ -29,7 +29,7 @@
 #import "OECorePlugin.h"
 #import "OEGameCoreManager_Internal.h"
 #import "OESystemPlugin.h"
-#import "OpenEmuHelperApp.h"
+#import <OpenEmuKit/OpenEmuKit-Swift.h>
 
 @interface OEThreadStartup: NSObject
 @property (nonatomic, nullable) void(^completionHandler)(void);

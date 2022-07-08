@@ -1,4 +1,4 @@
-// Copyright (c) 2019, OpenEmu Team
+// Copyright (c) 2022, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -22,15 +22,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import <Foundation/Foundation.h>
+import OSLog
 
-@import Metal;
-@import QuartzCore;
-
-// TODO: Remove this file when OpenEmuHelperApp is converted to Swift
-// NOTE:
-// This file exists to expose the internal Swift GameHelperMetalLayer class to
-// Objective-C.
-@interface OEGameHelperMetalLayer : CAMetalLayer
-
-@end
+extension OSLog {
+    static let `default` = OSLog(subsystem: "org.openemu.OpenEmuKit", category: "default")
+}

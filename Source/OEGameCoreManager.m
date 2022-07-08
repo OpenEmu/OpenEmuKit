@@ -88,6 +88,11 @@
     [_gameCoreHelper setAudioOutputDeviceID:deviceID];
 }
 
+- (void)setAdaptiveSyncEnabled:(BOOL)enabled
+{
+    [_gameCoreHelper setAdaptiveSyncEnabled:enabled];
+}
+
 - (void)setCheat:(NSString *)cheatCode withType:(NSString *)type enabled:(BOOL)enabled
 {
     [_gameCoreHelper setCheat:cheatCode withType:type enabled:enabled];

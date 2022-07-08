@@ -82,6 +82,9 @@ typedef NS_ENUM(NSUInteger, OEGameCoreEffectsMode) {
 - (void)setAudioOutputDeviceID:(AudioDeviceID)deviceID;
 - (void)setOutputBounds:(NSRect)rect;
 - (void)setBackingScaleFactor:(CGFloat)newBackingScaleFactor;
+/*! Controls whether the renderer should use a variable refresh rate.
+ */
+- (void)setAdaptiveSyncEnabled:(BOOL)enabled;
 
 #pragma mark - Shader management
 

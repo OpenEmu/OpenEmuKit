@@ -36,8 +36,6 @@ FOUNDATION_EXPORT const unsigned char OpenEmuKitVersionString[];
 #import <OpenEmuKit/OECorePlugin.h>
 #import <OpenEmuKit/OESystemPlugin.h>
 #import <OpenEmuKit/OEGameCoreHelper.h>
-#import <OpenEmuKit/OpenEmuHelperApp.h>
-#import <OpenEmuKit/OpenEmuXPCHelperApp.h>
 #import <OpenEmuKit/OEGameCoreManager.h>
 #import <OpenEmuKit/OEGameCoreManager+Synchronous.h>
 #import <OpenEmuKit/OEThreadGameCoreManager.h>
@@ -46,3 +44,4 @@ FOUNDATION_EXPORT const unsigned char OpenEmuKitVersionString[];
 #import <OpenEmuKit/NSXPCListener+HelperApp.h>
 #import <OpenEmuKit/OEGameStartupInfo.h>
 #import <OpenEmuKit/NSFileManager+ExtendedAttributes.h>
+#import <OpenEmuKit/OEXPCGameCoreHelper.h>

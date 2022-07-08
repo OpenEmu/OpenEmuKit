@@ -1,4 +1,4 @@
-// Copyright (c) 2019, OpenEmu Team
+// Copyright (c) 2022, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -22,19 +22,29 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import "OEGameRenderer.h"
-#import "OEGameHelperMetalLayer.h"
+import Foundation
+import OpenEmuBase
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface OEMTLGameRenderer : NSObject <OEGameRenderer>
-
-/*! @brief Specifies whether rendering is synchronized with the display */
-@property (nonatomic, readwrite) bool displaySyncEnabled;
-@property (nonatomic) OEIntSize surfaceSize;
-
-- (instancetype)initWithFilterChain:(FilterChain *)filterChain;
-
-@end
-
-NS_ASSUME_NONNULL_END
+protocol GameRenderer {
+    var gameCore: OEGameCore { get }
+    var surfaceSize: OEIntSize { get }
+    
+    var canChangeBufferSize: Bool { get }
+    
+    var presentationFramebuffer: Any? { get }
+    
+    /// Called when the gameCore or image render dimensions have changed.
+    func update()
+    
+    // MARK: - Execution
+    
+    func willExecuteFrame()
+    func didExecuteFrame()
+    
+    func presentDoubleBufferedFBO()
+    func willRenderFrameOnAlternateThread()
+    func didRenderFrameOnAlternateThread()
+    
+    func suspendFPSLimiting()
+    func resumeFPSLimiting()
+}

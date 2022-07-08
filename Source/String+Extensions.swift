@@ -1,4 +1,4 @@
-// Copyright (c) 2019, OpenEmu Team
+// Copyright (c) 2022, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -22,28 +22,31 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import <AudioToolbox/AudioToolbox.h>
+import Foundation
 
-NS_ASSUME_NONNULL_BEGIN
+public enum StringAlignment {
+    case left, center, right
+}
 
-CF_ENUM(UInt32) {
-    kAudioUnitSubType_Emulator = 'emu!'
-};
-    
-CF_ENUM(UInt32) {
-    kAudioUnitManufacturer_OpenEmu = 'oemu'
-};
-        
-@interface OEAudioUnit : AUAudioUnit
-
-+ (void)registerSelf;
-
-/*! @property    outputProvider
- @brief        The block that the output unit will call to get audio to send to the output.
- @discussion    This block must be set if output is enabled.
- */
-@property (nonatomic, copy, nullable) AURenderPullInputBlock outputProvider;
-
-@end
-        
-NS_ASSUME_NONNULL_END
+extension String {
+    public func aligned(to align: StringAlignment, width: Int, pad: Character = " ") -> String {
+        let count = count
+        if count > width {
+            return self
+        }
+        var res = ""
+        switch align {
+        case .left:
+            res.append(self)
+            res.append(String(repeating: pad, count: width - count))
+        case .center:
+            res.append(String(repeating: pad, count: (width - count)/2))
+            res.append(self)
+            res.append(String(repeating: pad, count: (width - count)/2))
+        case .right:
+            res.append(String(repeating: pad, count: width - count))
+            res.append(self)
+        }
+        return res
+    }
+}

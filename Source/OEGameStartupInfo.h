@@ -35,7 +35,7 @@ typedef NSDictionary<NSString *, NSNumber *> *ShaderParameters;
 @property(nonatomic) NSString                      *romHeader;
 @property(nonatomic) NSString                      *romSerial;
 @property(nonatomic) NSString                      *systemRegion;
-@property(nonatomic) NSDictionary <NSString *, id> *displayModeInfo;
+@property(nonatomic, nullable) NSDictionary <NSString *, id> *displayModeInfo;
 @property(nonatomic) NSURL                         *shader;
 @property(nonatomic) ShaderParameters               shaderParameters;
 @property(nonatomic) NSString                      *corePluginPath;
