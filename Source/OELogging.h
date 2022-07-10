@@ -26,10 +26,7 @@
 
 #define OE_LOG_NAME "org.openemu.OpenEmuKit"
 
-extern os_log_t OE_LOG_AUDIO;
 extern os_log_t OE_LOG_DEFAULT;
-/// Subsystem for logging renderer messages.
-extern os_log_t OE_LOG_RENDERER;
 
 /// Subsystem for logging XPC helper messages.
 extern os_log_t OE_LOG_HELPER;

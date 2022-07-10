@@ -581,7 +581,7 @@ extension OSLog {
         _gameRenderer.didRenderFrameOnAlternateThread()
     }
     
-    public var presentationFramebuffer: Any! {
+    public var presentationFramebuffer: Any {
         _gameRenderer.presentationFramebuffer
     }
     
@@ -679,7 +679,7 @@ extension OSLog {
 }
 
 @objc extension OpenEmuHelperApp: OEGameCoreDelegate {
-    public func gameCoreDidFinishFrameRefreshThread(_ gameCore: OEGameCore!) {
+    public func gameCoreDidFinishFrameRefreshThread(_ gameCore: OEGameCore) {
         os_log(.debug, log: .helper, "Finishing separate thread, stopping")
         CFRunLoopStop(CFRunLoopGetCurrent())
     }
