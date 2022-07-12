@@ -25,6 +25,7 @@
 #if swift(>=5.2)
 
 import Foundation
+import AppKit.NSEvent
 import Combine
 
 @available(macOS 10.15, *)
