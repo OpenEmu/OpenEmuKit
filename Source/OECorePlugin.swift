@@ -201,6 +201,11 @@ public class OECorePlugin: OEPlugin {
             return true
         }
         
+        // missing value for required key 'CFBundleIdentifier' in Info.plist
+        if infoDictionary["CFBundleIdentifier"] as? String == nil {
+            return true
+        }
+        
         return false
     }
     
