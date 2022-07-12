@@ -23,6 +23,9 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import Foundation
+import AudioToolbox
+import OpenEmuBase
+import OpenEmuSystem
 
 public typealias StartupCompletionHandler = (Error?) -> Void
 
@@ -140,11 +143,11 @@ extension GameCoreManager: OEGameCoreHelper {
         gameCoreHelper?.setShaderParameterValue(value, forKey: key)
     }
     
-    public func setupEmulation(completionHandler handler: @escaping (OEGameCoreHelperSetupResult) -> Void) {
+    public func setupEmulation(completionHandler handler: @escaping (_ screenSize: OEIntSize, _ aspectSize: OEIntSize) -> Void) {
         // we force unwrap, to ensure we panic, as the block will never be called
-        gameCoreHelper!.setupEmulation { result in
+        gameCoreHelper!.setupEmulation { screenSize, aspectSize in
             RunLoop.main.perform {
-                handler(result)
+                handler(screenSize, aspectSize)
             }
         }
     }

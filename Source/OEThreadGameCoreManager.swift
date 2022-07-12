@@ -55,7 +55,7 @@ import Foundation
         if let proxy = OEThreadProxy(target: gameCoreOwner, thread: .main) as? OEGameCoreOwner {
             helper.gameCoreOwner = proxy
         } else {
-            fatalError("Unable to cast to proxy")
+            fatalError("Unable to cast to OEGameCoreOwner proxy")
         }
 
         helperThread.start()
@@ -82,7 +82,7 @@ import Foundation
                 if let proxy = OEThreadProxy(target: helper, thread: .current) as? OEGameCoreHelper {
                     gameCoreHelper = proxy
                 } else {
-                    fatalError("Unable to cast to proxy")
+                    fatalError("Unable to cast to OEGameCoreHelper proxy")
                 }
 
                 try helper.load(withStartupInfo: startupInfo)

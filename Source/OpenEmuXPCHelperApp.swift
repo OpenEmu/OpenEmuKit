@@ -23,6 +23,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import Foundation
+import OpenEmuSystem
 import OSLog
 
 @objc public class OpenEmuXPCHelperApp: OpenEmuHelperApp {
@@ -41,7 +42,7 @@ import OSLog
         guard let serviceName = serviceName
         else { fatalError("Unable to find XPCBrokerServiceName key") }
         do {
-            let mainListener: NSXPCListener = try .helperListener(withServiceName: serviceName)
+            let mainListener: NSXPCListener = try .makeHelperListener(serviceName: serviceName)
             mainListener.delegate = self
             mainListener.resume()
             self.mainListener = mainListener

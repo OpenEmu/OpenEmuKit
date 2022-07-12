@@ -25,11 +25,9 @@
 #import "OELogging.h"
 
 os_log_t OE_LOG_DEFAULT;
-os_log_t OE_LOG_HELPER;
 
 __attribute__((constructor))
 static void InitializeLogging() {
     OE_LOG_DEFAULT  = os_log_create(OE_LOG_NAME, "default");
-    OE_LOG_HELPER   = os_log_create(OE_LOG_NAME, "helper");
 }
 

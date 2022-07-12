@@ -26,4 +26,6 @@ import OSLog
 
 extension OSLog {
     static let `default` = OSLog(subsystem: "org.openemu.OpenEmuKit", category: "default")
+    /// Subsystem for logging XPC helper messages.
+    static let helper    = OSLog(subsystem: "org.openemu.OpenEmuKit", category: "helper")
 }

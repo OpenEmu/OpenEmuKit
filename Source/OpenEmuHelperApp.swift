@@ -22,15 +22,16 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import AudioToolbox
 import Foundation
 import OpenEmuBase
+import OpenEmuSystem
 import OpenEmuKitPrivate
 import OpenEmuShaders
 import OSLog
 
 extension OSLog {
     static let display  = OSLog(subsystem: "org.openemu.OpenEmuKit", category: "display")
-    static let helper   = OSLog(subsystem: "org.openemu.OpenEmuKit", category: "helper")
     static let renderer = OSLog(subsystem: "org.openemu.OpenEmuKit", category: "renderer")
 }
 
@@ -56,7 +57,7 @@ extension OSLog {
     
     // initial shader and parameters
     var _shader: URL?
-    var _shaderParameters: [String: NSNumber]?
+    var _shaderParameters: [String: Double]?
     
     var _currentShader: URL?
     
@@ -398,7 +399,7 @@ extension OSLog {
     public func setShaderURL(_ url: URL, parameters: [String: NSNumber]?, completionHandler block: @escaping (Error?) -> Void) {
         gameCore.perform {
             do {
-                try self.setShaderURL(url, parameters: parameters)
+                try self.setShaderURL(url, parameters: parameters as? [String: Double])
                 block(nil)
             } catch {
                 block(error)
@@ -406,7 +407,7 @@ extension OSLog {
         }
     }
     
-    func setShaderURL(_ url: URL, parameters: [String: NSNumber]?) throws {
+    func setShaderURL(_ url: URL, parameters: [String: Double]?) throws {
         if _currentShader != url {
             try _filterChain.setShader(fromURL: url, options: .makeOptions())
             _currentShader = url
@@ -414,7 +415,7 @@ extension OSLog {
         
         if let parameters = parameters, let filter = _filterChain {
             for (key, val) in parameters {
-                filter.setValue(val.doubleValue, forParameterName: key)
+                filter.setValue(val, forParameterName: key)
             }
         }
     }
@@ -423,12 +424,11 @@ extension OSLog {
         _filterChain.setValue(value, forParameterName: key)
     }
     
-    public func setupEmulation(completionHandler handler: @escaping (OEGameCoreHelperSetupResult) -> Void) {
+    public func setupEmulation(completionHandler handler: @escaping (_ screenSize: OEIntSize, _ aspectSize: OEIntSize) -> Void) {
         gameCore.setupEmulation {
             self.setupGameCoreAudioAndVideo()
             
-            handler(OEGameCoreHelperSetupResult(screenSize: self._previousScreenRect.size,
-                                                aspectSize: self._previousAspectSize))
+            handler(self._previousScreenRect.size, self._previousAspectSize)
         }
     }
     

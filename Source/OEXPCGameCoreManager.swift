@@ -50,12 +50,11 @@ import OSLog
         
         let cn: NSXPCConnection
         do {
-            cn = try .init(serviceName: serviceName, executableURL: executableURL)
+            cn = try .makeConnection(serviceName: serviceName, executableURL: executableURL)
             helperConnection = cn
         } catch {
             RunLoop.main.perform {
-                completionHandler(NSError(domain: OEGameCoreErrorDomain,
-                                          code: OEGameCoreErrorCodes.couldNotLoadROMError.rawValue))
+                completionHandler(error)
             }
             
             // There's no listener endpoint, so don't bother trying to create an NSXPCConnection.

@@ -1,4 +1,4 @@
-// Copyright (c) 2020, OpenEmu Team
+// Copyright (c) 2022, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -22,14 +22,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import <Foundation/Foundation.h>
+import Foundation
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface NSXPCListener (HelperApp)
-
-+ (nullable instancetype)helperListenerWithServiceName:(NSString *)name error:(NSError **)error;
-
-@end
-
-NS_ASSUME_NONNULL_END
+@objc(OEXPCGameCoreHelper) public protocol OEXPCGameCoreHelper: OEGameCoreHelper {
+    func load(with info: OEGameStartupInfo, completionHandler: @escaping (Error?) -> Void)
+}

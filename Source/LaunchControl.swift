@@ -29,15 +29,15 @@ import OpenEmuKitPrivate
 public struct LaunchControl {
     
     /// Unloads the specified service name from launchd.
-    /// - Remark:
+    ///
     /// A use case is to remove application-specific xpc services at exit of an application. This
     /// allows the application bundle to be moved around and the xpc service will be automatically
     /// registered with `launchd` each time the application is opened.
     /// 
     /// - Parameter name: The name of the service.
-    /// - Throws:
-    ///   - `POSIXError` if the command fails.
-    ///   - `NSError` if the `launchctl` command is inaccessible.
+    ///
+    /// - Throws: `POSIXError` if the command fails.
+    /// - Throws: `NSError` if the `launchctl` command is inaccessible.
     public static func remove(service name: String) throws {
         try run("remove", args: name)
     }
