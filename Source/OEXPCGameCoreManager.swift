@@ -24,6 +24,7 @@
 
 import Foundation
 import OSLog
+import OpenEmuKitPrivate
 
 @objc public class OEXPCGameCoreManager: GameCoreManager {
     var infoDictionary: [String: String]? {

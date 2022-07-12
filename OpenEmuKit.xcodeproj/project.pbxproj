@@ -233,6 +233,8 @@
 				050A9A1024F9C35B00321847 /* OpenEmuKitPrivate.h */,
 				8F4AEABF27354776005C6246 /* NSBundle+CacheFlushing.h */,
 				8F3A1836285C9F0E008A7AC9 /* NSBundle+CacheFlushing.m */,
+				05E6BA3624CCD79200ACFB35 /* OEThreadProxy.h */,
+				05E6BA3824CCD79500ACFB35 /* OEThreadProxy.m */,
 				050A9A0C24F9B2E900321847 /* QuartzCoreSPI.h */,
 			);
 			path = OpenEmuKitPrivate;
@@ -447,8 +449,6 @@
 				05E6BA3924CCD79600ACFB35 /* OELogging.h */,
 				05E6BA3724CCD79300ACFB35 /* OELogging.m */,
 				057E7FEC28755CB100BC1C04 /* Logging.swift */,
-				05E6BA3624CCD79200ACFB35 /* OEThreadProxy.h */,
-				05E6BA3824CCD79500ACFB35 /* OEThreadProxy.m */,
 				05713217259C33B9001CB13A /* NSFileManager+ExtendedAttributes.h */,
 				05713218259C33B9001CB13A /* NSFileManager+ExtendedAttributes.m */,
 				05ED1CF8259D1FB200A2D400 /* NSFileManager+ExtendedAttributes.swift */,

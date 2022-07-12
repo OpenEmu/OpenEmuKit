@@ -23,6 +23,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import Foundation
+import OpenEmuKitPrivate
 
 @objc public class OEThreadGameCoreManager: GameCoreManager {
     var helperThread: Thread!

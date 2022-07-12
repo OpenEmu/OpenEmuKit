@@ -36,4 +36,3 @@ FOUNDATION_EXPORT const unsigned char OpenEmuKitVersionString[];
 #import <OpenEmuKit/OECorePlugin.h>
 #import <OpenEmuKit/OESystemPlugin.h>
 #import <OpenEmuKit/NSFileManager+ExtendedAttributes.h>
-#import <OpenEmuKit/OEThreadProxy.h>
