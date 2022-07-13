@@ -170,8 +170,8 @@ final class OpenGL2GameRenderer: GameRenderer {
         // Clear the other one while we're on this one.
         clearFramebuffer()
         
-        glGenFramebuffersEXT(1, &alternateFBO);
-        glBindFramebufferEXT(GLenum(GL_FRAMEBUFFER_EXT), alternateFBO);
+        glGenFramebuffersEXT(1, &alternateFBO)
+        glBindFramebufferEXT(GLenum(GL_FRAMEBUFFER_EXT), alternateFBO)
         
         glGenRenderbuffersEXT(2, &tempRB)
         glBindRenderbufferEXT(GLenum(GL_RENDERBUFFER_EXT), tempRB[0])

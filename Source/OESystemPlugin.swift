@@ -29,7 +29,7 @@ public class OESystemPlugin: OEPlugin {
     
     public static let didRegisterNotification = Notification.Name("OESystemPluginDidRegisterNotification")
     
-    private static var pluginsBySystemIdentifiers: [String : OESystemPlugin] = [:]
+    private static var pluginsBySystemIdentifiers: [String: OESystemPlugin] = [:]
     
     override public class var pluginExtension: String {
         "oesystemplugin"
@@ -40,6 +40,7 @@ public class OESystemPlugin: OEPlugin {
     }
     
     @objc public class var allPlugins: [OESystemPlugin] {
+        // swiftlint: disable force_cast
         return plugins() as! [OESystemPlugin]
     }
     
@@ -77,16 +78,15 @@ public class OESystemPlugin: OEPlugin {
     private var _controller: Controller?
     public var controller: OESystemController! {
         if _controller == nil,
-           let principalClass = bundle.principalClass
-        {
+           let principalClass = bundle.principalClass {
             _controller = newPluginController(with: principalClass)
         }
         return _controller
     }
     
     private func newPluginController(with bundleClass: AnyClass) -> Controller? {
-        guard bundleClass.isSubclass(of: Controller.self) else { return nil }
-        return (bundleClass as! Controller.Type).init(bundle: bundle)
+        guard let bundleClass = bundleClass as? Controller.Type else { return nil }
+        return bundleClass.init(bundle: bundle)
     }
     
     // MARK: -

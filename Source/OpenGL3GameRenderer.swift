@@ -173,8 +173,8 @@ final class OpenGL3GameRenderer: GameRenderer {
         // Clear the other one while we're on this one.
         clearFramebuffer()
         
-        glGenFramebuffers(1, &alternateFBO);
-        glBindFramebuffer(GLenum(GL_FRAMEBUFFER), alternateFBO);
+        glGenFramebuffers(1, &alternateFBO)
+        glBindFramebuffer(GLenum(GL_FRAMEBUFFER), alternateFBO)
         
         glGenRenderbuffers(2, &tempRB)
         glBindRenderbuffer(GLenum(GL_RENDERBUFFER), tempRB[0])

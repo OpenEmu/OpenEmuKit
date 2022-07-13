@@ -47,15 +47,15 @@ public enum OEGameCorePluginError: CustomNSError {
 public class OEPlugin: NSObject {
     
     private static var pluginClasses: Set<String> = []
-    private static var allPluginsByType: [String : NSMutableDictionary] = [:]
-    private static var pluginsForPathsByType: [String : NSMutableDictionary] = [:]
-    private static var pluginsForNamesByType: [String : NSMutableDictionary] = [:]
+    private static var allPluginsByType: [String: NSMutableDictionary] = [:]
+    private static var pluginsForPathsByType: [String: NSMutableDictionary] = [:]
+    private static var pluginsForNamesByType: [String: NSMutableDictionary] = [:]
     
     public private(set) var path: String
     public private(set) var name: String
     
     public private(set) var bundle: Bundle
-    public private(set) var infoDictionary: [String : Any]
+    public private(set) var infoDictionary: [String: Any]
     public private(set) var version: String
     public private(set) var displayName: String
     
@@ -206,20 +206,16 @@ public class OEPlugin: NSObject {
             let subpath = path.appendingPathComponent("OpenEmu", isDirectory: true)
                               .appendingPathComponent(Self.pluginFolder, isDirectory: true)
             let subpaths = try? fm.contentsOfDirectory(at: subpath, includingPropertiesForKeys: nil)
-            for bundlePath in subpaths ?? [] {
-                if Self.pluginExtension == bundlePath.pathExtension {
-                    _ = try? plugin(bundleAtPath: bundlePath.path, forceReload: true)
-                }
+            for bundlePath in subpaths ?? [] where Self.pluginExtension == bundlePath.pathExtension {
+                _ = try? plugin(bundleAtPath: bundlePath.path, forceReload: true)
             }
             
             let builtInPlugInsURL = Bundle.main.builtInPlugInsURL!
             let pluginFolderPath = builtInPlugInsURL.appendingPathComponent(Self.pluginFolder, isDirectory: true)
             let paths = try? fm.contentsOfDirectory(at: pluginFolderPath, includingPropertiesForKeys: nil)
-            for path in paths ?? [] {
-                if Self.pluginExtension == path.pathExtension {
-                    let path = path.absoluteURL.path
-                    _ = try? plugin(bundleAtPath: path)
-                }
+            for path in paths ?? [] where Self.pluginExtension == path.pathExtension {
+                let path = path.absoluteURL.path
+                _ = try? plugin(bundleAtPath: path)
             }
             
             plugins = allPluginsByType[Self.pluginType]

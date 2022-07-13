@@ -581,7 +581,7 @@ extension OSLog {
         _gameRenderer.didRenderFrameOnAlternateThread()
     }
     
-    public var presentationFramebuffer: Any {
+    public var presentationFramebuffer: Any? {
         _gameRenderer.presentationFramebuffer
     }
     

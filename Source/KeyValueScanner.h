@@ -41,9 +41,9 @@ typedef struct KVScanner * PKVScanner __attribute__((__swift_wrapper__(struct)))
 extern PKVScanner   kv_scanner_create(void)
                     NS_SWIFT_NAME(PKVScanner.init());
 extern void         kv_scanner_free(PKVScanner s);
-extern void         kv_scanner_init( PKVScanner s, uint8_t const * src, size_t src_len )
+extern void         kv_scanner_init(PKVScanner s, uint8_t const * src, size_t src_len)
                     NS_SWIFT_NAME(PKVScanner.setData(self:_:length:));
-extern KVToken      kv_scanner_scan( PKVScanner s )
+extern KVToken      kv_scanner_scan(PKVScanner s)
                     NS_SWIFT_NAME(PKVScanner.scan(self:));
 extern NSString *   kv_scanner_text(PKVScanner ps)
                     NS_SWIFT_NAME(getter:PKVScanner.text(self:));

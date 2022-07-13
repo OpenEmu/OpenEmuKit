@@ -36,6 +36,7 @@ public class OECorePlugin: OEPlugin {
     }
     
     @objc public class var allPlugins: [OECorePlugin] {
+        // swiftlint: disable force_cast
         return plugins() as! [OECorePlugin]
     }
     
@@ -75,8 +76,7 @@ public class OECorePlugin: OEPlugin {
     private var _controller: Controller?
     public var controller: OEGameCoreController! {
         if _controller == nil,
-           let principalClass = bundle.principalClass
-        {
+           let principalClass = bundle.principalClass {
             _controller = newPluginController(with: principalClass)
         }
         return _controller
@@ -84,15 +84,16 @@ public class OECorePlugin: OEPlugin {
     
     private func newPluginController(with bundleClass: AnyClass) -> Controller? {
         guard let bundleClass = bundleClass as? Controller.Type else { return nil }
+        // swiftlint: disable force_cast
         return bundleClass.init(bundle: bundle)
     }
     
     // MARK: -
     
-    private static var cachedRequiredFiles: [[String : Any]]?
-    public static var requiredFiles: [[String : Any]] {
+    private static var cachedRequiredFiles: [[String: Any]]?
+    public static var requiredFiles: [[String: Any]] {
         if cachedRequiredFiles == nil {
-            var files: [[String : Any]] = []
+            var files: [[String: Any]] = []
             for plugin in allPlugins {
                 files.append(contentsOf: plugin.requiredFiles)
             }
@@ -108,6 +109,7 @@ public class OECorePlugin: OEPlugin {
     }
     
     public var bundleIdentifier: String {
+        // swiftlint: disable force_cast
         return infoDictionary["CFBundleIdentifier"] as! String
     }
     
@@ -115,17 +117,16 @@ public class OECorePlugin: OEPlugin {
         return infoDictionary[OEGameCoreSystemIdentifiersKey] as? [String] ?? []
     }
     
-    public var coreOptions: [String : Any] {
+    public var coreOptions: [String: Any] {
         return infoDictionary[OEGameCoreOptionsKey] as? [String : Any] ?? [:]
     }
     
-    public var requiredFiles: [[String : Any]] {
-        var allRequiredFiles: [[String : Any]] = []
+    public var requiredFiles: [[String: Any]] {
+        var allRequiredFiles: [[String: Any]] = []
         
         for value in coreOptions.values {
-            if let resultDict = value as? [String : Any],
-               let object = resultDict[OEGameCoreRequiredFilesKey] as? [[String : Any]]
-            {
+            if let resultDict = value as? [String: Any],
+               let object = resultDict[OEGameCoreRequiredFilesKey] as? [[String: Any]] {
                 allRequiredFiles.append(contentsOf: object)
             }
         }

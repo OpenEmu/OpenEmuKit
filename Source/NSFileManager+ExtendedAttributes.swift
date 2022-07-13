@@ -25,16 +25,42 @@
 import Foundation
 
 public extension FileManager {
-    
-    /// Returns a boolean value that indicates whether the given path has an extended attribute of the given name.
+    /// Returns a boolean value that indicates whether the path has an extended attribute of the given name.
+    ///
     /// - Parameters:
     ///   - name: The name of the extended attribute.
     ///   - path: The path of a file or directory.
-    ///   - follows: Specify `true` to follow symbolic links.
+    ///   - follow: Specify `true` to follow symbolic links.
+    ///
     /// - Returns: A value indicating whether the item has an extended attribute of the given name.
-    func hasExtendedAttribute(_ name: String, atPath path: String, traverseLink follows: Bool) throws -> Bool {
-        var result: ObjCBool = false
-        try __hasExtendedAttribute(name, atPath: path, traverseLink: follows, result: &result)
-        return result.boolValue
+    /// - Throws: `POSIXError` if `getxattr` fails.
+    func hasExtendedAttribute(_ name: String, atPath path: String, traverseLink follow: Bool) throws -> Bool {
+        let flags = follow ? 0 : XATTR_NOFOLLOW
+        guard getxattr((path as NSString).fileSystemRepresentation, name, nil, 0, 0, flags) != -1 else {
+            switch errno {
+            case ENOATTR:
+                return false
+            default:
+                throw POSIXError(POSIXErrorCode(rawValue: errno)!)
+            }
+        }
+        return true
+    }
+    
+    /// Removes the extended attribute for the given file or directory.
+    ///
+    /// - Parameters:
+    ///   - name: The name of the extended attribute.
+    ///   - path: The path of a file or directory.
+    ///   - follow: Specify `true` to follow symbolic links.
+    ///
+    /// - Throws: `PosixError` if `removexattr` fails.
+    func removeExtendedAttribute(_ name: String, atPath path: String, traverseLink follow: Bool) throws {
+        let flags = follow ? 0 : XATTR_NOFOLLOW
+        if removexattr((path as NSString).fileSystemRepresentation, name, flags) == 0 {
+            return
+        }
+        
+        throw POSIXError(POSIXErrorCode(rawValue: errno)!)
     }
 }

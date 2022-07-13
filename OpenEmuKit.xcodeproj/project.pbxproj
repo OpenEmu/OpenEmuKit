@@ -33,8 +33,6 @@
 		054A774925B2399100F2F3D6 /* ShaderParameterGroupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054A774825B2399100F2F3D6 /* ShaderParameterGroupModel.swift */; };
 		0553DE2E27B5B83F0085512F /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553DE2D27B5B83F0085512F /* String+Extensions.swift */; };
 		055F774328740EF700BBFFF9 /* AudioUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055F774228740EF700BBFFF9 /* AudioUnit.swift */; };
-		05713219259C33B9001CB13A /* NSFileManager+ExtendedAttributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 05713217259C33B9001CB13A /* NSFileManager+ExtendedAttributes.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0571321A259C33B9001CB13A /* NSFileManager+ExtendedAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = 05713218259C33B9001CB13A /* NSFileManager+ExtendedAttributes.m */; };
 		0572A4012877883100AC32F8 /* OpenEmuXPCHelperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0572A4002877883100AC32F8 /* OpenEmuXPCHelperApp.swift */; };
 		0572A41128783DDB00AC32F8 /* Atomics in Frameworks */ = {isa = PBXBuildFile; productRef = 0572A41028783DDB00AC32F8 /* Atomics */; };
 		0572A4132878D76C00AC32F8 /* GameRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0572A4122878D76C00AC32F8 /* GameRenderer.swift */; };
@@ -141,8 +139,6 @@
 		054A774825B2399100F2F3D6 /* ShaderParameterGroupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShaderParameterGroupModel.swift; sourceTree = "<group>"; };
 		0553DE2D27B5B83F0085512F /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		055F774228740EF700BBFFF9 /* AudioUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioUnit.swift; sourceTree = "<group>"; };
-		05713217259C33B9001CB13A /* NSFileManager+ExtendedAttributes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+ExtendedAttributes.h"; sourceTree = "<group>"; };
-		05713218259C33B9001CB13A /* NSFileManager+ExtendedAttributes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+ExtendedAttributes.m"; sourceTree = "<group>"; };
 		0572A4002877883100AC32F8 /* OpenEmuXPCHelperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenEmuXPCHelperApp.swift; sourceTree = "<group>"; };
 		0572A4122878D76C00AC32F8 /* GameRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameRenderer.swift; sourceTree = "<group>"; };
 		0572A4142878E51C00AC32F8 /* GameCoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCoreManager.swift; sourceTree = "<group>"; };
@@ -226,6 +222,8 @@
 				050A9A1024F9C35B00321847 /* OpenEmuKitPrivate.h */,
 				8F4AEABF27354776005C6246 /* NSBundle+CacheFlushing.h */,
 				8F3A1836285C9F0E008A7AC9 /* NSBundle+CacheFlushing.m */,
+				05E6BA3924CCD79600ACFB35 /* OELogging.h */,
+				05E6BA3724CCD79300ACFB35 /* OELogging.m */,
 				05E6BA3624CCD79200ACFB35 /* OEThreadProxy.h */,
 				05E6BA3824CCD79500ACFB35 /* OEThreadProxy.m */,
 				050A9A0C24F9B2E900321847 /* QuartzCoreSPI.h */,
@@ -436,11 +434,7 @@
 				05C40F8926F6A72F0072B722 /* ApproximatelyEqual.swift */,
 				0547C20B2707F60500D386D3 /* Crypto.swift */,
 				0547C20F270A61C200D386D3 /* DataProtocol+HexString.swift */,
-				05E6BA3924CCD79600ACFB35 /* OELogging.h */,
-				05E6BA3724CCD79300ACFB35 /* OELogging.m */,
 				057E7FEC28755CB100BC1C04 /* Logging.swift */,
-				05713217259C33B9001CB13A /* NSFileManager+ExtendedAttributes.h */,
-				05713218259C33B9001CB13A /* NSFileManager+ExtendedAttributes.m */,
 				05ED1CF8259D1FB200A2D400 /* NSFileManager+ExtendedAttributes.swift */,
 				0524372C278D8171004DE02C /* PeekableIterator.swift */,
 				0553DE2D27B5B83F0085512F /* String+Extensions.swift */,
@@ -496,7 +490,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				05713219259C33B9001CB13A /* NSFileManager+ExtendedAttributes.h in Headers */,
 				05E6BA3F24CCD79600ACFB35 /* OELogging.h in Headers */,
 				054A2C0C278CDA6A00A2F241 /* KeyValueScanner+Private.h in Headers */,
 				054A2C0A278CDA5A00A2F241 /* KeyValueScanner.h in Headers */,
@@ -665,7 +658,6 @@
 				05201D672777EA910028CBE0 /* OESystemShaderStore.swift in Sources */,
 				05796B2528723C750007E415 /* MTLGameRenderer.swift in Sources */,
 				05AAD98726758240004466E3 /* XPCDebugSupport.swift in Sources */,
-				0571321A259C33B9001CB13A /* NSFileManager+ExtendedAttributes.m in Sources */,
 				05ED1CFC259D43E800A2D400 /* LaunchControl.swift in Sources */,
 				8F3A1837285C9F88008A7AC9 /* NSBundle+CacheFlushing.m in Sources */,
 				0547FD9824E7717E005C1FFC /* OEShaderStore.swift in Sources */,
