@@ -35,14 +35,14 @@ import Foundation
     public let displayModeInfo: [String: Any]?
     public let shader: URL
     public let shaderParameters: [String: Double]
-    public let corePluginPath: String
-    public let systemPluginPath: String
+    public let corePluginURL: URL
+    public let systemPluginURL: URL
     
     public init(romPath: String, romMD5: String, romHeader: String, romSerial: String,
                 systemRegion: String,
                 displayModeInfo: [String: Any]?,
                 shader: URL, shaderParameters: [String: Double],
-                corePluginPath: String, systemPluginPath: String) {
+                corePluginURL: URL, systemPluginURL: URL) {
         self.romPath = romPath
         self.romMD5 = romMD5
         self.romHeader = romHeader
@@ -51,8 +51,8 @@ import Foundation
         self.displayModeInfo = displayModeInfo
         self.shader = shader
         self.shaderParameters = shaderParameters
-        self.corePluginPath = corePluginPath
-        self.systemPluginPath = systemPluginPath
+        self.corePluginURL = corePluginURL
+        self.systemPluginURL = systemPluginURL
     }
     
     // MARK: - NSSecureCoding
@@ -68,8 +68,8 @@ import Foundation
             let shader = coder.decodeObject(of: NSURL.self, forKey: "shader") as? URL,
             let shaderParameters = coder.decodeObject(of: [NSString.self, NSDictionary.self, NSNumber.self],
                                                       forKey: "shaderParameters") as? [String: Double],
-            let corePluginPath = coder.decodeObject(of: NSString.self, forKey: "corePluginPath") as? String,
-            let systemPluginPath = coder.decodeObject(of: NSString.self, forKey: "systemPluginPath") as? String
+            let corePluginURL = coder.decodeObject(of: NSURL.self, forKey: "corePluginURL") as? URL,
+            let systemPluginURL = coder.decodeObject(of: NSURL.self, forKey: "systemPluginURL") as? URL
         else { return nil }
         
         self.romPath = romPath
@@ -80,8 +80,8 @@ import Foundation
         self.displayModeInfo = displayModeInfo
         self.shader = shader
         self.shaderParameters = shaderParameters
-        self.corePluginPath = corePluginPath
-        self.systemPluginPath = systemPluginPath
+        self.corePluginURL = corePluginURL
+        self.systemPluginURL = systemPluginURL
     }
     
     public func encode(with coder: NSCoder) {
@@ -93,7 +93,7 @@ import Foundation
         coder.encode(displayModeInfo, forKey: "displayModeInfo")
         coder.encode(shader, forKey: "shader")
         coder.encode(shaderParameters, forKey: "shaderParameters")
-        coder.encode(corePluginPath, forKey: "corePluginPath")
-        coder.encode(systemPluginPath, forKey: "systemPluginPath")
+        coder.encode(corePluginURL, forKey: "corePluginURL")
+        coder.encode(systemPluginURL, forKey: "systemPluginURL")
     }
 }

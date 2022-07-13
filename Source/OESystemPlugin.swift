@@ -44,8 +44,8 @@ public class OESystemPlugin: OEPlugin {
         return plugins() as! [OESystemPlugin]
     }
     
-    required init(bundleAtPath path: String, name: String?) throws {
-        try super.init(bundleAtPath: path, name: name)
+    required init(bundleAtURL bundleURL: URL, name: String?) throws {
+        try super.init(bundleAtURL: bundleURL, name: name)
         
         assert(infoDictionary[OESystemIdentifier] != nil, "Info.plist missing value for required key: \(OESystemIdentifier)")
         
@@ -63,8 +63,8 @@ public class OESystemPlugin: OEPlugin {
         NotificationCenter.default.post(name: didRegisterNotification, object: plugin)
     }
     
-    public static func systemPlugin(bundleAtPath bundlePath: String) -> OESystemPlugin? {
-        return try? plugin(bundleAtPath: bundlePath)
+    public static func systemPlugin(bundleAtURL bundleURL: URL) -> OESystemPlugin? {
+        return try? plugin(bundleAtURL: bundleURL)
     }
     
     public static func systemPlugin(forIdentifier identifier: String) -> OESystemPlugin? {

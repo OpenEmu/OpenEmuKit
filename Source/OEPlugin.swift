@@ -51,7 +51,7 @@ public class OEPlugin: NSObject {
     private static var pluginsForPathsByType: [String: NSMutableDictionary] = [:]
     private static var pluginsForNamesByType: [String: NSMutableDictionary] = [:]
     
-    public private(set) var path: String
+    public private(set) var url: URL
     public private(set) var name: String
     
     public private(set) var bundle: Bundle
@@ -92,29 +92,29 @@ public class OEPlugin: NSObject {
     }
     
     override public var description: String {
-        "Type: \(Self.pluginType), Bundle: \(displayName), Version: \(version), Path: \(path)"
+        "Type: \(Self.pluginType), Bundle: \(displayName), Version: \(version), Path: \(url.path)"
     }
     
-    required init(bundleAtPath path: String, name: String?) throws {
-        guard let bundle = Bundle(path: path),
+    required init(bundleAtURL bundleURL: URL, name: String?) throws {
+        guard let bundle = Bundle(url: bundleURL),
               let infoDictionary = bundle.infoDictionary
         else {
             throw OEGameCorePluginError.invalid
         }
         
-        let name = name ?? ((path as NSString).lastPathComponent as NSString).deletingPathExtension
+        let name = name ?? (bundleURL.lastPathComponent as NSString).deletingPathExtension
         
         let existing = Self.pluginsForNames(createIfNeeded: false)?[name]
-                    ?? Self.pluginsForPaths(createIfNeeded: false)?[path]
+                    ?? Self.pluginsForPaths(createIfNeeded: false)?[bundleURL.path]
         if existing != nil {
             throw OEGameCorePluginError.alreadyLoaded
         }
         
-        if (path as NSString).pathExtension != Self.pluginExtension {
+        if bundleURL.pathExtension != Self.pluginExtension {
             throw OEGameCorePluginError.invalid
         }
         
-        self.path = bundle.bundlePath
+        self.url = bundle.bundleURL
         self.name = name
         
         self.bundle = bundle
@@ -126,11 +126,11 @@ public class OEPlugin: NSObject {
         
         if isOutOfSupport {
             // plugin must be removed
-            os_log(.default, log: .default, "Removing out-of-support plugin %{public}@", path)
+            os_log(.default, log: .default, "Removing out-of-support plugin %{public}@", bundleURL.path)
             
             let fm = FileManager.default
             do {
-                try fm.removeItem(atPath: path)
+                try fm.removeItem(at: bundleURL)
             } catch {
                 os_log(.error, log: .default, "Error when removing out-of-support plugin: %{public}@", error as NSError)
             }
@@ -138,7 +138,7 @@ public class OEPlugin: NSObject {
             throw OEGameCorePluginError.outOfSupport
         }
         
-        Self.pluginsForPaths(createIfNeeded: true)![path] = self
+        Self.pluginsForPaths(createIfNeeded: true)![bundleURL.path] = self
         Self.pluginsForNames(createIfNeeded: true)![name] = self
     }
     
@@ -146,14 +146,14 @@ public class OEPlugin: NSObject {
         bundle.unload()
     }
     
-    public class func plugin(bundleAtPath filePath: String, forceReload reload: Bool = false) throws -> Self? {
+    public class func plugin(bundleAtURL bundleURL: URL, forceReload reload: Bool = false) throws -> Self? {
         var plugins = allPluginsByType[Self.pluginType]
         if plugins == nil {
             plugins = NSMutableDictionary()
             allPluginsByType[Self.pluginType] = plugins
         }
         
-        let pluginName = ((filePath as NSString).lastPathComponent as NSString).deletingPathExtension
+        let pluginName = (bundleURL.lastPathComponent as NSString).deletingPathExtension
         var ret = plugins?[pluginName] as? NSObject
         
         if reload {
@@ -167,10 +167,10 @@ public class OEPlugin: NSObject {
             }
         }
         
-        // No plugin with such name, attempt to actually load the file at the given path
+        // No plugin with such name, attempt to actually load the file at the given url
         if ret == nil {
             Self.willChangeValue(forKey: "allPlugins")
-            ret = try? Self.init(bundleAtPath: filePath, name: pluginName)
+            ret = try? Self.init(bundleAtURL: bundleURL, name: pluginName)
             
             // If ret is still nil at this point, it means the plugin can't be loaded
             if ret == nil {
@@ -200,22 +200,32 @@ public class OEPlugin: NSObject {
         }
         var plugins = allPluginsByType[Self.pluginType]
         if plugins == nil {
-            let path = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
             let fm = FileManager.default
             
-            let subpath = path.appendingPathComponent("OpenEmu", isDirectory: true)
-                              .appendingPathComponent(Self.pluginFolder, isDirectory: true)
-            let subpaths = try? fm.contentsOfDirectory(at: subpath, includingPropertiesForKeys: nil)
-            for bundlePath in subpaths ?? [] where Self.pluginExtension == bundlePath.pathExtension {
-                _ = try? plugin(bundleAtPath: bundlePath.path, forceReload: true)
+            // load plugins in Application Support
+            let appSupportDir: URL
+            #if swift(>=5.7)
+            if #available(macOS 13.0, *) {
+                appSupportDir = .applicationSupportDirectory
+            } else {
+                appSupportDir = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+            }
+            #else
+            appSupportDir = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+            #endif
+            let pluginsDir = appSupportDir.appendingPathComponent("OpenEmu", isDirectory: true)
+                                          .appendingPathComponent(Self.pluginFolder, isDirectory: true)
+            let pluginURLs = try? fm.contentsOfDirectory(at: pluginsDir, includingPropertiesForKeys: [])
+            for bundleURL in pluginURLs ?? [] where bundleURL.pathExtension == Self.pluginExtension {
+                _ = try? plugin(bundleAtURL: bundleURL, forceReload: true)
             }
             
-            let builtInPlugInsURL = Bundle.main.builtInPlugInsURL!
-            let pluginFolderPath = builtInPlugInsURL.appendingPathComponent(Self.pluginFolder, isDirectory: true)
-            let paths = try? fm.contentsOfDirectory(at: pluginFolderPath, includingPropertiesForKeys: nil)
-            for path in paths ?? [] where Self.pluginExtension == path.pathExtension {
-                let path = path.absoluteURL.path
-                _ = try? plugin(bundleAtPath: path)
+            // load plugins in application bundle
+            let builtInPluginsURL = Bundle.main.builtInPlugInsURL!
+            let bundledPluginsDir = builtInPluginsURL.appendingPathComponent(Self.pluginFolder, isDirectory: true)
+            let bundledPluginURLs = try? fm.contentsOfDirectory(at: bundledPluginsDir, includingPropertiesForKeys: [])
+            for bundleURL in bundledPluginURLs ?? [] where bundleURL.pathExtension == Self.pluginExtension {
+                _ = try? plugin(bundleAtURL: bundleURL)
             }
             
             plugins = allPluginsByType[Self.pluginType]

@@ -40,15 +40,15 @@ public class OECorePlugin: OEPlugin {
         return plugins() as! [OECorePlugin]
     }
     
-    required init(bundleAtPath path: String, name: String?) throws {
-        try super.init(bundleAtPath: path, name: name)
+    required init(bundleAtURL bundleURL: URL, name: String?) throws {
+        try super.init(bundleAtURL: bundleURL, name: name)
         
         // invalidate global cache
         Self.cachedRequiredFiles = nil
     }
     
-    public static func corePlugin(bundleAtPath bundlePath: String) -> OECorePlugin? {
-        return try? plugin(bundleAtPath: bundlePath)
+    public static func corePlugin(bundleAtURL bundleURL: URL) -> OECorePlugin? {
+        return try? plugin(bundleAtURL: bundleURL)
     }
     
     public static func corePlugin(bundleIdentifier identifier: String) -> OECorePlugin? {
