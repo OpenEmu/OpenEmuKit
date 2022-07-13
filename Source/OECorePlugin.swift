@@ -83,8 +83,8 @@ public class OECorePlugin: OEPlugin {
     }
     
     private func newPluginController(with bundleClass: AnyClass) -> Controller? {
-        guard bundleClass.isSubclass(of: Controller.self) else { return nil }
-        return (bundleClass as! Controller.Type).init(bundle: bundle)
+        guard let bundleClass = bundleClass as? Controller.Type else { return nil }
+        return bundleClass.init(bundle: bundle)
     }
     
     // MARK: -
