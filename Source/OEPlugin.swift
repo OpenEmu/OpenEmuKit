@@ -25,23 +25,12 @@
 import Foundation
 import os.log
 
-public enum OEGameCorePluginError: CustomNSError {
-    case alreadyLoaded
-    case invalid
-    case outOfSupport
+public enum OEGameCorePluginError: Int, CustomNSError {
+    case alreadyLoaded = -1000
+    case invalid = -1001
+    case outOfSupport = -1002
     
     public static var errorDomain: String { "org.openemu.OpenEmuKit.OEPlugin" }
-    
-    public var errorCode: Int {
-        switch self {
-        case .alreadyLoaded:
-            return -1000
-        case .invalid:
-            return -1001
-        case .outOfSupport:
-            return -1002
-        }
-    }
 }
 
 public class OEPlugin: NSObject {
