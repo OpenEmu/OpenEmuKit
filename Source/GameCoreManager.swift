@@ -130,7 +130,7 @@ extension GameCoreManager: OEGameCoreHelper {
         gameCoreHelper?.setBackingScaleFactor(newBackingScaleFactor)
     }
 
-    public func setShaderURL(_ url: URL, parameters: [String : NSNumber]?, completionHandler block: @escaping (Error?) -> Void) {
+    public func setShaderURL(_ url: URL, parameters: [String: NSNumber]?, completionHandler block: @escaping (Error?) -> Void) {
         // we force unwrap, to ensure we panic, as the block will never be called
         gameCoreHelper!.setShaderURL(url, parameters: parameters) { error in
             RunLoop.main.perform {

@@ -84,7 +84,6 @@ public class OECorePlugin: OEPlugin {
     
     private func newPluginController(with bundleClass: AnyClass) -> Controller? {
         guard let bundleClass = bundleClass as? Controller.Type else { return nil }
-        // swiftlint: disable force_cast
         return bundleClass.init(bundle: bundle)
     }
     
@@ -118,7 +117,7 @@ public class OECorePlugin: OEPlugin {
     }
     
     public var coreOptions: [String: Any] {
-        return infoDictionary[OEGameCoreOptionsKey] as? [String : Any] ?? [:]
+        return infoDictionary[OEGameCoreOptionsKey] as? [String: Any] ?? [:]
     }
     
     public var requiredFiles: [[String: Any]] {
@@ -187,16 +186,14 @@ public class OECorePlugin: OEPlugin {
         
         // beta-era plugins
         if let appcastURL = infoDictionary["SUFeedURL"] as? String,
-           appcastURL.contains("openemu.org/update")
-        {
+           appcastURL.contains("openemu.org/update") {
             return true
         }
         
         // plugins marked as deprecated in the Info.plist keys
         if isMarkedDeprecatedInInfoPlist,
            let deadline = infoDictionary[OEGameCoreSupportDeadlineKey] as? Date,
-           Date().compare(deadline) == .orderedDescending
-        {
+           Date().compare(deadline) == .orderedDescending {
             // we are past the support deadline; return true to remove the core
             prepareForRemoval()
             return true
@@ -211,14 +208,13 @@ public class OECorePlugin: OEPlugin {
     }
     
     private func prepareForRemoval() {
-        let replacements = infoDictionary[OEGameCoreSuggestedReplacement] as? [String : String]
+        let replacements = infoDictionary[OEGameCoreSuggestedReplacement] as? [String: String]
         
         let defaults = UserDefaults.standard
         for systemIdentifier in systemIdentifiers {
             let prefKey = "defaultCore." + systemIdentifier
             if let currentCore = defaults.string(forKey: prefKey),
-               currentCore == bundleIdentifier
-            {
+               currentCore == bundleIdentifier {
                 if let replacement = replacements?[systemIdentifier] {
                     defaults.set(replacement, forKey: prefKey)
                 } else {

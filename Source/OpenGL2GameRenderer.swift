@@ -41,7 +41,8 @@ final class OpenGL2GameRenderer: GameRenderer {
     
     // Double buffered FBO rendering (3D mode)
     var isDoubleBufferFBOMode = false
-    var alternateFBO: GLuint = 0                    // 3D games may render into this FBO which is blit into the IOSurface. Used if game accidentally syncs surface.
+    var alternateFBO: GLuint = 0                    // 3D games may render into this FBO which is blit into the IOSurface.
+                                                    // Used if game accidentally syncs surface.
     var tempRB = [GLuint](repeating: 0, count: 2)   // Color and depth buffers backing alternate FBO.
     
     // Alternate-thread rendering (3D mode)

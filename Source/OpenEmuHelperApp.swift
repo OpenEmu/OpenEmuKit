@@ -271,7 +271,7 @@ extension OSLog {
         _systemResponder.client                 = gameCore
         _systemResponder.globalEventsHandler    = self
         
-        _unhandledEventsMonitor = OEDeviceManager.shared.addUnhandledEventMonitorHandler { [weak self] handler, event in
+        _unhandledEventsMonitor = OEDeviceManager.shared.addUnhandledEventMonitorHandler { [weak self] _, event in
             guard
                 let self = self,
                 self._handleEvents,
