@@ -50,11 +50,11 @@ extension NSXPCListener {
         cn.remoteObjectInterface = .init(with: OEXPCMatchMaking.self)
         cn.resume()
         
-        let mm = cn.remoteObjectProxyWithErrorHandler { error in
+        let mm_ = cn.remoteObjectProxyWithErrorHandler { error in
             os_log(.error, log: .helper, "Error waiting for reply from OEXPCMatchMaking. { error = %{public}@ }", error.localizedDescription)
         } as? OEXPCMatchMaking
         
-        guard let mm = mm else {
+        guard let mm = mm_ else {
             os_log(.error, log: .helper, "Unexpected nil for OEXPCMatchMaking proxy.")
             fatalError("Unexpected nil for OEXPCMatchMaking proxy.")
         }

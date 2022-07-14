@@ -81,11 +81,11 @@ extension NSXPCConnection {
         cn.remoteObjectInterface = .init(with: OEXPCMatchMaking.self)
         cn.resume()
         
-        let mm = cn.remoteObjectProxyWithErrorHandler { error in
+        let mm_ = cn.remoteObjectProxyWithErrorHandler { error in
             os_log(.error, log: .helper, "Error waiting for reply from OEXPCMatchMaking. { error = %{public}@ }", error.localizedDescription)
         } as? OEXPCMatchMaking
         
-        guard let mm = mm else {
+        guard let mm = mm_ else {
             os_log(.error, log: .helper, "Unexpected nil for OEXPCMatchMaking proxy.")
             throw BrokerError(failureReason: NSLocalizedString("OEXPCMatchMaking proxy was nil", comment: ""))
         }
@@ -112,7 +112,7 @@ extension NSXPCConnection {
         cn.invalidationHandler = nil
         cn.invalidate()
         
-        guard let endpoint = endpoint else {
+        guard let listenerEndpoint = endpoint else {
             throw BrokerError(failureReason: NSLocalizedString("Broker endpoint is nil", comment: ""))
         }
         
@@ -120,7 +120,7 @@ extension NSXPCConnection {
             throw BrokerError(failureReason: NSLocalizedString("Helper unexpectedly terminated", comment: ""))
         }
         
-        let newCn = NSXPCConnection(listenerEndpoint: endpoint)
+        let newCn = NSXPCConnection(listenerEndpoint: listenerEndpoint)
         
         task.terminationHandler = { [weak newCn] task in
             os_log(.debug, log: .helper,
