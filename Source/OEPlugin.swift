@@ -158,15 +158,26 @@ public class OEPlugin: NSObject {
         
         // No plugin with such name, attempt to actually load the file at the given url
         if ret == nil {
-            Self.willChangeValue(forKey: "allPlugins")
-            ret = try? Self.init(bundleAtURL: bundleURL, name: pluginName)
+            var err: Error?
+            
+            do {
+                ret = try Self.init(bundleAtURL: bundleURL, name: pluginName)
+            } catch {
+                err = error
+            }
             
             // If ret is still nil at this point, it means the plugin can't be loaded
             if ret == nil {
                 ret = NSNull()
             }
+            
+            Self.willChangeValue(forKey: "allPlugins")
             plugins?[pluginName] = ret
             Self.didChangeValue(forKey: "allPlugins")
+            
+            if let error = err {
+                throw error
+            }
         }
         
         if ret == NSNull() {
