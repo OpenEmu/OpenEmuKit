@@ -43,10 +43,10 @@ public typealias StartupCompletionHandler = (Error?) -> Void
     }
     
     public override var description: String {
-        String(format: "<%@ %p, ROM: %@, System: %@, Core: %@, Display Helper: %@>",
-               String(reflecting: self),
+        String(format: "<%@ %p, ROM: %@, Core: %@, System: %@, Display Helper: %@>",
+               "\(Self.self)",
                Unmanaged.passUnretained(self).toOpaque().debugDescription,
-               startupInfo,
+               startupInfo.romPath,
                plugin?.bundleIdentifier ?? "no plugin",
                systemPlugin?.systemIdentifier ?? "no systemPlugin",
                gameCoreOwner != nil ? Unmanaged.passUnretained(gameCoreOwner!).toOpaque().debugDescription : "no gameCoreOwner"
