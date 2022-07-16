@@ -26,7 +26,7 @@ import Foundation
 import OpenEmuShaders
 
 public extension ShaderCompilerOptions {
-    @objc static func makeOptions() -> ShaderCompilerOptions {
+    static func makeOptions() -> ShaderCompilerOptions {
         let options = ShaderCompilerOptions()
         
         guard
@@ -34,7 +34,7 @@ public extension ShaderCompilerOptions {
         else { return options }
         
         options.cacheDir = url.appendingPathComponent("OpenEmu", isDirectory: true).appendingPathComponent("Shaders", isDirectory: true)
-
+        
         return options
     }
 }

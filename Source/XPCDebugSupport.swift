@@ -25,9 +25,7 @@
 import Foundation
 import Darwin
 
-@objc
-@objcMembers
-public class XPCDebugSupport: NSObject {
+public class XPCDebugSupport {
     
     /// Returns a value indicating whether a debugger is attached to the current process
     public static var isDebuggerAttached: Bool {

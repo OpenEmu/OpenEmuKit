@@ -86,6 +86,7 @@ import OpenEmuKitPrivate
         cn.remoteObjectInterface = intf
         cn.resume()
         
+        // swiftlint:disable identifier_name
         let gameCoreHelper_ = cn.remoteObjectProxyWithErrorHandler { error in
             os_log(.error, log: .helper, "Helper connection failed with error: %{public}@", error.localizedDescription)
             self.stop()
