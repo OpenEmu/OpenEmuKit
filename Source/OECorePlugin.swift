@@ -58,15 +58,7 @@ public class OECorePlugin: OEPlugin {
     }
     
     public static func corePlugins(forSystemIdentifier identifier: String) -> [OECorePlugin] {
-        var validCores: [OECorePlugin] = []
-        
-        for plugin in allPlugins {
-            if plugin.systemIdentifiers.contains(identifier) {
-                validCores.append(plugin)
-            }
-        }
-        
-        return validCores
+        return allPlugins.filter { $0.systemIdentifiers.contains(identifier) }
     }
     
     // MARK: -
