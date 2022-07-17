@@ -46,7 +46,7 @@ public typealias StartupCompletionHandler = (Error?) -> Void
         String(format: "<%@ %p, ROM: %@, Core: %@, System: %@, Display Helper: %@>",
                "\(Self.self)",
                Unmanaged.passUnretained(self).toOpaque().debugDescription,
-               startupInfo.romPath,
+               startupInfo.romURL.path,
                plugin?.bundleIdentifier ?? "no plugin",
                systemPlugin?.systemIdentifier ?? "no systemPlugin",
                gameCoreOwner != nil ? Unmanaged.passUnretained(gameCoreOwner!).toOpaque().debugDescription : "no gameCoreOwner"
@@ -173,16 +173,16 @@ extension GameCoreManager: OEGameCoreHelper {
         }
     }
     
-    public func saveStateToFile(atPath fileName: String, completionHandler block: @escaping (Bool, Error?) -> Void) {
-        gameCoreHelper!.saveStateToFile(atPath: fileName) { success, error in
+    public func saveStateToFile(at fileURL: URL, completionHandler block: @escaping (Bool, Error?) -> Void) {
+        gameCoreHelper!.saveStateToFile(at: fileURL) { success, error in
             RunLoop.main.perform {
                 block(success, error)
             }
         }
     }
     
-    public func loadStateFromFile(atPath fileName: String, completionHandler block: @escaping (Bool, Error?) -> Void) {
-        gameCoreHelper!.loadStateFromFile(atPath: fileName) { success, error in
+    public func loadStateFromFile(at fileURL: URL, completionHandler block: @escaping (Bool, Error?) -> Void) {
+        gameCoreHelper!.loadStateFromFile(at: fileURL) { success, error in
             RunLoop.main.perform {
                 block(success, error)
             }

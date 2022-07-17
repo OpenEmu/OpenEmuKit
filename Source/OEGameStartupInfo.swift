@@ -27,29 +27,29 @@ import Foundation
 @objc(OEGameStartupInfo) public class OEGameStartupInfo: NSObject, NSSecureCoding {
     public static var supportsSecureCoding: Bool { return true }
     
-    public let romPath: String
+    public let romURL: URL
     public let romMD5: String
     public let romHeader: String
     public let romSerial: String
     public let systemRegion: String
     public let displayModeInfo: [String: Any]?
-    public let shader: URL
+    public let shaderURL: URL
     public let shaderParameters: [String: Double]
     public let corePluginURL: URL
     public let systemPluginURL: URL
     
-    public init(romPath: String, romMD5: String, romHeader: String, romSerial: String,
+    public init(romURL: URL, romMD5: String, romHeader: String, romSerial: String,
                 systemRegion: String,
                 displayModeInfo: [String: Any]?,
-                shader: URL, shaderParameters: [String: Double],
+                shaderURL: URL, shaderParameters: [String: Double],
                 corePluginURL: URL, systemPluginURL: URL) {
-        self.romPath = romPath
+        self.romURL = romURL
         self.romMD5 = romMD5
         self.romHeader = romHeader
         self.romSerial = romSerial
         self.systemRegion = systemRegion
         self.displayModeInfo = displayModeInfo
-        self.shader = shader
+        self.shaderURL = shaderURL
         self.shaderParameters = shaderParameters
         self.corePluginURL = corePluginURL
         self.systemPluginURL = systemPluginURL
@@ -59,39 +59,39 @@ import Foundation
     
     public required init?(coder: NSCoder) {
         guard
-            let romPath = coder.decodeObject(of: NSString.self, forKey: "romPath") as? String,
+            let romURL = coder.decodeObject(of: NSURL.self, forKey: "romPath") as? URL,
             let romMD5 = coder.decodeObject(of: NSString.self, forKey: "romMD5") as? String,
             let romHeader = coder.decodeObject(of: NSString.self, forKey: "romHeader") as? String,
             let romSerial = coder.decodeObject(of: NSString.self, forKey: "romSerial") as? String,
             let systemRegion = coder.decodeObject(of: NSString.self, forKey: "systemRegion") as? String,
             let displayModeInfo = coder.decodePropertyList(forKey: "displayModeInfo") as? [String: Any]?,
-            let shader = coder.decodeObject(of: NSURL.self, forKey: "shader") as? URL,
+            let shaderURL = coder.decodeObject(of: NSURL.self, forKey: "shaderURL") as? URL,
             let shaderParameters = coder.decodeObject(of: [NSString.self, NSDictionary.self, NSNumber.self],
                                                       forKey: "shaderParameters") as? [String: Double],
             let corePluginURL = coder.decodeObject(of: NSURL.self, forKey: "corePluginURL") as? URL,
             let systemPluginURL = coder.decodeObject(of: NSURL.self, forKey: "systemPluginURL") as? URL
         else { return nil }
         
-        self.romPath = romPath
+        self.romURL = romURL
         self.romMD5 = romMD5
         self.romHeader = romHeader
         self.romSerial = romSerial
         self.systemRegion = systemRegion
         self.displayModeInfo = displayModeInfo
-        self.shader = shader
+        self.shaderURL = shaderURL
         self.shaderParameters = shaderParameters
         self.corePluginURL = corePluginURL
         self.systemPluginURL = systemPluginURL
     }
     
     public func encode(with coder: NSCoder) {
-        coder.encode(romPath, forKey: "romPath")
+        coder.encode(romURL, forKey: "romURL")
         coder.encode(romMD5, forKey: "romMD5")
         coder.encode(romHeader, forKey: "romHeader")
         coder.encode(romSerial, forKey: "romSerial")
         coder.encode(systemRegion, forKey: "systemRegion")
         coder.encode(displayModeInfo, forKey: "displayModeInfo")
-        coder.encode(shader, forKey: "shader")
+        coder.encode(shaderURL, forKey: "shaderURL")
         coder.encode(shaderParameters, forKey: "shaderParameters")
         coder.encode(corePluginURL, forKey: "corePluginURL")
         coder.encode(systemPluginURL, forKey: "systemPluginURL")

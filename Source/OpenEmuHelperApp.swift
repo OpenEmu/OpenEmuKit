@@ -242,11 +242,11 @@ extension OSLog {
             return // NO
         }
         
-        let aPath = (info.romPath as NSString).standardizingPath
+        let aPath = info.romURL.standardizedFileURL.path
         
         os_log(.info, log: .helper, "Load ROM at path %{public}@", aPath)
         
-        _shader = info.shader
+        _shader = info.shaderURL
         _shaderParameters = info.shaderParameters
         _systemController = OESystemPlugin.systemPlugin(bundleAtURL: info.systemPluginURL)!.controller
         _systemResponder  = _systemController.newGameSystemResponder()
@@ -455,15 +455,15 @@ extension OSLog {
         }
     }
     
-    public func saveStateToFile(atPath fileName: String, completionHandler block: @escaping (Bool, Error?) -> Void) {
+    public func saveStateToFile(at fileURL: URL, completionHandler block: @escaping (Bool, Error?) -> Void) {
         gameCore.perform {
-            self.gameCore.saveStateToFile(atPath: fileName, completionHandler: block)
+            self.gameCore.saveStateToFile(atPath: fileURL.path, completionHandler: block)
         }
     }
     
-    public func loadStateFromFile(atPath fileName: String, completionHandler block: @escaping (Bool, Error?) -> Void) {
+    public func loadStateFromFile(at fileURL: URL, completionHandler block: @escaping (Bool, Error?) -> Void) {
         gameCore.perform {
-            self.gameCore.loadStateFromFile(atPath: fileName, completionHandler: block)
+            self.gameCore.loadStateFromFile(atPath: fileURL.path, completionHandler: block)
         }
     }
     
