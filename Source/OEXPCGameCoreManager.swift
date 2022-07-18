@@ -77,7 +77,7 @@ import OpenEmuKitPrivate
         
         // startup
         let classes: NSSet = [OEGameStartupInfo.self]
-        // swiftlint: disable force_cast
+        // swiftlint:disable:next force_cast
         intf.setClasses(classes as! Set<AnyHashable>,
                         for: #selector(OEXPCGameCoreHelper.load(with:completionHandler:)),
                         argumentIndex: 0,
@@ -86,7 +86,7 @@ import OpenEmuKitPrivate
         cn.remoteObjectInterface = intf
         cn.resume()
         
-        // swiftlint:disable identifier_name
+        // swiftlint:disable:next identifier_name
         let gameCoreHelper_ = cn.remoteObjectProxyWithErrorHandler { error in
             os_log(.error, log: .helper, "Helper connection failed with error: %{public}@", error.localizedDescription)
             self.stop()

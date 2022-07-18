@@ -50,7 +50,7 @@ extension NSXPCListener {
         cn.remoteObjectInterface = .init(with: OEXPCMatchMaking.self)
         cn.resume()
         
-        // swiftlint: disable identifier_name
+        // swiftlint:disable:next identifier_name
         let mm_ = cn.remoteObjectProxyWithErrorHandler { error in
             os_log(.error, log: .helper, "Error waiting for reply from OEXPCMatchMaking. { error = %{public}@ }", error.localizedDescription)
         } as? OEXPCMatchMaking

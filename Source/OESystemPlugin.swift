@@ -40,7 +40,7 @@ public class OESystemPlugin: OEPlugin {
     }
     
     @objc public class var allPlugins: [OESystemPlugin] {
-        // swiftlint: disable force_cast
+        // swiftlint:disable:next force_cast
         return plugins() as! [OESystemPlugin]
     }
     

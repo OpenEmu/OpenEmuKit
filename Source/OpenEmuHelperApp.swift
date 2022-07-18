@@ -41,7 +41,7 @@ extension OSLog {
     @objc public private(set) var gameSystemResponderClientProtocol: Protocol!
     
     // MARK: - State
-    // swiftlint: disable identifier_name
+    // swiftlint:disable identifier_name
     var _previousScreenRect: OEIntRect = .init()
     var _previousAspectSize: OEIntSize = .init()
     

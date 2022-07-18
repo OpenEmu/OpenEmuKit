@@ -36,7 +36,7 @@ public class OECorePlugin: OEPlugin {
     }
     
     @objc public class var allPlugins: [OECorePlugin] {
-        // swiftlint: disable force_cast
+        // swiftlint:disable:next force_cast
         return plugins() as! [OECorePlugin]
     }
     
@@ -100,7 +100,7 @@ public class OECorePlugin: OEPlugin {
     }
     
     public var bundleIdentifier: String {
-        // swiftlint: disable force_cast
+        // swiftlint:disable:next force_cast
         return infoDictionary["CFBundleIdentifier"] as! String
     }
     

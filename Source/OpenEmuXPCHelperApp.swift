@@ -82,7 +82,7 @@ import OSLog
         
         // load ROM
         let classes: NSSet = [OEGameStartupInfo.self]
-        // swiftlint: disable force_cast
+        // swiftlint:disable:next force_cast
         intf.setClasses(classes as! Set<AnyHashable>,
                         for: #selector(load(with:completionHandler:)),
                         argumentIndex: 0,
