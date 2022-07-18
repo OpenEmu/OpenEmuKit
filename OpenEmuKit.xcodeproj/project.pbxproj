@@ -144,7 +144,7 @@
 		0572A4142878E51C00AC32F8 /* GameCoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCoreManager.swift; sourceTree = "<group>"; };
 		0572A4162878EF3300AC32F8 /* OEThreadGameCoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OEThreadGameCoreManager.swift; sourceTree = "<group>"; };
 		0572A418287A334600AC32F8 /* OEXPCGameCoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OEXPCGameCoreManager.swift; sourceTree = "<group>"; };
-		0572A423287B89CD00AC32F8 /* OEGameStartupInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OEGameStartupInfo.swift; sourceTree = "<group>"; };
+		0572A423287B89CD00AC32F8 /* OEGameStartupInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OEGameStartupInfo.swift; sourceTree = "<group>"; usesTabs = 0; };
 		0572A425287B969500AC32F8 /* OEGameCoreOwner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OEGameCoreOwner.swift; sourceTree = "<group>"; };
 		0572A427287BAF9300AC32F8 /* OEGameCoreHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OEGameCoreHelper.swift; sourceTree = "<group>"; };
 		0572A429287BB0B000AC32F8 /* OEXPCGameCoreHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OEXPCGameCoreHelper.swift; sourceTree = "<group>"; };
