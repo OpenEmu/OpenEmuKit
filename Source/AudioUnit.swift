@@ -32,7 +32,7 @@ import AVFoundation
     @objc public static var kAudioUnitSubType_Emulator     = OSType(bitPattern: 0x65_6d_75_21) // emu!
     @objc public static let kAudioUnitManufacturer_OpenEmu = OSType(bitPattern: 0x6f_65_6d_75) // oemu
     
-    private static var isRegistered: Bool {
+    private static var isRegistered: Bool = {
         let desc = AudioComponentDescription(componentType: kAudioUnitType_Generator,
                                              componentSubType: kAudioUnitSubType_Emulator,
                                              componentManufacturer: kAudioUnitManufacturer_OpenEmu,
@@ -44,7 +44,7 @@ import AVFoundation
                                      name: "OEAudioUnit",
                                      version: .max)
         return true
-    }
+    }()
     
     @objc public static func register() {
         _ = isRegistered
