@@ -23,7 +23,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import Foundation
-import OSLog
+@_implementationOnly import os.log
 import OpenEmuKitPrivate
 
 @objc public class OEXPCGameCoreManager: GameCoreManager {

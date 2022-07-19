@@ -25,8 +25,8 @@
 import Foundation
 import OpenEmuBase
 import OpenGL.GL3
-import Atomics
-import OSLog
+@_implementationOnly import Atomics
+@_implementationOnly import os.log
 
 final class OpenGL3GameRenderer: GameRenderer {
     let gameCore: OEGameCore

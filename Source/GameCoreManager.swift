@@ -228,7 +228,7 @@ extension GameCoreManager: OEGameCoreHelper {
 
 // MARK: - Synchronous image capture APIs
 
-import Atomics
+@_implementationOnly import Atomics
 
 @objc extension GameCoreManager {
     public func captureOutputImage() -> NSBitmapImageRep {

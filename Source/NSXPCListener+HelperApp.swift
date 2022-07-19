@@ -23,7 +23,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import Foundation
-import OSLog
+@_implementationOnly import os.log
 
 extension NSXPCListener {
     private static var helperIdentifierFromArguments: String? {

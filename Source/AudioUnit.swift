@@ -25,7 +25,7 @@
 import Foundation
 import AudioToolbox
 import AVFoundation
-import OSLog
+@_implementationOnly import os.log
 
 @objc(OEAudioUnit) final public class AudioUnit: AUAudioUnit {
     // swiftlint:disable identifier_name

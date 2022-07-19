@@ -25,8 +25,8 @@
 import Foundation
 import OpenEmuBase
 import OpenGL
-import Atomics
-import OSLog
+@_implementationOnly import Atomics
+@_implementationOnly import os.log
 
 final class OpenGL2GameRenderer: GameRenderer {
     let gameCore: OEGameCore
