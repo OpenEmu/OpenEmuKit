@@ -34,9 +34,9 @@ public extension FileManager {
     ///
     /// - Returns: A value indicating whether the item has an extended attribute of the given name.
     /// - Throws: `POSIXError` if `getxattr` fails.
-    func hasExtendedAttribute(_ name: String, atPath path: String, traverseLink follow: Bool) throws -> Bool {
+    func hasExtendedAttribute(_ name: String, at url: URL, traverseLink follow: Bool) throws -> Bool {
         let flags = follow ? 0 : XATTR_NOFOLLOW
-        guard getxattr((path as NSString).fileSystemRepresentation, name, nil, 0, 0, flags) != -1 else {
+        guard getxattr((url as NSURL).fileSystemRepresentation, name, nil, 0, 0, flags) != -1 else {
             switch errno {
             case ENOATTR:
                 return false
@@ -55,9 +55,9 @@ public extension FileManager {
     ///   - follow: Specify `true` to follow symbolic links.
     ///
     /// - Throws: `PosixError` if `removexattr` fails.
-    func removeExtendedAttribute(_ name: String, atPath path: String, traverseLink follow: Bool) throws {
+    func removeExtendedAttribute(_ name: String, at url: URL, traverseLink follow: Bool) throws {
         let flags = follow ? 0 : XATTR_NOFOLLOW
-        if removexattr((path as NSString).fileSystemRepresentation, name, flags) == 0 {
+        if removexattr((url as NSURL).fileSystemRepresentation, name, flags) == 0 {
             return
         }
         

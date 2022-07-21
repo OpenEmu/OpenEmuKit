@@ -72,7 +72,7 @@
 		05E6BA3F24CCD79600ACFB35 /* OELogging.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E6BA3924CCD79600ACFB35 /* OELogging.h */; };
 		05E6BA5524CCD9A000ACFB35 /* OpenEmuShaders.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E6BA5424CCD9A000ACFB35 /* OpenEmuShaders.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		05EA2F2224FFD16B00569EBA /* OEIntegralWindowResizingDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05EA2F2124FFD16B00569EBA /* OEIntegralWindowResizingDelegate.swift */; };
-		05ED1CF9259D1FB200A2D400 /* NSFileManager+ExtendedAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05ED1CF8259D1FB200A2D400 /* NSFileManager+ExtendedAttributes.swift */; };
+		05ED1CF9259D1FB200A2D400 /* FileManager+ExtendedAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05ED1CF8259D1FB200A2D400 /* FileManager+ExtendedAttributes.swift */; };
 		05ED1CFC259D43E800A2D400 /* LaunchControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05ED1CFB259D43E800A2D400 /* LaunchControl.swift */; };
 		05EEF0F22707C875008A03DC /* ShaderPresetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05EEF0F12707C875008A03DC /* ShaderPresetData.swift */; };
 		05EEF1022707C986008A03DC /* ShaderPresetStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05EEF1012707C986008A03DC /* ShaderPresetStoreTests.swift */; };
@@ -181,7 +181,7 @@
 		05E6BA5424CCD9A000ACFB35 /* OpenEmuShaders.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OpenEmuShaders.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		05E6BA5824CCDF1200ACFB35 /* OpenEmuKit_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenEmuKit_Prefix.pch; sourceTree = "<group>"; };
 		05EA2F2124FFD16B00569EBA /* OEIntegralWindowResizingDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OEIntegralWindowResizingDelegate.swift; sourceTree = "<group>"; };
-		05ED1CF8259D1FB200A2D400 /* NSFileManager+ExtendedAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSFileManager+ExtendedAttributes.swift"; sourceTree = "<group>"; };
+		05ED1CF8259D1FB200A2D400 /* FileManager+ExtendedAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+ExtendedAttributes.swift"; sourceTree = "<group>"; };
 		05ED1CFB259D43E800A2D400 /* LaunchControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchControl.swift; sourceTree = "<group>"; };
 		05EEF0F12707C875008A03DC /* ShaderPresetData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderPresetData.swift; sourceTree = "<group>"; };
 		05EEF0F72707C96B008A03DC /* OpenEmuKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenEmuKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -435,7 +435,7 @@
 				0547C20B2707F60500D386D3 /* Crypto.swift */,
 				0547C20F270A61C200D386D3 /* DataProtocol+HexString.swift */,
 				057E7FEC28755CB100BC1C04 /* Logging.swift */,
-				05ED1CF8259D1FB200A2D400 /* NSFileManager+ExtendedAttributes.swift */,
+				05ED1CF8259D1FB200A2D400 /* FileManager+ExtendedAttributes.swift */,
 				0524372C278D8171004DE02C /* PeekableIterator.swift */,
 				0553DE2D27B5B83F0085512F /* String+Extensions.swift */,
 			);
@@ -691,7 +691,7 @@
 				0572A4172878EF3300AC32F8 /* OEThreadGameCoreManager.swift in Sources */,
 				0530C3B32512DF680050F90F /* OEScaledGameLayerView.swift in Sources */,
 				05B078172735DA2300F1E302 /* SystemShaderPresetStore.swift in Sources */,
-				05ED1CF9259D1FB200A2D400 /* NSFileManager+ExtendedAttributes.swift in Sources */,
+				05ED1CF9259D1FB200A2D400 /* FileManager+ExtendedAttributes.swift in Sources */,
 				05B0781927371B2200F1E302 /* GameAudio.swift in Sources */,
 				0518D6E824F32DD10037101D /* NSEvent+Combine.swift in Sources */,
 			);
