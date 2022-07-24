@@ -179,7 +179,6 @@
 		05E6BA3824CCD79500ACFB35 /* OEThreadProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OEThreadProxy.m; sourceTree = "<group>"; };
 		05E6BA3924CCD79600ACFB35 /* OELogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OELogging.h; sourceTree = "<group>"; };
 		05E6BA5424CCD9A000ACFB35 /* OpenEmuShaders.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OpenEmuShaders.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		05E6BA5824CCDF1200ACFB35 /* OpenEmuKit_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenEmuKit_Prefix.pch; sourceTree = "<group>"; };
 		05EA2F2124FFD16B00569EBA /* OEIntegralWindowResizingDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OEIntegralWindowResizingDelegate.swift; sourceTree = "<group>"; };
 		05ED1CF8259D1FB200A2D400 /* FileManager+ExtendedAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+ExtendedAttributes.swift"; sourceTree = "<group>"; };
 		05ED1CFB259D43E800A2D400 /* LaunchControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchControl.swift; sourceTree = "<group>"; };
@@ -313,7 +312,6 @@
 				050A9A0E24F9B36400321847 /* Module */,
 				050A9A0A24F9B29300321847 /* OpenEmuKitPrivate */,
 				05E695C924CCD32900ACFB35 /* Classes */,
-				05E6BA5724CCDEEE00ACFB35 /* Other Sources */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -440,14 +438,6 @@
 				0553DE2D27B5B83F0085512F /* String+Extensions.swift */,
 			);
 			name = Utilities;
-			sourceTree = "<group>";
-		};
-		05E6BA5724CCDEEE00ACFB35 /* Other Sources */ = {
-			isa = PBXGroup;
-			children = (
-				05E6BA5824CCDF1200ACFB35 /* OpenEmuKit_Prefix.pch */,
-			);
-			name = "Other Sources";
 			sourceTree = "<group>";
 		};
 		05E6BA5924CCDFB200ACFB35 /* Shaders */ = {
@@ -867,7 +857,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../OpenEmu";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Source/OpenEmuKit_Prefix.pch;
 				INFOPLIST_FILE = OpenEmuKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -898,7 +887,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../OpenEmu";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Source/OpenEmuKit_Prefix.pch;
 				INFOPLIST_FILE = OpenEmuKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
