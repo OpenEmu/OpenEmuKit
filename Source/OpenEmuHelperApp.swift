@@ -47,6 +47,7 @@ extension OSLog {
     
     // Video
     var _gameRenderer: GameRenderer!
+    var _openGLGameRenderer: OpenGLGameRenderer?
     var _surface: CoreVideoTexture!
     
     // OE stuff
@@ -141,7 +142,7 @@ extension OSLog {
         _screenshot     = Screenshot(device: _device)
         
         updateScreenSize()
-        updateGameRenderer()
+        setupGameRenderer()
         setupCVBuffer()
         setupRemoteLayer()
         if let _shader = _shader {
@@ -158,7 +159,7 @@ extension OSLog {
         _previousScreenRect = gameCore.screenRect
     }
     
-    private func updateGameRenderer() {
+    private func setupGameRenderer() {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         defer { CATransaction.commit() }
@@ -172,19 +173,32 @@ extension OSLog {
         let rendering = gameCore.gameCoreRendering
         switch rendering {
         case .rendering2DVideo:
-            _gameRenderer = MTLGameRenderer(withFilterChain: _filterChain, gameCore: gameCore)
+            _gameRenderer = setup2dVideo()
             
         case .renderingOpenGL2Video, .renderingOpenGL3Video:
-            _surface = CoreVideoTexture(metalPixelFormat: .bgra8Unorm)
-            _surface.metalDevice = _device
+            _openGLGameRenderer = setupOpenGLVideo()
+            _gameRenderer       = _openGLGameRenderer
             
-            if rendering == .renderingOpenGL2Video {
-                _gameRenderer = OpenGL2GameRenderer(withInteropTexture: _surface, gameCore: gameCore)
-            } else {
-                _gameRenderer = OpenGL3GameRenderer(withInteropTexture: _surface, gameCore: gameCore)
-            }
         default:
             fatalError("Rendering API \(rendering) not supported")
+        }
+    }
+    
+    private func setup2dVideo() -> GameRenderer {
+        MTLGameRenderer(withFilterChain: _filterChain, gameCore: gameCore)
+    }
+    
+    private func setupOpenGLVideo() -> OpenGLGameRenderer {
+        precondition(gameCore.gameCoreRendering == .renderingOpenGL2Video || gameCore.gameCoreRendering == .renderingOpenGL3Video)
+        _surface = CoreVideoTexture(metalPixelFormat: .bgra8Unorm)
+        _surface.metalDevice = _device
+        
+        if gameCore.gameCoreRendering == .renderingOpenGL2Video {
+            os_log(.debug, log: .display, "Using GL 2.x renderer")
+            return OpenGL2GameRenderer(withInteropTexture: _surface, gameCore: gameCore)
+        } else {
+            os_log(.debug, log: .display, "Using GL 3.x renderer")
+            return OpenGL3GameRenderer(withInteropTexture: _surface, gameCore: gameCore)
         }
     }
     
@@ -570,19 +584,19 @@ extension OSLog {
 
 @objc extension OpenEmuHelperApp: OERenderDelegate {
     public func presentDoubleBufferedFBO() {
-        _gameRenderer.presentDoubleBufferedFBO()
+        _openGLGameRenderer?.presentDoubleBufferedFBO()
     }
     
     public func willRenderFrameOnAlternateThread() {
-        _gameRenderer.willRenderFrameOnAlternateThread()
+        _openGLGameRenderer?.willRenderFrameOnAlternateThread()
     }
     
     public func didRenderFrameOnAlternateThread() {
-        _gameRenderer.didRenderFrameOnAlternateThread()
+        _openGLGameRenderer?.didRenderFrameOnAlternateThread()
     }
     
     public var presentationFramebuffer: Any? {
-        _gameRenderer.presentationFramebuffer
+        _openGLGameRenderer?.presentationFramebuffer
     }
     
     public func willExecute() {

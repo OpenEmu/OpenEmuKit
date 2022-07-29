@@ -58,6 +58,7 @@
 		05B0781B273882C600F1E302 /* GameHelperMetalLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B0781A273882C600F1E302 /* GameHelperMetalLayer.swift */; };
 		05C40F8826F69B6F0072B722 /* ShaderParamValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C40F8726F69B6F0072B722 /* ShaderParamValue.swift */; };
 		05C40F8A26F6A72F0072B722 /* ApproximatelyEqual.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C40F8926F6A72F0072B722 /* ApproximatelyEqual.swift */; };
+		05D53292289330FF004DC253 /* OpenGLGameRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D53291289330FF004DC253 /* OpenGLGameRenderer.swift */; };
 		05D828D524E9881E00BB975E /* OEXPCMatchMaking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D828D424E9881E00BB975E /* OEXPCMatchMaking.swift */; };
 		05D828DB24E98A8E00BB975E /* OEXPCMatchMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D828DA24E98A8E00BB975E /* OEXPCMatchMaker.swift */; };
 		05E6958424CA5D4200ACFB35 /* OpenEmuKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E6958224CA5D4200ACFB35 /* OpenEmuKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -163,6 +164,7 @@
 		05B0781A273882C600F1E302 /* GameHelperMetalLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameHelperMetalLayer.swift; sourceTree = "<group>"; };
 		05C40F8726F69B6F0072B722 /* ShaderParamValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderParamValue.swift; sourceTree = "<group>"; };
 		05C40F8926F6A72F0072B722 /* ApproximatelyEqual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApproximatelyEqual.swift; sourceTree = "<group>"; };
+		05D53291289330FF004DC253 /* OpenGLGameRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenGLGameRenderer.swift; sourceTree = "<group>"; };
 		05D828D424E9881E00BB975E /* OEXPCMatchMaking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OEXPCMatchMaking.swift; sourceTree = "<group>"; };
 		05D828DA24E98A8E00BB975E /* OEXPCMatchMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OEXPCMatchMaker.swift; sourceTree = "<group>"; };
 		05E6957F24CA5D4200ACFB35 /* OpenEmuKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OpenEmuKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -343,6 +345,8 @@
 			children = (
 				0572A4122878D76C00AC32F8 /* GameRenderer.swift */,
 				05796B2428723C750007E415 /* MTLGameRenderer.swift */,
+				05796B2A28738FFE0007E415 /* CoreVideoTexture.swift */,
+				05D53291289330FF004DC253 /* OpenGLGameRenderer.swift */,
 				057E7FEE28762D4700BC1C04 /* OpenGL2GameRenderer.swift */,
 				057E7FF028762D5400BC1C04 /* OpenGL3GameRenderer.swift */,
 			);
@@ -352,7 +356,6 @@
 		05E6B9FF24CCD47400ACFB35 /* Video */ = {
 			isa = PBXGroup;
 			children = (
-				05796B2A28738FFE0007E415 /* CoreVideoTexture.swift */,
 				05B0781A273882C600F1E302 /* GameHelperMetalLayer.swift */,
 			);
 			name = Video;
@@ -642,6 +645,7 @@
 				05201D652777C8CC0028CBE0 /* ShaderPresetStore.swift in Sources */,
 				0547C20C2707F60500D386D3 /* Crypto.swift in Sources */,
 				0547C210270A61C200D386D3 /* DataProtocol+HexString.swift in Sources */,
+				05D53292289330FF004DC253 /* OpenGLGameRenderer.swift in Sources */,
 				05796B2B28738FFE0007E415 /* CoreVideoTexture.swift in Sources */,
 				05E6BA3E24CCD79600ACFB35 /* OEThreadProxy.m in Sources */,
 				05E6BA3D24CCD79600ACFB35 /* OELogging.m in Sources */,

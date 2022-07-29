@@ -30,7 +30,6 @@ import OpenGL
 final class MTLGameRenderer: GameRenderer {
     var surfaceSize: OEIntSize { gameCore.bufferSize }
     let gameCore: OEGameCore
-    var presentationFramebuffer: Any?
     
     var buffer: PixelBuffer!
     
@@ -84,9 +83,6 @@ final class MTLGameRenderer: GameRenderer {
     }
     
     func didExecuteFrame() { }
-    func presentDoubleBufferedFBO() { }
-    func willRenderFrameOnAlternateThread() { }
-    func didRenderFrameOnAlternateThread() { }
     func suspendFPSLimiting() { }
     func resumeFPSLimiting() { }
     
@@ -119,5 +115,4 @@ final class MTLGameRenderer: GameRenderer {
         
         return nil
     }
-    
 }

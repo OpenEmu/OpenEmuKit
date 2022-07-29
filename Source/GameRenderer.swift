@@ -29,9 +29,10 @@ protocol GameRenderer {
     var gameCore: OEGameCore { get }
     var surfaceSize: OEIntSize { get }
     
-    var canChangeBufferSize: Bool { get }
+    /// The current rendered texture that may be displayed or filtered
+    // var renderedTexture: MTLTexture { get }
     
-    var presentationFramebuffer: Any? { get }
+    var canChangeBufferSize: Bool { get }
     
     /// Called when the gameCore or image render dimensions have changed.
     func update()
@@ -41,10 +42,14 @@ protocol GameRenderer {
     func willExecuteFrame()
     func didExecuteFrame()
     
+    func suspendFPSLimiting()
+    func resumeFPSLimiting()
+}
+
+protocol OpenGLGameRenderer: GameRenderer {
+    var presentationFramebuffer: Any? { get }
+
     func presentDoubleBufferedFBO()
     func willRenderFrameOnAlternateThread()
     func didRenderFrameOnAlternateThread()
-    
-    func suspendFPSLimiting()
-    func resumeFPSLimiting()
 }
