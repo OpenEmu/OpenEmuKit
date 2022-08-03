@@ -32,19 +32,16 @@ import AudioToolbox
     case displayAlways
 }
 
-/**
- * A protocol that defines the behaviour required to control an emulator core.
- *
- * A host application obtains an instance of @c OEGameCoreHelper in order
- * to communicate with the core, which may be running in another thread or
- * a remote process.
- */
+/// A protocol that defines the behaviour required to control an emulator core.
+///
+/// A host application obtains an instance of @c OEGameCoreHelper in order
+/// to communicate with the core, which may be running in another thread or
+/// a remote process.
 @objc(OEGameCoreHelper) public protocol OEGameCoreHelper: NSObjectProtocol {
-    
-    /**
-     * Adjust the output volume of the core.
-     * @param value The new volume level, from @c [0,1.0]
-     */
+
+    /// Adjust the output volume of the core.
+    ///
+    /// - Parameter value: The new volume level, from @c [0,1.0]
     func setVolume(_ value: Float)
     
     /**
@@ -66,8 +63,7 @@ import AudioToolbox
     func setOutputBounds(_ rect: NSRect)
     func setBackingScaleFactor(_ newBackingScaleFactor: CGFloat)
     
-    /** Controls whether the renderer should use a variable refresh rate.
-     */
+    /// Controls whether the renderer should use a variable refresh rate.
     func setAdaptiveSyncEnabled(_ enabled: Bool)
     func setShaderURL(_ url: URL, parameters: [String: NSNumber]?, completionHandler block: @escaping (Error?) -> Void)
     func setShaderParameterValue(_ value: CGFloat, forKey key: String)
@@ -88,13 +84,9 @@ import AudioToolbox
     func systemBindingsDidSetEvent(_ event: OEHIDEvent, forBinding bindingDescription: OEBindingDescription, playerNumber: UInt)
     func systemBindingsDidUnsetEvent(_ event: OEHIDEvent, forBinding bindingDescription: OEBindingDescription, playerNumber: UInt)
     
-    /**
-     * Capture an image of the core's video display buffer, which includes all shader effects.
-     */
+    /// Capture an image of the core's video display buffer, which includes all shader effects.
     func captureOutputImage(completionHandler block: @escaping (NSBitmapImageRep) -> Void)
     
-    /**
-     * Capture an image of the core's raw video display buffer with no effects.
-     */
+    /// Capture an image of the core's raw video display buffer with no effects.
     func captureSourceImage(completionHandler block: @escaping (NSBitmapImageRep) -> Void)
 }

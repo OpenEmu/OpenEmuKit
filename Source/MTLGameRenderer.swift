@@ -30,51 +30,68 @@ import OpenGL
 final class MTLGameRenderer: GameRenderer {
     var surfaceSize: OEIntSize { gameCore.bufferSize }
     let gameCore: OEGameCore
+    private(set) var renderTexture: MTLTexture?
     
-    var buffer: PixelBuffer!
+    private let device: MTLDevice
+    private let converter: MTLPixelConverter
+    private var buffer: PixelBuffer!
+    private var texture: MTLTexture!
     
-    private let filterChain: FilterChain
-    
-    init(withFilterChain filterChain: FilterChain, gameCore: OEGameCore) {
-        self.filterChain = filterChain
+    init(withDevice device: MTLDevice, gameCore: OEGameCore) throws {
+        self.device      = device
+        self.converter   = try .init(device: device)
         self.gameCore    = gameCore
     }
     
     func update() {
         precondition(gameCore.gameCoreRendering == .rendering2DVideo, "Metal only supports 2D rendering")
-        setup2D()
-    }
-    
-    private func setup2D() {
+
         let pixelFormat = gameCore.pixelFormat
         let pixelType   = gameCore.pixelType
         guard let pf = glToRPixelFormat(pixelFormat: pixelFormat, pixelType: pixelType) else {
             fatalError("Invalid pixel format")
         }
-        
+
+        // bufferSize is fixed for 2D, so doesn't need to be reallocated.
+        if buffer == nil {
+            let bufferSize  = gameCore.bufferSize
+            let bytesPerRow = gameCore.bytesPerRow
+
+            buffer = PixelBuffer.makeBuffer(withDevice: device,
+                    converter: converter,
+                    format: pf,
+                    height: Int(bufferSize.height),
+                    bytesPerRow: bytesPerRow)
+
+            let buf = UnsafeMutableRawPointer(mutating: gameCore.getVideoBuffer(withHint: buffer.contents))
+            if buf != buffer.contents {
+                buffer = PixelBuffer.makeBuffer(withDevice: device,
+                        converter: converter,
+                        format: pf,
+                        height: Int(bufferSize.height),
+                        bytesPerRow: bytesPerRow,
+                        bytes: buf)
+            }
+        }
+
+        guard let buffer = buffer else {
+            fatalError("buffer == nil")
+        }
+
         let rect       = gameCore.screenRect
         let sourceRect = CGRect(x: CGFloat(rect.origin.x), y: CGFloat(rect.origin.y),
-                                width: CGFloat(rect.size.width), height: CGFloat(rect.size.height))
-        let aspectSize = CGSize(width: CGFloat(gameCore.aspectSize.width),
-                                height: CGFloat(gameCore.aspectSize.height))
-        filterChain.setSourceRect(sourceRect, aspect: aspectSize)
-        
-        // bufferSize is fixed for 2D, so doesn't need to be reallocated.
-        if buffer != nil { return }
-        
-        let bufferSize  = gameCore.bufferSize
-        let bytesPerRow = gameCore.bytesPerRow
-        
-        buffer = filterChain.newBuffer(withFormat: pf, height: UInt(bufferSize.height), bytesPerRow: UInt(bytesPerRow))
-        let buf = UnsafeMutableRawPointer(mutating: gameCore.getVideoBuffer(withHint: buffer.contents))
-        if buf != buffer.contents {
-            buffer = filterChain.newBuffer(withFormat: pf,
-                                           height: UInt(bufferSize.height),
-                                           bytesPerRow: UInt(bytesPerRow),
-                                           bytes: buf)
-        }
+                width: CGFloat(rect.size.width), height: CGFloat(rect.size.height))
+        buffer.outputRect = sourceRect
+
+        let td = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .bgra8Unorm,
+                width: Int(sourceRect.width),
+                height: Int(sourceRect.height),
+                mipmapped: false)
+        td.storageMode = .private
+        td.usage = [.shaderRead, .shaderWrite]
+        renderTexture = device.makeTexture(descriptor: td)
     }
-    
+
     var canChangeBufferSize: Bool { true }
     
     func willExecuteFrame() {
@@ -83,6 +100,15 @@ final class MTLGameRenderer: GameRenderer {
     }
     
     func didExecuteFrame() { }
+    
+    func prepareFrameForRender(commandBuffer: MTLCommandBuffer) -> MTLTexture? {
+        guard let renderTexture = renderTexture else {
+            return nil
+        }
+        buffer.prepare(withCommandBuffer: commandBuffer, texture: renderTexture)
+        return renderTexture
+    }
+    
     func suspendFPSLimiting() { }
     func resumeFPSLimiting() { }
     

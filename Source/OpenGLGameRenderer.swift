@@ -47,14 +47,14 @@ class BaseOpenGLGameRenderer: OpenGLGameRenderer {
     
     // Alternate-thread rendering (3D mode)
     var alternateContext: CGLContextObj?
-    var renderingThreadCanProceed   = DispatchSemaphore(value: 0)
-    var executeThreadCanProceed     = DispatchSemaphore(value: 0)
+    var renderingThreadCanProceed = DispatchSemaphore(value: 0)
+    var executeThreadCanProceed = DispatchSemaphore(value: 0)
     
     var isFPSLimiting = ManagedAtomic(0)
     
     init(withInteropTexture texture: CoreVideoTexture, gameCore: OEGameCore) {
-        self.texture    = texture
-        self.gameCore   = gameCore
+        self.texture = texture
+        self.gameCore = gameCore
     }
     
     deinit {
@@ -74,6 +74,7 @@ class BaseOpenGLGameRenderer: OpenGLGameRenderer {
     }
     
     // 3D games can only change buffer size.
+    
     // We'll be in trouble if a game core does software vector drawing.
     // TODO: Test alternate threads - might need to call glViewport() again on that thread.
     // TODO: Implement for double buffered FBO - need to reallocate alternateFBO.
@@ -198,7 +199,11 @@ class BaseOpenGLGameRenderer: OpenGLGameRenderer {
         bindFBO(isDoubleBufferFBOMode ? alternateFBO : coreVideoFBO)
     }
     
-    func didExecuteFrame() { }
+    func didExecuteFrame() {}
+    
+    func prepareFrameForRender(commandBuffer: MTLCommandBuffer) -> MTLTexture? {
+        texture.metalTexture
+    }
     
     func willRenderFrameOnAlternateThread() {
         CGLSetCurrentContext(alternateContext)

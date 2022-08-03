@@ -24,13 +24,11 @@
 
 import Foundation
 import OpenEmuBase
+import Metal
 
 protocol GameRenderer {
     var gameCore: OEGameCore { get }
     var surfaceSize: OEIntSize { get }
-    
-    /// The current rendered texture that may be displayed or filtered
-    // var renderedTexture: MTLTexture { get }
     
     var canChangeBufferSize: Bool { get }
     
@@ -41,6 +39,10 @@ protocol GameRenderer {
     
     func willExecuteFrame()
     func didExecuteFrame()
+    
+    /// Called after the core has executed the next frame and prior filters being applied to the ``renderTexture``.
+    /// - Returns: A texture containing the core's output in ``Metal.MTLPixelFormat.bgra8Unorm`` format.
+    func prepareFrameForRender(commandBuffer: MTLCommandBuffer) -> MTLTexture?
     
     func suspendFPSLimiting()
     func resumeFPSLimiting()

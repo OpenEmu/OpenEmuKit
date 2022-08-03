@@ -49,6 +49,7 @@ extension OSLog {
     var _gameRenderer: GameRenderer!
     var _openGLGameRenderer: OpenGLGameRenderer?
     var _surface: CoreVideoTexture!
+    var flipVertically: Bool = false
     
     // OE stuff
     var _gameController: OEGameCoreController!
@@ -185,13 +186,16 @@ extension OSLog {
     }
     
     private func setup2dVideo() -> GameRenderer {
-        MTLGameRenderer(withFilterChain: _filterChain, gameCore: gameCore)
+        do {
+            return try MTLGameRenderer(withDevice: _device, gameCore: gameCore)
+        } catch {
+            fatalError("Unable to create MTLGameRenderer")
+        }
     }
     
     private func setupOpenGLVideo() -> OpenGLGameRenderer {
         precondition(gameCore.gameCoreRendering == .renderingOpenGL2Video || gameCore.gameCoreRendering == .renderingOpenGL3Video)
-        _surface = CoreVideoTexture(metalPixelFormat: .bgra8Unorm)
-        _surface.metalDevice = _device
+        _surface = CoreVideoTexture(device: _device, metalPixelFormat: .bgra8Unorm)
         
         if gameCore.gameCoreRendering == .renderingOpenGL2Video {
             os_log(.debug, log: .display, "Using GL 2.x renderer")
@@ -208,9 +212,8 @@ extension OSLog {
         
         if gameCore.gameCoreRendering != .rendering2DVideo {
             _surface.size = size
+            flipVertically = _surface.metalTextureIsFlippedVertically
             os_log(.debug, log: .display, "Updated GL render surface size to %{public}@", NSStringFromOEIntSize(surfaceSize))
-            _filterChain.sourceTexture          = _surface.metalTexture
-            _filterChain.sourceTextureIsFlipped = _surface.metalTextureIsFlipped
         } else {
             os_log(.debug, log: .display, "Set 2D buffer size to %{public}@", NSStringFromOEIntSize(surfaceSize))
         }
@@ -562,20 +565,23 @@ extension OSLog {
     // MARK: - OEGameCoreOwner image capture
     
     public func captureOutputImage(completionHandler block: @escaping (NSBitmapImageRep) -> Void) {
+        let gr      = _gameRenderer!
         let ss      = _screenshot!
         let chain   = _filterChain!
+        let flipped = flipVertically
         gameCore.perform {
-            let imgRef = ss.getCGImageFromOutputWithFilterChain(chain)
+            let imgRef = ss.getCGImageFromOutput(gameRenderer: gr, filterChain: chain, flippedVertically: flipped)
             let img    = NSBitmapImageRep(cgImage: imgRef)
             block(img)
         }
     }
     
     public func captureSourceImage(completionHandler block: @escaping (NSBitmapImageRep) -> Void) {
+        let gr      = _gameRenderer!
         let ss      = _screenshot!
-        let chain   = _filterChain!
+        let flipped = flipVertically
         gameCore.perform {
-            let imgRef = ss.getCGImageFromSourceWithFilterChain(chain)
+            let imgRef = ss.getCGImageFromGameRenderer(gr, flippedVertically: flipped)
             let img    = NSBitmapImageRep(cgImage: imgRef)
             block(img)
         }
@@ -731,7 +737,9 @@ extension OSLog {
             guard let offscreenCB = _commandQueue.makeCommandBuffer() else { return }
             offscreenCB.label = "offscreen"
             offscreenCB.enqueue()
-            _filterChain.renderOffscreenPassesWithCommandBuffer(offscreenCB)
+            if let sourceTexture = _gameRenderer.prepareFrameForRender(commandBuffer: offscreenCB) {
+                _filterChain.renderOffscreenPasses(sourceTexture: sourceTexture, commandBuffer: offscreenCB)
+            }
             offscreenCB.commit()
             
             guard let drawable = _videoLayer.nextDrawable() else { return }
@@ -749,7 +757,7 @@ extension OSLog {
             else { return }
             finalCB.label = "final"
             
-            _filterChain.renderFinalPass(withCommandEncoder: rce)
+            _filterChain.renderFinalPass(withCommandEncoder: rce, flipVertically: flipVertically)
             rce.endEncoding()
             
             skipped = nil

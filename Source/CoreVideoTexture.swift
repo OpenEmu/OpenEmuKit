@@ -28,21 +28,22 @@ import CoreVideo
 
 // source: https://developer.apple.com/documentation/metal/mixing_metal_and_opengl_rendering_in_a_view
 
-@objc public class CoreVideoTexture: NSObject {
+final class CoreVideoTexture {
     let mtlPixelFormat: MTLPixelFormat
     let cvPixelFormat: OSType
+    let metalDevice: MTLDevice
     
-    @objc public init(metalPixelFormat mtlPixelFormat: MTLPixelFormat) {
+    public init(device: MTLDevice, metalPixelFormat mtlPixelFormat: MTLPixelFormat) {
         guard let cv = Self.metalToCVMap[mtlPixelFormat]
         else { fatalError("Unsupported Metal pixel format") }
+        self.metalDevice    = device
         self.mtlPixelFormat = mtlPixelFormat
         self.cvPixelFormat  = cv
-        super.init()
     }
     
     var cvPixelBuffer: CVPixelBuffer?
     
-    @objc public var size: CGSize = .zero {
+    var size: CGSize = .zero {
         didSet {
             let cvBufferProperties = [
                 kCVPixelBufferOpenGLCompatibilityKey: true,
@@ -61,34 +62,24 @@ import CoreVideo
                 createGLTexture(context: openGLContext)
             }
             
-            if let metalDevice = metalDevice {
-                createMetalTexture(device: metalDevice)
-            }
+            createMetalTexture(device: metalDevice)
         }
     }
     
     // MARK: - Metal resources
     
-    @objc public var metalDevice: MTLDevice? {
-        didSet {
-            if let metalDevice = metalDevice {
-                createMetalTexture(device: metalDevice)
-            }
-        }
-    }
-    
-    @objc public var metalTexture: MTLTexture?
+    var metalTexture: MTLTexture?
     
     var cvMTLTextureCache: CVMetalTextureCache?
     var cvMTLTexture: CVMetalTexture?
     
-    func releaseMetalTexture() {
+    private func releaseMetalTexture() {
         metalTexture        = nil
         cvMTLTexture        = nil
         cvMTLTextureCache   = nil
     }
     
-    func createMetalTexture(device: MTLDevice) {
+    private func createMetalTexture(device: MTLDevice) {
         releaseMetalTexture()
         guard size != .zero else { return }
         
@@ -125,7 +116,7 @@ import CoreVideo
         }
     }
     
-    @objc public var metalTextureIsFlipped: Bool {
+    var metalTextureIsFlippedVertically: Bool {
         if let cvMTLTexture = cvMTLTexture {
             return CVMetalTextureIsFlipped(cvMTLTexture)
         }
@@ -134,7 +125,7 @@ import CoreVideo
     
     // MARK: - OpenGL resources
     
-    @objc public var openGLContext: CGLContextObj? {
+    var openGLContext: CGLContextObj? {
         didSet {
             if let openGLContext = openGLContext {
                 cglPixelFormat = CGLGetPixelFormat(openGLContext)
@@ -142,19 +133,19 @@ import CoreVideo
             }
         }
     }
-    @objc public var openGLTexture: GLuint = 0
+    var openGLTexture: GLuint = 0
     
     var cvGLTextureCache: CVOpenGLTextureCache?
     var cvGLTexture: CVOpenGLTexture?
     var cglPixelFormat: CGLPixelFormatObj?
     
-    func releaseGLTexture() {
+    private func releaseGLTexture() {
         openGLTexture       = 0
         cvGLTexture         = nil
         cvGLTextureCache    = nil
     }
     
-    func createGLTexture(context: CGLContextObj) {
+    private func createGLTexture(context: CGLContextObj) {
         releaseGLTexture()
         
         guard size != .zero else { return }
@@ -190,7 +181,7 @@ import CoreVideo
     
     // source: https://developer.apple.com/documentation/metal/mixing_metal_and_opengl_rendering_in_a_view
     
-    static let metalToCVMap: [MTLPixelFormat: OSType] = [
+    private static let metalToCVMap: [MTLPixelFormat: OSType] = [
         .bgra8Unorm: kCVPixelFormatType_32BGRA,
         .bgr10a2Unorm: kCVPixelFormatType_ARGB2101010LEPacked,
         .bgra8Unorm_srgb: kCVPixelFormatType_32BGRA,
