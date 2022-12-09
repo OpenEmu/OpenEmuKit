@@ -42,11 +42,11 @@ import OpenEmuShaders
         self.index = index
         name       = p.name
         desc       = p.desc
-        value      = Double(p.initial) as NSNumber
-        initial    = Double(p.initial) as NSNumber
-        minimum    = Double(p.minimum) as NSNumber
-        maximum    = Double(p.maximum) as NSNumber
-        step       = Double(p.step)    as NSNumber
+        value      = p.initial as NSNumber
+        initial    = p.initial as NSNumber
+        minimum    = p.minimum as NSNumber
+        maximum    = p.maximum as NSNumber
+        step       = p.step    as NSNumber
     }
     
     public func reset() {
