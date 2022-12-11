@@ -432,7 +432,7 @@ extension OSLog {
         
         if let parameters = parameters, let filter = _filterChain {
             for (key, val) in parameters {
-                filter.setValue(CGFloat(val), forParameterName: key)
+                filter.setValue(val, forParameterName: key)
             }
         }
     }
