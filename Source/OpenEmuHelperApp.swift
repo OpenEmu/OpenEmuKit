@@ -858,6 +858,9 @@ extension OSLog {
     }
     
     public func fastForwardGameplay(_ enable: Bool) {
+        // Required so that _videoLayer.nextDrawable() vends frames faster than the display refresh rate
+        // Fixes: https://github.com/OpenEmu/OpenEmu/issues/4780
+        _videoLayer.displaySyncEnabled = !enable
         gameCoreOwner.fastForwardGameplay(enable)
     }
     
