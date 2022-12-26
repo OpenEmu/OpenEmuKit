@@ -1,4 +1,4 @@
-// Copyright (c) 2021, OpenEmu Team
+// Copyright (c) 2022, OpenEmu Team
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -23,28 +23,14 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import Foundation
+import AVFoundation
 
-private let charA = UInt8(ascii: "a")
-private let char0 = UInt8(ascii: "0")
-
-private func itoh(_ value: UInt8) -> UInt8 {
-    assert(value <= 0xF)
-    return (value > 9) ? (charA + value - 10) : (char0 + value)
-}
-
-extension DataProtocol {
-    /// Returns a hexidecimal encoding of the receiver.
-    var hexString: String {
-        let hexLen = self.count * 2
-        let ptr = UnsafeMutablePointer<UInt8>.allocate(capacity: hexLen)
-        var offset = 0
-        
-        for i in self {
-            ptr[offset    ] = itoh((i >> 4) & 0xF)
-            ptr[offset + 1] = itoh(i & 0xF)
-            offset += 2
-        }
-        
-        return String(bytesNoCopy: ptr, length: hexLen, encoding: .utf8, freeWhenDone: true)!
-    }
+protocol GameAudioProtocol {
+    var volume: Float { get set }
+    func audioSampleRateDidChange()
+    func startAudio()
+    func stopAudio()
+    func pauseAudio()
+    func resumeAudio()
+    func setOutputDeviceID(_ newOutputDeviceID: AudioDeviceID)
 }

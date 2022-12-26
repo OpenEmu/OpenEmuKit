@@ -36,6 +36,8 @@ extension NSEvent {
         return Publisher(scope: scope, matching: mask)
     }
     
+    // swiftlint:disable nesting
+    
     public struct Publisher: Combine.Publisher {
         public typealias Output = NSEvent
         public typealias Failure = Never

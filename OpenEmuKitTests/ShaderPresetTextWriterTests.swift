@@ -55,7 +55,7 @@ class ShaderPresetTextWriterTests: XCTestCase {
     
     func testWriteNoParametersAndOptions() throws {
         let got = try w.write(preset: .init(name: "foo", shader: "CRT", parameters: [:]), options: [])
-        expect(got) == #""#
+        expect(got.isEmpty) == true
     }
     
     // MARK: - signed

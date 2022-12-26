@@ -55,7 +55,7 @@ extension OSLog {
     var _gameController: OEGameCoreController!
     var _systemController: OESystemController!
     var _systemResponder: OESystemResponder!
-    var _gameAudio: GameAudio!
+    var _gameAudio: GameAudioProtocol!
     
     // initial shader and parameters
     var _shader: URL?
@@ -127,10 +127,17 @@ extension OSLog {
     }
     
     private func setupGameCoreAudioAndVideo() {
-        guard let gameCore = gameCore else { fatalError("Expected gameCore to be set") }
+        guard let gameCore else { fatalError("Expected gameCore to be set") }
         
         // 1. Audio
-        _gameAudio = GameAudio(withCore: gameCore)
+        if #available(macOS 12.0, *) {
+            os_log(.info, log: .helper, "Using GameAudio2 driver")
+            _gameAudio = GameAudio2(withCore: gameCore)
+        } else {
+            os_log(.info, log: .helper, "Using GameAudio driver")
+            _gameAudio = GameAudio(withCore: gameCore)
+        }
+        
         _gameAudio.volume = 1.0
         
         // 2. Video
@@ -459,7 +466,6 @@ extension OSLog {
     
     public func stopEmulation(completionHandler handler: @escaping () -> Void) {
         guard let gameCore = gameCore else { return }
-        self.gameCore = nil
         
         gameCore.stopEmulation {
             self._gameAudio.stopAudio()
@@ -467,6 +473,7 @@ extension OSLog {
             gameCore.audioDelegate = nil
             self.gameCoreOwner = nil
             self._gameAudio = nil
+            self.gameCore = nil
             
             handler()
         }

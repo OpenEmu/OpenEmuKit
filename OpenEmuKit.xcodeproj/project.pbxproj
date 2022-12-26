@@ -56,6 +56,8 @@
 		05B078172735DA2300F1E302 /* SystemShaderPresetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B078162735DA2300F1E302 /* SystemShaderPresetStore.swift */; };
 		05B0781927371B2200F1E302 /* GameAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B0781827371B2200F1E302 /* GameAudio.swift */; };
 		05B0781B273882C600F1E302 /* GameHelperMetalLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B0781A273882C600F1E302 /* GameHelperMetalLayer.swift */; };
+		05BC69C729590DC400D2C38F /* GameAudio2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BC69C629590DC400D2C38F /* GameAudio2.swift */; };
+		05BC69C929590E3800D2C38F /* GameAudioProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BC69C829590E3800D2C38F /* GameAudioProtocol.swift */; };
 		05C40F8826F69B6F0072B722 /* ShaderParamValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C40F8726F69B6F0072B722 /* ShaderParamValue.swift */; };
 		05C40F8A26F6A72F0072B722 /* ApproximatelyEqual.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C40F8926F6A72F0072B722 /* ApproximatelyEqual.swift */; };
 		05D53292289330FF004DC253 /* OpenGLGameRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D53291289330FF004DC253 /* OpenGLGameRenderer.swift */; };
@@ -163,6 +165,8 @@
 		05B078162735DA2300F1E302 /* SystemShaderPresetStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemShaderPresetStore.swift; sourceTree = "<group>"; };
 		05B0781827371B2200F1E302 /* GameAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameAudio.swift; sourceTree = "<group>"; };
 		05B0781A273882C600F1E302 /* GameHelperMetalLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameHelperMetalLayer.swift; sourceTree = "<group>"; };
+		05BC69C629590DC400D2C38F /* GameAudio2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameAudio2.swift; sourceTree = "<group>"; };
+		05BC69C829590E3800D2C38F /* GameAudioProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameAudioProtocol.swift; sourceTree = "<group>"; };
 		05C40F8726F69B6F0072B722 /* ShaderParamValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderParamValue.swift; sourceTree = "<group>"; };
 		05C40F8926F6A72F0072B722 /* ApproximatelyEqual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApproximatelyEqual.swift; sourceTree = "<group>"; };
 		05D53291289330FF004DC253 /* OpenGLGameRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenGLGameRenderer.swift; sourceTree = "<group>"; };
@@ -418,6 +422,8 @@
 			children = (
 				055F774228740EF700BBFFF9 /* AudioUnit.swift */,
 				05B0781827371B2200F1E302 /* GameAudio.swift */,
+				05BC69C629590DC400D2C38F /* GameAudio2.swift */,
+				05BC69C829590E3800D2C38F /* GameAudioProtocol.swift */,
 			);
 			name = Audio;
 			sourceTree = "<group>";
@@ -679,6 +685,7 @@
 				05E6BA3024CCD77600ACFB35 /* OEGameLayerView.swift in Sources */,
 				05201D6F277D316E0028CBE0 /* UserDefaultsPresetStorage.swift in Sources */,
 				0572A424287B89CD00AC32F8 /* OEGameStartupInfo.swift in Sources */,
+				05BC69C929590E3800D2C38F /* GameAudioProtocol.swift in Sources */,
 				05E6BA1E24CCD71D00ACFB35 /* OEPlugin.swift in Sources */,
 				05E6BA2224CCD71D00ACFB35 /* OECorePlugin.swift in Sources */,
 				0572A4132878D76C00AC32F8 /* GameRenderer.swift in Sources */,
@@ -686,6 +693,7 @@
 				054A2C0E278CDA7800A2F241 /* KeyValueScanner.m in Sources */,
 				05D828DB24E98A8E00BB975E /* OEXPCMatchMaker.swift in Sources */,
 				0572A4152878E51C00AC32F8 /* GameCoreManager.swift in Sources */,
+				05BC69C729590DC400D2C38F /* GameAudio2.swift in Sources */,
 				0572A4172878EF3300AC32F8 /* OEThreadGameCoreManager.swift in Sources */,
 				0530C3B32512DF680050F90F /* OEScaledGameLayerView.swift in Sources */,
 				05B078172735DA2300F1E302 /* SystemShaderPresetStore.swift in Sources */,
@@ -781,7 +789,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = XPC_WAIT_FOREVER;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "XPC_WAIT_FOREVER DEBUG";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
