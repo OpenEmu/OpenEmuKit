@@ -130,7 +130,7 @@ extension OSLog {
         guard let gameCore else { fatalError("Expected gameCore to be set") }
         
         // 1. Audio
-        if #available(macOS 12.0, *) {
+        if #available(macOS 11.0, *) {
             os_log(.info, log: .helper, "Using GameAudio2 driver")
             _gameAudio = GameAudio2(withCore: gameCore)
         } else {

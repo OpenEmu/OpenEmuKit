@@ -27,10 +27,10 @@ import AVFoundation
 @_implementationOnly import os
 import OpenEmuBase.OEGameCore
 
-@available(macOS 12.0, *)
+@available(macOS 11.0, iOS 14.0, *)
 private var log = Logger(subsystem: "org.openemu.OpenEmuKit", category: "GameAudio2")
 
-@available(macOS 12.0, *)
+@available(macOS 11.0, iOS 14.0, *)
 final public class GameAudio2: GameAudioProtocol {
     public var volume: Float {
         didSet {
