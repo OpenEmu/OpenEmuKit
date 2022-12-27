@@ -87,7 +87,7 @@ import OpenEmuKitPrivate
                 }
 
                 try helper.load(withStartupInfo: startupInfo)
-                RunLoop.main.perform {
+                DispatchQueue.main.async {
                     handler(nil)
                 }
                 
@@ -96,11 +96,11 @@ import OpenEmuKitPrivate
                 CFRunLoopRun()
                 
                 if let stopHandler = stopHandler {
-                    RunLoop.main.perform(stopHandler)
+                    DispatchQueue.main.async(execute: stopHandler)
                 }
                 notifyGameCoreDidTerminate()
             } catch {
-                RunLoop.main.perform {
+                DispatchQueue.main.async {
                     handler(error)
                 }
             }

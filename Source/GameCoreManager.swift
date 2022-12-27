@@ -74,7 +74,7 @@ public typealias StartupCompletionHandler = (Error?) -> Void
     /// Asynchronously sends the -gameCoreDidTerminate message to the
     /// gameCoreOwner
     func notifyGameCoreDidTerminate() {
-        RunLoop.main.perform { [weak self] in
+        DispatchQueue.main.async { [weak self] in
             self?.gameCoreOwner?.gameCoreDidTerminate?()
         }
     }
@@ -112,7 +112,7 @@ extension GameCoreManager: OEGameCoreHelper {
     public func insertFile(at url: URL, completionHandler block: @escaping (Bool, Error?) -> Void) {
         // we force unwrap, to ensure we panic, as the block will never be called
         gameCoreHelper!.insertFile(at: url) { success, error in
-            RunLoop.main.perform {
+            DispatchQueue.main.async {
                 block(success, error)
             }
         }
@@ -133,7 +133,7 @@ extension GameCoreManager: OEGameCoreHelper {
     public func setShaderURL(_ url: URL, parameters: [String: NSNumber]?, completionHandler block: @escaping (Error?) -> Void) {
         // we force unwrap, to ensure we panic, as the block will never be called
         gameCoreHelper!.setShaderURL(url, parameters: parameters) { error in
-            RunLoop.main.perform {
+            DispatchQueue.main.async {
                 block(error)
             }
         }
@@ -146,7 +146,7 @@ extension GameCoreManager: OEGameCoreHelper {
     public func setupEmulation(completionHandler handler: @escaping (_ screenSize: OEIntSize, _ aspectSize: OEIntSize) -> Void) {
         // we force unwrap, to ensure we panic, as the block will never be called
         gameCoreHelper!.setupEmulation { screenSize, aspectSize in
-            RunLoop.main.perform {
+            DispatchQueue.main.async {
                 handler(screenSize, aspectSize)
             }
         }
@@ -154,19 +154,19 @@ extension GameCoreManager: OEGameCoreHelper {
     
     public func startEmulation(completionHandler handler: @escaping () -> Void) {
         gameCoreHelper!.startEmulation {
-            RunLoop.main.perform(handler)
+            DispatchQueue.main.async(execute: handler)
         }
     }
     
     public func resetEmulation(completionHandler handler: @escaping () -> Void) {
         gameCoreHelper!.resetEmulation {
-            RunLoop.main.perform(handler)
+            DispatchQueue.main.async(execute: handler)
         }
     }
     
     public func stopEmulation(completionHandler handler: @escaping () -> Void) {
         gameCoreHelper!.stopEmulation {
-            RunLoop.main.perform {
+            DispatchQueue.main.async {
                 handler()
                 self.stop()
             }
@@ -175,7 +175,7 @@ extension GameCoreManager: OEGameCoreHelper {
     
     public func saveStateToFile(at fileURL: URL, completionHandler block: @escaping (Bool, Error?) -> Void) {
         gameCoreHelper!.saveStateToFile(at: fileURL) { success, error in
-            RunLoop.main.perform {
+            DispatchQueue.main.async {
                 block(success, error)
             }
         }
@@ -183,7 +183,7 @@ extension GameCoreManager: OEGameCoreHelper {
     
     public func loadStateFromFile(at fileURL: URL, completionHandler block: @escaping (Bool, Error?) -> Void) {
         gameCoreHelper!.loadStateFromFile(at: fileURL) { success, error in
-            RunLoop.main.perform {
+            DispatchQueue.main.async {
                 block(success, error)
             }
         }
@@ -191,7 +191,7 @@ extension GameCoreManager: OEGameCoreHelper {
     
     public func captureOutputImage(completionHandler block: @escaping (NSBitmapImageRep) -> Void) {
         gameCoreHelper!.captureOutputImage { image in
-            RunLoop.main.perform {
+            DispatchQueue.main.async {
                 block(image)
             }
         }
@@ -199,7 +199,7 @@ extension GameCoreManager: OEGameCoreHelper {
     
     public func captureSourceImage(completionHandler block: @escaping (NSBitmapImageRep) -> Void) {
         gameCoreHelper!.captureSourceImage { image in
-            RunLoop.main.perform {
+            DispatchQueue.main.async {
                 block(image)
             }
         }
@@ -235,12 +235,10 @@ extension GameCoreManager: OEGameCoreHelper {
         let done = ManagedAtomic(false)
         
         var res: NSBitmapImageRep?
-        gameCoreHelper!.captureOutputImage(completionHandler: { image in
-            RunLoop.main.perform {
-                res = image
-                done.store(true, ordering: .sequentiallyConsistent)
-            }
-        })
+        gameCoreHelper!.captureOutputImage { image in
+            res = image
+            done.store(true, ordering: .sequentiallyConsistent)
+        }
         
         while done.load(ordering: .sequentiallyConsistent) == false {
             if CFRunLoopRunInMode(.defaultMode, 10.0, false) == .finished {
@@ -255,12 +253,10 @@ extension GameCoreManager: OEGameCoreHelper {
         let done = ManagedAtomic(false)
         
         var res: NSBitmapImageRep?
-        gameCoreHelper!.captureSourceImage(completionHandler: { image in
-            RunLoop.main.perform {
-                res = image
-                done.store(true, ordering: .sequentiallyConsistent)
-            }
-        })
+        gameCoreHelper!.captureSourceImage { image in
+            res = image
+            done.store(true, ordering: .sequentiallyConsistent)
+        }
         
         while done.load(ordering: .sequentiallyConsistent) == false {
             if CFRunLoopRunInMode(.defaultMode, 10.0, false) == .finished {

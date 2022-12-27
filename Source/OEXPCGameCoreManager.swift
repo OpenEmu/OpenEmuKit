@@ -54,7 +54,7 @@ import OpenEmuKitPrivate
             cn = try .makeConnection(serviceName: serviceName, executableURL: executableURL)
             helperConnection = cn
         } catch {
-            RunLoop.main.perform {
+            DispatchQueue.main.async {
                 completionHandler(error)
             }
             
@@ -96,7 +96,7 @@ import OpenEmuKitPrivate
         
         gameCoreHelper.load(with: startupInfo) { error in
             if let error = error {
-                RunLoop.main.perform {
+                DispatchQueue.main.async {
                     completionHandler(error)
                     self.stop()
                 }
@@ -107,7 +107,7 @@ import OpenEmuKitPrivate
             }
             
             self.gameCoreHelper = gameCoreHelper
-            RunLoop.main.perform {
+            DispatchQueue.main.async {
                 completionHandler(nil)
             }
         }
