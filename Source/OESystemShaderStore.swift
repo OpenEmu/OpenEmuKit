@@ -142,7 +142,8 @@ extension UserDefaults: ShaderModelStore {
             var res = [String: Double]()
             for param in state.split(separator: ";") {
                 let vals = param.split(separator: "=")
-                if let d = Double(vals[1]) {
+                if vals.count == 2,
+                   let d = Double(vals[1]) {
                     res[String(vals[0])] = d
                 }
             }
