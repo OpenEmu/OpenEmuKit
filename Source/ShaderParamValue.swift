@@ -29,13 +29,15 @@ import OpenEmuShaders
     @objc dynamic public var index: Int
     @objc dynamic public var name: String
     @objc dynamic public var desc: String
-    @objc dynamic public var value: NSNumber
+    @objc dynamic public var value: NSNumber?
+    public var resolvedValue: NSNumber { value ?? initial }
     @objc dynamic public var initial: NSNumber
     @objc dynamic public var minimum: NSNumber
     @objc dynamic public var maximum: NSNumber
     @objc dynamic public var step: NSNumber
     @objc public var isInitial: Bool {
-        value.doubleValue.isApproximatelyEqual(to: initial.doubleValue, relativeTolerance: 0.001)
+        // if the value is nil, also consider it the initial value
+        value?.doubleValue.isApproximatelyEqual(to: initial.doubleValue, relativeTolerance: 0.001) ?? true
     }
     
     init(parameter p: ShaderParameter, at index: Int) {
@@ -93,13 +95,13 @@ extension Dictionary where Dictionary.Key == String, Dictionary.Value == Double 
     /// Creates a new dictionary from the array of parameters.
     /// - Parameter params: An array of shader parameters to use to create the dictionary.
     public init(allParams params: [ShaderParamValue]) {
-        self.init(uniqueKeysWithValues: params.map { ($0.name, $0.value.doubleValue) })
+        self.init(uniqueKeysWithValues: params.map { ($0.name, $0.resolvedValue.doubleValue) })
     }
     
     /// Creates a new dictionary from the array of parameters, excluding those that are assigned
     /// their initial value.
     /// - Parameter params: An array of shader parameters to use to create the dictionary.
     public init(changedParams params: [ShaderParamValue]) {
-        self.init(uniqueKeysWithValues: params.compactMap { $0.isInitial ? nil : ($0.name, $0.value.doubleValue) })
+        self.init(uniqueKeysWithValues: params.compactMap { $0.isInitial ? nil : ($0.name, $0.resolvedValue.doubleValue) })
     }
 }

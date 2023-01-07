@@ -156,7 +156,7 @@ extension UserDefaults: ShaderModelStore {
     public func write(parameters params: [ShaderParamValue]) {
         let state = params
             .filter { !$0.isInitial }
-            .map { "\($0.name)=\($0.value)" }
+            .map { "\($0.name)=\($0.resolvedValue)" }
         
         if state.isEmpty {
             store.remove(parametersForShader: shader.name, identifier: system)
