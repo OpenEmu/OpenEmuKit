@@ -45,7 +45,7 @@
 		0572A42C287BEA3800AC32F8 /* NSXPCConnection+HelperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0572A42B287BEA3800AC32F8 /* NSXPCConnection+HelperApp.swift */; };
 		0572A42E287CD66A00AC32F8 /* NSXPCListener+HelperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0572A42D287CD66A00AC32F8 /* NSXPCListener+HelperApp.swift */; };
 		0578484B25C1392400A842E7 /* ShaderCompilerOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578484A25C1392300A842E7 /* ShaderCompilerOptions.swift */; };
-		05796B2728727F790007E415 /* MTLGameRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05796B2628727F790007E415 /* MTLGameRenderer.swift */; };
+		05796B2728727F790007E415 /* MTL3DGameRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05796B2628727F790007E415 /* MTL3DGameRenderer.swift */; };
 		05796B2B28738FFE0007E415 /* CoreVideoTexture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05796B2A28738FFE0007E415 /* CoreVideoTexture.swift */; };
 		057E7FED28755CB100BC1C04 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057E7FEC28755CB100BC1C04 /* Logging.swift */; };
 		057E7FEF28762D4700BC1C04 /* OpenGL2GameRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057E7FEE28762D4700BC1C04 /* OpenGL2GameRenderer.swift */; };
@@ -82,6 +82,8 @@
 		05EEF1052707CA9B008A03DC /* OpenEmuKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E6957F24CA5D4200ACFB35 /* OpenEmuKit.framework */; };
 		05EEF1082707D2ED008A03DC /* Nimble in Frameworks */ = {isa = PBXBuildFile; productRef = 05EEF1072707D2ED008A03DC /* Nimble */; };
 		8F3A1837285C9F88008A7AC9 /* NSBundle+CacheFlushing.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F3A1836285C9F0E008A7AC9 /* NSBundle+CacheFlushing.m */; };
+		DD75EE5D298976C60056B3BA /* MTLGameRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD75EE5C298976C60056B3BA /* MTLGameRenderer.swift */; };
+		DDD842D52983154E00341C61 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDD842D42983154E00341C61 /* Metal.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -153,7 +155,7 @@
 		0572A42B287BEA3800AC32F8 /* NSXPCConnection+HelperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSXPCConnection+HelperApp.swift"; sourceTree = "<group>"; };
 		0572A42D287CD66A00AC32F8 /* NSXPCListener+HelperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSXPCListener+HelperApp.swift"; sourceTree = "<group>"; };
 		0578484A25C1392300A842E7 /* ShaderCompilerOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShaderCompilerOptions.swift; sourceTree = "<group>"; };
-		05796B2628727F790007E415 /* MTLGameRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MTLGameRenderer.swift; sourceTree = "<group>"; };
+		05796B2628727F790007E415 /* MTL3DGameRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MTL3DGameRenderer.swift; sourceTree = "<group>"; };
 		05796B2A28738FFE0007E415 /* CoreVideoTexture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreVideoTexture.swift; sourceTree = "<group>"; };
 		057E7FEA28755C5600BC1C04 /* OpenEmuHelperApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenEmuHelperApp.swift; sourceTree = "<group>"; };
 		057E7FEC28755CB100BC1C04 /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
@@ -194,6 +196,8 @@
 		05EEF1032707CA7A008A03DC /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/MacOSX.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		8F3A1836285C9F0E008A7AC9 /* NSBundle+CacheFlushing.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+CacheFlushing.m"; sourceTree = "<group>"; };
 		8F4AEABF27354776005C6246 /* NSBundle+CacheFlushing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+CacheFlushing.h"; sourceTree = "<group>"; };
+		DD75EE5C298976C60056B3BA /* MTLGameRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MTLGameRenderer.swift; sourceTree = "<group>"; };
+		DDD842D42983154E00341C61 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,6 +207,7 @@
 			files = (
 				05E6BA5524CCD9A000ACFB35 /* OpenEmuShaders.framework in Frameworks */,
 				05E6BA0F24CCD53100ACFB35 /* OpenEmuBase.framework in Frameworks */,
+				DDD842D52983154E00341C61 /* Metal.framework in Frameworks */,
 				05E6BA1324CCD56200ACFB35 /* OpenEmuSystem.framework in Frameworks */,
 				0572A41128783DDB00AC32F8 /* Atomics in Frameworks */,
 			);
@@ -349,7 +354,8 @@
 			isa = PBXGroup;
 			children = (
 				0572A4122878D76C00AC32F8 /* GameRenderer.swift */,
-				05796B2628727F790007E415 /* MTLGameRenderer.swift */,
+				DD75EE5C298976C60056B3BA /* MTLGameRenderer.swift */,
+				05796B2628727F790007E415 /* MTL3DGameRenderer.swift */,
 				05796B2A28738FFE0007E415 /* CoreVideoTexture.swift */,
 				05D53291289330FF004DC253 /* OpenGLGameRenderer.swift */,
 				057E7FEE28762D4700BC1C04 /* OpenGL2GameRenderer.swift */,
@@ -379,6 +385,7 @@
 		05E6BA0D24CCD53100ACFB35 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DDD842D42983154E00341C61 /* Metal.framework */,
 				05EEF1032707CA7A008A03DC /* XCTest.framework */,
 				0533EA6624CDFD030095146E /* XADMaster.framework */,
 				05E6BA5424CCD9A000ACFB35 /* OpenEmuShaders.framework */,
@@ -639,7 +646,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				05EEF0F22707C875008A03DC /* ShaderPresetData.swift in Sources */,
-				05796B2728727F790007E415 /* MTLGameRenderer.swift in Sources */,
+				05796B2728727F790007E415 /* MTL3DGameRenderer.swift in Sources */,
 				057E7FF2287630C000BC1C04 /* OpenEmuHelperApp.swift in Sources */,
 				05D828D524E9881E00BB975E /* OEXPCMatchMaking.swift in Sources */,
 				057E7FEF28762D4700BC1C04 /* OpenGL2GameRenderer.swift in Sources */,
@@ -659,6 +666,7 @@
 				05AAD98726758240004466E3 /* XPCDebugSupport.swift in Sources */,
 				05ED1CFC259D43E800A2D400 /* LaunchControl.swift in Sources */,
 				05D532942895F73C004DC253 /* ScreenShot.swift in Sources */,
+				DD75EE5D298976C60056B3BA /* MTLGameRenderer.swift in Sources */,
 				8F3A1837285C9F88008A7AC9 /* NSBundle+CacheFlushing.m in Sources */,
 				0547FD9824E7717E005C1FFC /* OEShaderStore.swift in Sources */,
 				05201D73277D82920028CBE0 /* ShaderPresetStorage.swift in Sources */,
