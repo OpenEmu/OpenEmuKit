@@ -43,14 +43,14 @@ final class MTL3DGameRenderer: GameRenderer {
     
     var isFPSLimiting = ManagedAtomic(0)
     
-    init(withDevice device: MTLDevice,withLayer layer: CAMetalLayer,withCmdQueue cmdqueue: MTLCommandQueue, gameCore: OEGameCore) throws {
+    init(withDevice device: MTLDevice, withLayer layer: CAMetalLayer, withCmdQueue cmdqueue: MTLCommandQueue, gameCore: OEGameCore) throws {
         self.device      = device
         self.converter   = try .init(device: device)
         self.gameCore    = gameCore
-        gameCore.setMetalDev(device)
-        gameCore.setMetalLayer(layer)
-        gameCore.setMetalCmdQueue(cmdqueue)
-        gameCore.createMetalTex();
+        gameCore.metalDevice = device
+        gameCore.metalLayer = layer
+        gameCore.metalCommandQueue = cmdqueue
+        gameCore.createMetalTexture()
     }
     
     func update() {
@@ -90,7 +90,6 @@ final class MTL3DGameRenderer: GameRenderer {
             }
     }
     
-    
     func didExecuteFrame() {
             // Wait for the rendering thread to complete this frame.
             // Most cores with rendering threads don't seem to handle timing themselves - they're probably relying on Vsync.
@@ -114,7 +113,7 @@ final class MTL3DGameRenderer: GameRenderer {
     }
     
     func prepareFrameForRender(commandBuffer: MTLCommandBuffer) -> MTLTexture? {
-        return gameCore.getMetalTex() ;
+        return gameCore.metalTexture
     }
     
     func willRenderFrameOnAlternateThread() {
@@ -135,7 +134,6 @@ final class MTL3DGameRenderer: GameRenderer {
             renderingThreadCanProceed.wait()
         }
     }
-    
     
     private func glToRPixelFormat(pixelFormat: GLenum, pixelType: GLenum) -> OEMTLPixelFormat? {
         switch Int32(pixelFormat) {
@@ -167,4 +165,3 @@ final class MTL3DGameRenderer: GameRenderer {
         return nil
     }
 }
-
