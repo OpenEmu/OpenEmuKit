@@ -72,14 +72,6 @@ final class MTL3DGameRenderer: GameRenderer {
                                             height: Int(bufferSize.height),
                                             bytesPerRow: bytesPerRow)
         }
-
-       let rect = gameCore.screenRect
-
-        // If the screen rect is zero and not yet determined, return. It will be updated in a future frame.
-        guard rect.size != .init(width: 0, height: 0) else { return }
-
-        let sourceRect = CGRect(x: CGFloat(rect.origin.x), y: CGFloat(rect.origin.y),
-                width: CGFloat(rect.size.width), height: CGFloat(rect.size.height))
     }
 
    var canChangeBufferSize: Bool { true }
