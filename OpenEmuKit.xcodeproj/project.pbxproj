@@ -21,7 +21,6 @@
 		0530C3B32512DF680050F90F /* OEScaledGameLayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0530C3B22512DF680050F90F /* OEScaledGameLayerView.swift */; };
 		0547C2032707E59C00D386D3 /* ShaderPresetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547C2022707E59C00D386D3 /* ShaderPresetTests.swift */; };
 		0547C20C2707F60500D386D3 /* Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547C20B2707F60500D386D3 /* Crypto.swift */; };
-		0547C210270A61C200D386D3 /* DataProtocol+HexString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547C20F270A61C200D386D3 /* DataProtocol+HexString.swift */; };
 		0547FD9824E7717E005C1FFC /* OEShaderStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547FD9724E7717E005C1FFC /* OEShaderStore.swift */; };
 		054A2C07278CDA2600A2F241 /* KeyValueScanner.rl in Resources */ = {isa = PBXBuildFile; fileRef = 054A2C06278CDA2600A2F241 /* KeyValueScanner.rl */; };
 		054A2C0A278CDA5A00A2F241 /* KeyValueScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = 054A2C09278CDA5A00A2F241 /* KeyValueScanner.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -131,7 +130,6 @@
 		0547C2092707E96400D386D3 /* .swift-format.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ".swift-format.json"; sourceTree = "<group>"; };
 		0547C20A2707E96400D386D3 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		0547C20B2707F60500D386D3 /* Crypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto.swift; sourceTree = "<group>"; };
-		0547C20F270A61C200D386D3 /* DataProtocol+HexString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DataProtocol+HexString.swift"; sourceTree = "<group>"; };
 		0547FD9724E7717E005C1FFC /* OEShaderStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OEShaderStore.swift; sourceTree = "<group>"; };
 		054A2C06278CDA2600A2F241 /* KeyValueScanner.rl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = KeyValueScanner.rl; sourceTree = "<group>"; };
 		054A2C09278CDA5A00A2F241 /* KeyValueScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyValueScanner.h; sourceTree = "<group>"; };
@@ -443,7 +441,6 @@
 			children = (
 				05C40F8926F6A72F0072B722 /* ApproximatelyEqual.swift */,
 				0547C20B2707F60500D386D3 /* Crypto.swift */,
-				0547C20F270A61C200D386D3 /* DataProtocol+HexString.swift */,
 				057E7FEC28755CB100BC1C04 /* Logging.swift */,
 				05ED1CF8259D1FB200A2D400 /* FileManager+ExtendedAttributes.swift */,
 				0524372C278D8171004DE02C /* PeekableIterator.swift */,
@@ -654,7 +651,6 @@
 				05C40F8A26F6A72F0072B722 /* ApproximatelyEqual.swift in Sources */,
 				05201D652777C8CC0028CBE0 /* ShaderPresetStore.swift in Sources */,
 				0547C20C2707F60500D386D3 /* Crypto.swift in Sources */,
-				0547C210270A61C200D386D3 /* DataProtocol+HexString.swift in Sources */,
 				05D53292289330FF004DC253 /* OpenGLGameRenderer.swift in Sources */,
 				05796B2B28738FFE0007E415 /* CoreVideoTexture.swift in Sources */,
 				05E6BA3E24CCD79600ACFB35 /* OEThreadProxy.m in Sources */,
