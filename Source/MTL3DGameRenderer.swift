@@ -48,7 +48,6 @@ final class MTL3DGameRenderer: GameRenderer {
         self.converter   = try .init(device: device)
         self.gameCore    = gameCore
         gameCore.metalDevice = device
-        gameCore.metalLayer = layer
         gameCore.metalCommandQueue = cmdqueue
         gameCore.createMetalTexture()
     }
