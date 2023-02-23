@@ -31,14 +31,10 @@ public typealias StartupCompletionHandler = (Error?) -> Void
 
 @objc public class GameCoreManager: NSObject {
     @objc public private(set) var startupInfo: OEGameStartupInfo
-    @objc public private(set) weak var plugin: OECorePlugin?
-    @objc public private(set) weak var systemPlugin: OESystemPlugin?
     @objc public private(set) weak var gameCoreOwner: OEGameCoreOwner?
     
-    @objc public init(startupInfo: OEGameStartupInfo, corePlugin plugin: OECorePlugin, systemPlugin: OESystemPlugin, gameCoreOwner: OEGameCoreOwner) {
+    @objc public init(startupInfo: OEGameStartupInfo, gameCoreOwner: OEGameCoreOwner) {
         self.startupInfo    = startupInfo
-        self.plugin         = plugin
-        self.systemPlugin   = systemPlugin
         self.gameCoreOwner  = gameCoreOwner
     }
     
@@ -47,8 +43,8 @@ public typealias StartupCompletionHandler = (Error?) -> Void
                "\(Self.self)",
                Unmanaged.passUnretained(self).toOpaque().debugDescription,
                startupInfo.romURL.path,
-               plugin?.bundleIdentifier ?? "no plugin",
-               systemPlugin?.systemIdentifier ?? "no systemPlugin",
+               startupInfo.corePluginURL.deletingPathExtension().lastPathComponent,
+               startupInfo.systemPluginURL.deletingPathExtension().lastPathComponent,
                gameCoreOwner != nil ? Unmanaged.passUnretained(gameCoreOwner!).toOpaque().debugDescription : "no gameCoreOwner"
         )
     }
