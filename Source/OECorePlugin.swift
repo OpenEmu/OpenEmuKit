@@ -273,3 +273,25 @@ public extension OECorePlugin {
         return options?[OEGameCoreRewindBufferSecondsKey] as? Int ?? 0
     }
 }
+
+public extension OECorePlugin.Architecture {
+    static let x86_64 = "x86_64"
+    static let arm64 = "arm64"
+}
+
+public extension OECorePlugin {
+    typealias Architecture = String
+    
+    var architectures: [Architecture] {
+        var architectures: [Architecture] = []
+        let executableArchitectures = bundle.executableArchitectures as? [Int] ?? []
+        if executableArchitectures.contains(NSBundleExecutableArchitectureX86_64) {
+            architectures.append(.x86_64)
+        }
+        if #available(macOS 11.0, *),
+           executableArchitectures.contains(NSBundleExecutableArchitectureARM64) {
+            architectures.append(.arm64)
+        }
+        return architectures
+    }
+}
