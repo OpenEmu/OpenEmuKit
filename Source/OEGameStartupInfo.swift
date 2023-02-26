@@ -36,12 +36,14 @@ import Foundation
     public let shaderParameters: [String: Double]
     public let corePluginURL: URL
     public let systemPluginURL: URL
+    public let xpcHelperExecutableName: String?
     
     public init(romURL: URL, romMD5: String, romHeader: String, romSerial: String,
                 systemRegion: String,
                 displayModeInfo: [String: Any]?,
                 shaderURL: URL, shaderParameters: [String: Double],
-                corePluginURL: URL, systemPluginURL: URL) {
+                corePluginURL: URL, systemPluginURL: URL,
+                xpcHelperExecutableName: String? = nil) {
         self.romURL = romURL
         self.romMD5 = romMD5
         self.romHeader = romHeader
@@ -52,6 +54,7 @@ import Foundation
         self.shaderParameters = shaderParameters
         self.corePluginURL = corePluginURL
         self.systemPluginURL = systemPluginURL
+        self.xpcHelperExecutableName = xpcHelperExecutableName
     }
     
     // MARK: - NSSecureCoding
@@ -70,7 +73,8 @@ import Foundation
             let shaderParameters = coder.decodeObject(of: [NSString.self, NSDictionary.self, NSNumber.self],
                                                       forKey: CodingKeys.shaderParameters.rawValue) as? [String: Double],
             let corePluginURL = coder.decodeObject(of: NSURL.self, forKey: CodingKeys.corePluginURL.rawValue) as? URL,
-            let systemPluginURL = coder.decodeObject(of: NSURL.self, forKey: CodingKeys.systemPluginURL.rawValue) as? URL
+            let systemPluginURL = coder.decodeObject(of: NSURL.self, forKey: CodingKeys.systemPluginURL.rawValue) as? URL,
+            let xpcHelperExecutableName = coder.decodeObject(of: NSString.self, forKey: CodingKeys.xpcHelperExecutableName.rawValue) as? String
         else { return nil }
         
         self.romURL = romURL
@@ -83,6 +87,7 @@ import Foundation
         self.shaderParameters = shaderParameters
         self.corePluginURL = corePluginURL
         self.systemPluginURL = systemPluginURL
+        self.xpcHelperExecutableName = xpcHelperExecutableName
     }
     
     public func encode(with coder: NSCoder) {
@@ -96,6 +101,7 @@ import Foundation
         coder.encode(shaderParameters, forKey: CodingKeys.shaderParameters.rawValue)
         coder.encode(corePluginURL, forKey: CodingKeys.corePluginURL.rawValue)
         coder.encode(systemPluginURL, forKey: CodingKeys.systemPluginURL.rawValue)
+        coder.encode(xpcHelperExecutableName, forKey: CodingKeys.xpcHelperExecutableName.rawValue)
     }
     
     private enum CodingKeys: String {
@@ -103,5 +109,6 @@ import Foundation
         case systemRegion, displayModeInfo
         case shaderURL, shaderParameters
         case corePluginURL, systemPluginURL
+        case xpcHelperExecutableName
     }
 }

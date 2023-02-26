@@ -36,7 +36,7 @@ import OpenEmuKitPrivate
     }
     
     var executableURL: URL? {
-        if let name = infoDictionary?["XPCHelperExecutableName"] {
+        if let name = startupInfo.xpcHelperExecutableName ?? infoDictionary?["XPCHelperExecutableName"] {
             return Bundle.main.url(forAuxiliaryExecutable: name)
         }
         return nil
