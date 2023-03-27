@@ -46,8 +46,8 @@ final class MTL3DGameRenderer: GameRenderer {
         self.device      = device
         self.converter   = try .init(device: device)
         self.gameCore    = gameCore
-        gameCore.metalDevice = device
-        gameCore.createMetalTexture()
+        
+        gameCore.createMetalTexture(device: device)
     }
     
     func update() {
