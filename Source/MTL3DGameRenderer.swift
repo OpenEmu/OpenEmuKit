@@ -25,7 +25,6 @@
 import Foundation
 import OpenEmuShaders
 import OpenEmuBase
-//import OpenGL
 @_implementationOnly import Atomics
 @_implementationOnly import os.log
 
@@ -43,17 +42,16 @@ final class MTL3DGameRenderer: GameRenderer {
     
     var isFPSLimiting = ManagedAtomic(0)
     
-    init(withDevice device: MTLDevice, withLayer layer: CAMetalLayer, withCmdQueue cmdqueue: MTLCommandQueue, gameCore: OEGameCore) throws {
+    init(withDevice device: MTLDevice, gameCore: OEGameCore) throws {
         self.device      = device
         self.converter   = try .init(device: device)
         self.gameCore    = gameCore
         gameCore.metalDevice = device
-        gameCore.metalCommandQueue = cmdqueue
         gameCore.createMetalTexture()
     }
     
     func update() {
-        precondition( gameCore.gameCoreRendering == .renderingMetal2Video, "Metal now supports 3D rendering")
+        precondition(gameCore.gameCoreRendering == .renderingMetal2Video, "Metal now supports 3D rendering")
 
         let pixelFormat = gameCore.pixelFormat
         let pixelType   = gameCore.pixelType
@@ -73,20 +71,20 @@ final class MTL3DGameRenderer: GameRenderer {
         }
     }
 
-   var canChangeBufferSize: Bool { true }
+    var canChangeBufferSize: Bool { true }
     
     func willExecuteFrame() {
         if isFPSLimiting.load(ordering: .sequentiallyConsistent) != 0 {
-                renderingThreadCanProceed.signal()
-            }
+            renderingThreadCanProceed.signal()
+        }
     }
     
     func didExecuteFrame() {
-            // Wait for the rendering thread to complete this frame.
-            // Most cores with rendering threads don't seem to handle timing themselves - they're probably relying on Vsync.
-            if isFPSLimiting.load(ordering: .sequentiallyConsistent) != 0 {
-                executeThreadCanProceed.wait()
-            }
+        // Wait for the rendering thread to complete this frame.
+        // Most cores with rendering threads don't seem to handle timing themselves - they're probably relying on Vsync.
+        if isFPSLimiting.load(ordering: .sequentiallyConsistent) != 0 {
+            executeThreadCanProceed.wait()
+        }
     }
     
     func resumeFPSLimiting() {

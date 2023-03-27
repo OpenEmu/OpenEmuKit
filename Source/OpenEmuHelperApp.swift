@@ -76,8 +76,6 @@ extension OSLog {
     var _scope: MTLCaptureScope!
     var _device: MTLDevice!
     var _commandQueue: MTLCommandQueue!
-    var _renderPassDescriptor: MTLRenderPassDescriptor!
-    var _commandEncoder: MTLCommandEncoder!
     
     var _clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 1)
     var _skippedFrames: UInt = 0
@@ -208,7 +206,7 @@ extension OSLog {
     
     private func setup3dVideo() -> GameRenderer {
         do {
-            return try MTL3DGameRenderer(withDevice: _device,withLayer: _videoLayer,withCmdQueue: _commandQueue, gameCore: gameCore)
+            return try MTL3DGameRenderer(withDevice: _device, gameCore: gameCore)
         } catch {
             fatalError("Unable to create MTL3DGameRenderer")
         }
