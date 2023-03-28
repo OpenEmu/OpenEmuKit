@@ -108,16 +108,15 @@ public class OECorePlugin: OEPlugin {
         return infoDictionary[OEGameCoreSystemIdentifiersKey] as? [String] ?? []
     }
     
-    public var coreOptions: [String: Any] {
-        return infoDictionary[OEGameCoreOptionsKey] as? [String: Any] ?? [:]
+    public var coreOptions: [String: [String: Any]] {
+        return infoDictionary[OEGameCoreOptionsKey] as? [String: [String: Any]] ?? [:]
     }
     
     public var requiredFiles: [[String: Any]] {
         var allRequiredFiles: [[String: Any]] = []
         
         for value in coreOptions.values {
-            if let resultDict = value as? [String: Any],
-               let object = resultDict[OEGameCoreRequiredFilesKey] as? [[String: Any]] {
+            if let object = value[OEGameCoreRequiredFilesKey] as? [[String: Any]] {
                 allRequiredFiles.append(contentsOf: object)
             }
         }
@@ -214,5 +213,63 @@ public class OECorePlugin: OEPlugin {
                 }
             }
         }
+    }
+}
+
+public extension OECorePlugin {
+    
+    func requiredFiles(forSystemIdentifier systemIdentifier: String) -> [[String: Any]]? {
+        let options = coreOptions[systemIdentifier]
+        return options?[OEGameCoreRequiredFilesKey] as? [[String: Any]] ?? nil
+    }
+    
+    func requiresFiles(forSystemIdentifier systemIdentifier: String) -> Bool {
+        let options = coreOptions[systemIdentifier]
+        return options?[OEGameCoreRequiresFilesKey] as? Bool ?? false
+    }
+    
+    func supportsCheatCode(forSystemIdentifier systemIdentifier: String) -> Bool {
+        let options = coreOptions[systemIdentifier]
+        return options?[OEGameCoreSupportsCheatCodeKey] as? Bool ?? false
+    }
+    
+    func hasGlitches(forSystemIdentifier systemIdentifier: String) -> Bool {
+        let options = coreOptions[systemIdentifier]
+        return options?[OEGameCoreHasGlitchesKey] as? Bool ?? false
+    }
+    
+    func saveStatesNotSupported(forSystemIdentifier systemIdentifier: String) -> Bool {
+        let options = coreOptions[systemIdentifier]
+        return options?[OEGameCoreSaveStatesNotSupportedKey] as? Bool ?? false
+    }
+    
+    func supportsMultipleDiscs(forSystemIdentifier systemIdentifier: String) -> Bool {
+        let options = coreOptions[systemIdentifier]
+        return options?[OEGameCoreSupportsMultipleDiscsKey] as? Bool ?? false
+    }
+    
+    func supportsRewinding(forSystemIdentifier systemIdentifier: String) -> Bool {
+        let options = coreOptions[systemIdentifier]
+        return options?[OEGameCoreSupportsRewindingKey] as? Bool ?? false
+    }
+    
+    func supportsFileInsertion(forSystemIdentifier systemIdentifier: String) -> Bool {
+        let options = coreOptions[systemIdentifier]
+        return options?[OEGameCoreSupportsFileInsertionKey] as? Bool ?? false
+    }
+    
+    func supportsDisplayModeChange(forSystemIdentifier systemIdentifier: String) -> Bool {
+        let options = coreOptions[systemIdentifier]
+        return options?[OEGameCoreSupportsDisplayModeChangeKey] as? Bool ?? false
+    }
+    
+    func rewindInterval(forSystemIdentifier systemIdentifier: String) -> Int {
+        let options = coreOptions[systemIdentifier]
+        return options?[OEGameCoreRewindIntervalKey] as? Int ?? 0
+    }
+    
+    func rewindBufferSeconds(forSystemIdentifier systemIdentifier: String) -> Int {
+        let options = coreOptions[systemIdentifier]
+        return options?[OEGameCoreRewindBufferSecondsKey] as? Int ?? 0
     }
 }
