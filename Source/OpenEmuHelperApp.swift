@@ -86,8 +86,6 @@ extension OSLog {
     
     var _handleEvents: Bool = false
     var _handleKeyboardEvents: Bool = false
-    var _pendingDeviceHandlerBindings: [OEDeviceHandlerPlaceholder: [() -> Void]] = [:]
-    var _token: NSObjectProtocol?
     
     var loadedRom = false
     
@@ -98,22 +96,6 @@ extension OSLog {
     
     @objc public override init() {
         super.init()
-        _token = NotificationCenter.default
-            .addObserver(forName: .OEDeviceHandlerPlaceholderOriginalDeviceDidBecomeAvailable,
-                         object: nil,
-                         queue: .main) { [weak self] notification in
-                guard
-                    let self            = self,
-                    let placeholder     = notification.object as? OEDeviceHandlerPlaceholder,
-                    let pendingBlocks   = self._pendingDeviceHandlerBindings[placeholder]
-                else { return }
-                
-                for block in pendingBlocks {
-                    block()
-                }
-                
-                self._pendingDeviceHandlerBindings[placeholder] = nil
-            }
     }
     
     required init?(coder: NSCoder) {
@@ -533,39 +515,14 @@ extension OSLog {
     }
     
     public func systemBindingsDidSetEvent(_ event: OEHIDEvent, forBinding bindingDescription: OEBindingDescription, playerNumber: UInt) {
-        updateBindingForEvent(event) {
+        DispatchQueue.main.async {
             self._systemResponder.systemBindingsDidSetEvent(event, forBinding: bindingDescription, playerNumber: playerNumber)
         }
     }
     
     public func systemBindingsDidUnsetEvent(_ event: OEHIDEvent, forBinding bindingDescription: OEBindingDescription, playerNumber: UInt) {
-        updateBindingForEvent(event) {
-            self._systemResponder.systemBindingsDidUnsetEvent(event, forBinding: bindingDescription, playerNumber: playerNumber)
-        }
-    }
-    
-    private func updateBindingForEvent(_ event: OEHIDEvent, withBlock block: @escaping () -> Void) {
         DispatchQueue.main.async {
-            guard event.hasDeviceHandlerPlaceholder
-            else {
-                block()
-                return
-            }
-            
-            guard let placeHolder = event.deviceHandler as? OEDeviceHandlerPlaceholder
-            else { return }
-            
-            var pendingBlocks: [() -> Void]
-            if let pb = self._pendingDeviceHandlerBindings[placeHolder] {
-                pendingBlocks = pb
-            } else {
-                pendingBlocks = []
-            }
-            pendingBlocks.append {
-                event.resolveDeviceHandlerPlaceholder()
-                block()
-            }
-            self._pendingDeviceHandlerBindings[placeHolder] = pendingBlocks
+            self._systemResponder.systemBindingsDidUnsetEvent(event, forBinding: bindingDescription, playerNumber: playerNumber)
         }
     }
     
