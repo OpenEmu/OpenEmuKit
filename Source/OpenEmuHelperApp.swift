@@ -76,6 +76,7 @@ extension OSLog {
     var _scope: MTLCaptureScope!
     var _device: MTLDevice!
     var _commandQueue: MTLCommandQueue!
+    
     var _clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 1)
     var _skippedFrames: UInt = 0
     var _effectsMode: OEGameCoreEffectsMode = .reflectPaused
@@ -126,6 +127,7 @@ extension OSLog {
         _device         = MTLCreateSystemDefaultDevice()
         _scope          = MTLCaptureManager.shared().makeCaptureScope(device: _device)
         _commandQueue   = _device.makeCommandQueue()
+        
         // TODO: Handle error
         // Original Obj-C didn't handle the error either
         _filterChain    = try? FilterChain(device: _device)
@@ -168,6 +170,8 @@ extension OSLog {
         case .renderingOpenGL2Video, .renderingOpenGL3Video:
             _openGLGameRenderer = setupOpenGLVideo()
             _gameRenderer       = _openGLGameRenderer
+        case .renderingMetal2Video:
+            _gameRenderer = setup3dVideo()
             
         default:
             fatalError("Rendering API \(rendering) not supported")
@@ -179,6 +183,14 @@ extension OSLog {
             return try MTLGameRenderer(withDevice: _device, gameCore: gameCore)
         } catch {
             fatalError("Unable to create MTLGameRenderer")
+        }
+    }
+    
+    private func setup3dVideo() -> GameRenderer {
+        do {
+            return try MTL3DGameRenderer(withDevice: _device, gameCore: gameCore)
+        } catch {
+            fatalError("Unable to create MTL3DGameRenderer")
         }
     }
     
@@ -199,7 +211,7 @@ extension OSLog {
         let surfaceSize = gameCore.bufferSize
         let size = CGSize(width: CGFloat(surfaceSize.width), height: CGFloat(surfaceSize.height))
         
-        if gameCore.gameCoreRendering != .rendering2DVideo {
+        if gameCore.gameCoreRendering != .rendering2DVideo && gameCore.gameCoreRendering != .renderingMetal2Video {
             _surface.size = size
             flipVertically = _surface.metalTextureIsFlippedVertically
             os_log(.debug, log: .display, "Updated GL render surface size to %{public}@", NSStringFromOEIntSize(surfaceSize))
