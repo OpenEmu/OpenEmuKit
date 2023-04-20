@@ -26,7 +26,7 @@
 @import Foundation;
 #import "KeyValueScanner+Private.h"
 
-PKVScanner kv_scanner_create()
+PKVScanner kv_scanner_create(void)
 {
     return calloc(1, sizeof(KVScanner));
 }

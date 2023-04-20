@@ -27,7 +27,6 @@
 os_log_t OE_LOG_DEFAULT;
 
 __attribute__((constructor))
-static void InitializeLogging() {
+static void InitializeLogging(void) {
     OE_LOG_DEFAULT  = os_log_create(OE_LOG_NAME, "default");
 }
-
