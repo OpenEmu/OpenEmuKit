@@ -32,7 +32,7 @@ public enum Crypto {
             data.withContiguousStorageIfAvailable {
                 _ = CC_MD5($0.baseAddress, CC_LONG($0.count), &digest)
             }
-            return digest.hexString
+            return digest.hexString.lowercased()
         }
         
         public static func digest<T: StringProtocol>(string: T) -> String {
@@ -46,7 +46,7 @@ public enum Crypto {
             data.withContiguousStorageIfAvailable {
                 _ = CC_SHA1($0.baseAddress, CC_LONG($0.count), &digest)
             }
-            return digest.hexString
+            return digest.hexString.lowercased()
         }
         
         public static func digest<T: StringProtocol>(string: T) -> String {
@@ -60,7 +60,7 @@ public enum Crypto {
             data.withContiguousStorageIfAvailable {
                 _ = CC_SHA256($0.baseAddress, CC_LONG($0.count), &digest)
             }
-            return digest.hexString
+            return digest.hexString.lowercased()
         }
         
         public static func digest<T: StringProtocol>(string: T) -> String {
