@@ -115,20 +115,6 @@ public class OEGameLayerView: NSView, CALayerDelegate {
     
     // MARK: - NSResponder
     
-    public override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
-        // By default, AppKit tries to set the child window containing this view as its main & key window
-        // upon first mouse. Since our child window shouldn’t behave like a window, we make its parent
-        // window (the visible window from the user point of view) main and key.
-        // See https://github.com/OpenEmu/OpenEmu/issues/365
-        if let mainWindow = window?.parent {
-            mainWindow.makeMain()
-            mainWindow.makeKey()
-            return false
-        }
-        
-        return super.acceptsFirstMouse(for: event)
-    }
-    
     public override var acceptsFirstResponder: Bool {
         return true
     }
