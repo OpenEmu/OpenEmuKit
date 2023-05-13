@@ -47,8 +47,6 @@ class ShaderPresetModelTests: XCTestCase {
     private var path: String!
     
     override func setUp() {
-        super.setUp()
-        
         path = FileManager.default
             .temporaryDirectory
             .appendingPathComponent("OpenEmuKitTests", isDirectory: true)
@@ -75,7 +73,6 @@ class ShaderPresetModelTests: XCTestCase {
     
     override func tearDown() {
         try? FileManager.default.removeItem(atPath: path)
-        super.tearDown()
     }
 
     func testCanFindPreset() {
