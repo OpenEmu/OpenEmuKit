@@ -275,6 +275,7 @@ public extension OECorePlugin {
 }
 
 public extension OECorePlugin.Architecture {
+    // swiftlint:disable:next identifier_name
     static let x86_64 = "x86_64"
     static let arm64 = "arm64"
 }
