@@ -30,17 +30,39 @@ import Foundation
     var mainListener: NSXPCListener!
     var gameCoreConnection: NSXPCConnection!
     
-    var infoDictionary: [String: String]? {
-        Bundle.main.object(forInfoDictionaryKey: "OpenEmuKit") as? [String: String]
+    var serviceName: String
+    
+    init(serviceName: String) {
+        self.serviceName = serviceName
+        super.init()
     }
     
-    var serviceName: String? {
-        infoDictionary?["XPCBrokerServiceName"]
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    static var serviceNameArgument: String? {
+        ProcessInfo
+            .processInfo
+            .arguments
+            // find the first argument with the service name option
+            .first { $0.hasPrefix(NSXPCConnection.helperServiceNameArgumentPrefix) }
+            // trim the prefix to return just the service name
+            .map { String($0.suffix(from: NSXPCConnection.helperServiceNameArgumentPrefix.endIndex)) }
+    }
+    
+    public static func run() {
+        guard let serviceName = Self.serviceNameArgument else {
+            fatalError("Unable to find XPCBrokerServiceName argument")
+        }
+        
+        autoreleasepool {
+            let app = OpenEmuXPCHelperApp(serviceName: serviceName)
+            app.launchApplication()
+        }
     }
     
     public override func launchApplication() {
-        guard let serviceName = serviceName
-        else { fatalError("Unable to find XPCBrokerServiceName key") }
         do {
             let mainListener: NSXPCListener = try .makeHelperListener(serviceName: serviceName)
             mainListener.delegate = self

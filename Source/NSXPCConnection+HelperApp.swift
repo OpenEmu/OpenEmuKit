@@ -34,6 +34,7 @@ extension NSXPCConnection {
     }
     
     static let helperIdentifierArgumentPrefix = "--org.openemu.broker.id="
+    static let helperServiceNameArgumentPrefix = "--org.openemu.broker.name="
     private static var xpcTaskKey = 0
     
     static func makeConnection(serviceName name: String, executableURL url: URL) throws -> NSXPCConnection {
@@ -44,7 +45,7 @@ extension NSXPCConnection {
         /// `identifier`
         let task = Process()
         task.executableURL = url
-        task.arguments = ["\(Self.helperIdentifierArgumentPrefix)\(identifier)"]
+        task.arguments = ["\(Self.helperIdentifierArgumentPrefix)\(identifier)", "\(Self.helperServiceNameArgumentPrefix)\(name)"]
         task.terminationHandler = { task in
             os_log(.error, log: .helper,
                    "Helper terminated unexpectedly. { id = %{public}@, reason = %ld, exit = %d }",
