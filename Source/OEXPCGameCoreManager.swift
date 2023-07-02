@@ -27,27 +27,25 @@ import Foundation
 import OpenEmuKitPrivate
 
 @objc public class OEXPCGameCoreManager: GameCoreManager {
-    var infoDictionary: [String: String]? {
-        Bundle.main.object(forInfoDictionaryKey: "OpenEmuKit") as? [String: String]
-    }
+    let serviceName: String
+    let helperExecutableName: String
     
-    var serviceName: String? {
-        infoDictionary?["XPCBrokerServiceName"]
+    @objc public init(startupInfo: OEGameStartupInfo, gameCoreOwner: OEGameCoreOwner, serviceName: String, helperExecutableName: String) {
+        self.serviceName = serviceName
+        self.helperExecutableName = helperExecutableName
+        super.init(startupInfo: startupInfo, gameCoreOwner: gameCoreOwner)
     }
     
     var executableURL: URL? {
-        if let name = startupInfo.xpcHelperExecutableName ?? infoDictionary?["XPCHelperExecutableName"] {
-            return Bundle.main.url(forAuxiliaryExecutable: name)
-        }
-        return nil
+        Bundle.main.url(forAuxiliaryExecutable: helperExecutableName)
     }
     
     var helperConnection: NSXPCConnection?
     var gameCoreOwnerProxy: OEThreadProxy?
     
     public override func loadROM(completionHandler: @escaping StartupCompletionHandler) {
-        guard let serviceName = serviceName, let executableURL = executableURL
-        else { fatalError("Incomplete OpenEmuKit data in Info.plist") }
+        guard let executableURL = executableURL
+        else { fatalError("Missing XPC helper executable") }
         
         let cn: NSXPCConnection
         do {
