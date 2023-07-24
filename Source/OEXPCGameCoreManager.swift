@@ -86,7 +86,10 @@ import OpenEmuKitPrivate
         
         let gameCoreHelper = cn.remoteObjectProxyWithErrorHandler { error in
             os_log(.error, log: .helper, "Helper connection failed with error: %{public}@", error.localizedDescription)
-            self.stop()
+            DispatchQueue.main.async {
+                completionHandler(error)
+                self.stop()
+            }
         } as? OEXPCGameCoreHelper
         
         guard let gameCoreHelper = gameCoreHelper
