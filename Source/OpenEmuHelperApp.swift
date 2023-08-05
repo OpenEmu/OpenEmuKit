@@ -411,7 +411,7 @@ extension OSLog {
     
     public func setAdaptiveSyncEnabled(_ enabled: Bool) {
         os_log(.debug, log: .default, "Set adaptive sync enabled: %@", enabled ? "YES" : "NO")
-        _adaptiveSyncEnabled = true
+        _adaptiveSyncEnabled = enabled
     }
     
     public func setShaderURL(_ url: URL, parameters: [String: NSNumber]?, completionHandler block: @escaping (Error?) -> Void) {
@@ -742,9 +742,8 @@ extension OSLog {
                 inflight.signal()
             }
             
-#if false
-            if #available(macOS 10.15.4, *) {
-                if _adaptiveSyncEnabled {
+            if _adaptiveSyncEnabled {
+                if #available(macOS 10.15.4, *) {
                     // NOTE:
                     // When a variable refresh rate display is configured with minimum and maximum
                     // refresh rates, and the game window is full-screen, we inform the variable
@@ -759,9 +758,6 @@ extension OSLog {
             } else {
                 finalCB.present(drawable)
             }
-#else
-            finalCB.present(drawable)
-#endif
             
 #if false
             // TODO: Add developer option to show using ImGui?
