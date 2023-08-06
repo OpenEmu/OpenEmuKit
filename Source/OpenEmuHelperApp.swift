@@ -306,12 +306,11 @@ extension OSLog {
             os_log(.error, log: .helper, "Unable to access file at path %{public}@", url.path)
             gameCore = nil
             
-            throw NSError(domain: OEGameCoreErrorDomain,
-                          code: OEGameCoreErrorCodes.couldNotLoadROMError.rawValue,
-                          userInfo: [
-                            NSLocalizedDescriptionKey: NSLocalizedString("The emulator does not have read permissions to the ROM.",
-                                                                         comment: "Error when loading a ROM."),
-                          ])
+            throw OEGameCoreErrorCodes(.couldNotLoadROMError,
+                                       userInfo: [
+                                        NSLocalizedDescriptionKey: NSLocalizedString("The emulator does not have read permissions to the ROM.",
+                                                                                     comment: "Error when loading a ROM."),
+                                       ])
         }
         
         do {
@@ -328,12 +327,12 @@ extension OSLog {
             os_log(.debug, log: .helper, "Failed to load ROM.")
             gameCore = nil
             
-            throw NSError(domain: OEGameCoreErrorDomain,
-                          code: OEGameCoreErrorCodes.couldNotLoadROMError.rawValue,
-                          userInfo: [
-                            NSLocalizedDescriptionKey: NSLocalizedString("The emulator could not load ROM.",
-                                                                         comment: "Error when loading a ROM."),
-                          ])
+			throw OEGameCoreErrorCodes(.couldNotLoadROMError,
+                                       userInfo: [
+                                        NSLocalizedDescriptionKey: NSLocalizedString("The emulator could not load ROM.",
+                                                                                     comment: "Error when loading a ROM."),
+                                        NSUnderlyingErrorKey: error
+                                       ])
         }
     }
     
