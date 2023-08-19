@@ -44,7 +44,7 @@ final class MTLGameRenderer: GameRenderer {
     }
     
     func update() {
-        precondition(gameCore.gameCoreRendering == .rendering2DVideo, "Metal only supports 2D rendering")
+        precondition(gameCore.gameCoreRendering == .bitmap, "Metal only supports 2D rendering")
 
         let pixelFormat = gameCore.pixelFormat
         let pixelType   = gameCore.pixelType

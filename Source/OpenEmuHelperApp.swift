@@ -164,13 +164,13 @@ extension OSLog {
         
         let rendering = gameCore.gameCoreRendering
         switch rendering {
-        case .rendering2DVideo:
+        case .bitmap:
             _gameRenderer = setup2dVideo()
             
-        case .renderingOpenGL2Video, .renderingOpenGL3Video:
+        case .openGL2, .openGL3:
             _openGLGameRenderer = setupOpenGLVideo()
             _gameRenderer       = _openGLGameRenderer
-        case .renderingMetal2Video:
+        case .metal2:
             _gameRenderer = setup3dVideo()
             
         default:
@@ -195,10 +195,10 @@ extension OSLog {
     }
     
     private func setupOpenGLVideo() -> OpenGLGameRenderer {
-        precondition(gameCore.gameCoreRendering == .renderingOpenGL2Video || gameCore.gameCoreRendering == .renderingOpenGL3Video)
+        precondition(gameCore.gameCoreRendering == .openGL2 || gameCore.gameCoreRendering == .openGL3)
         _surface = CoreVideoTexture(device: _device, metalPixelFormat: .bgra8Unorm)
         
-        if gameCore.gameCoreRendering == .renderingOpenGL2Video {
+        if gameCore.gameCoreRendering == .openGL2 {
             os_log(.debug, log: .display, "Using GL 2.x renderer")
             return OpenGL2GameRenderer(withInteropTexture: _surface, gameCore: gameCore)
         } else {
@@ -211,7 +211,7 @@ extension OSLog {
         let surfaceSize = gameCore.bufferSize
         let size = CGSize(width: CGFloat(surfaceSize.width), height: CGFloat(surfaceSize.height))
         
-        if gameCore.gameCoreRendering != .rendering2DVideo && gameCore.gameCoreRendering != .renderingMetal2Video {
+        if gameCore.gameCoreRendering != .bitmap && gameCore.gameCoreRendering != .metal2 {
             _surface.size = size
             flipVertically = _surface.metalTextureIsFlippedVertically
             os_log(.debug, log: .display, "Updated GL render surface size to %{public}@", NSStringFromOEIntSize(surfaceSize))

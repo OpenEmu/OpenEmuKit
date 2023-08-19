@@ -51,7 +51,7 @@ final class MTL3DGameRenderer: GameRenderer {
     }
     
     func update() {
-        precondition(gameCore.gameCoreRendering == .renderingMetal2Video, "Metal now supports 3D rendering")
+        precondition(gameCore.gameCoreRendering == .metal2, "Metal now supports 3D rendering")
 
         let pixelFormat = gameCore.pixelFormat
         let pixelType   = gameCore.pixelType
