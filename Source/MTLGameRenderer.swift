@@ -122,11 +122,15 @@ extension OEMTLPixelFormat {
         case OEPixelFormat_BGRA:
             if Int32(pixelType) == OEPixelType_UNSIGNED_INT_8_8_8_8_REV {
                 self = .bgra8Unorm
+            } else {
+                return nil
             }
             
         case OEPixelFormat_RGB:
             if Int32(pixelType) == OEPixelType_UNSIGNED_SHORT_5_6_5 {
                 self = .b5g6r5Unorm
+            } else {
+                return nil
             }
             
         case OEPixelFormat_RGBA:
@@ -138,12 +142,10 @@ extension OEMTLPixelFormat {
             case OEPixelType_UNSIGNED_SHORT_1_5_5_5_REV:
                 self = .r5g5b5a1Unorm
             default:
-                break
+                return nil
             }
         default:
-            break
+            return nil
         }
-        
-        return nil
     }
 }
