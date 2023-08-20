@@ -25,7 +25,6 @@
 import Foundation
 import OpenEmuShaders
 import OpenEmuBase
-import OpenGL
 
 final class MTLGameRenderer: GameRenderer {
     var surfaceSize: OEIntSize { gameCore.bufferSize }
@@ -118,25 +117,25 @@ final class MTLGameRenderer: GameRenderer {
 }
 
 extension OEMTLPixelFormat {
-    init?(pixelFormat: GLenum, pixelType: GLenum) {
+    init?(pixelFormat: UInt32, pixelType: UInt32) {
         switch Int32(pixelFormat) {
-        case GL_BGRA:
-            if Int32(pixelType) == GL_UNSIGNED_INT_8_8_8_8_REV {
+        case OEPixelFormat_BGRA:
+            if Int32(pixelType) == OEPixelType_UNSIGNED_INT_8_8_8_8_REV {
                 self = .bgra8Unorm
             }
             
-        case GL_RGB:
-            if Int32(pixelType) == GL_UNSIGNED_SHORT_5_6_5 {
+        case OEPixelFormat_RGB:
+            if Int32(pixelType) == OEPixelType_UNSIGNED_SHORT_5_6_5 {
                 self = .b5g6r5Unorm
             }
             
-        case GL_RGBA:
+        case OEPixelFormat_RGBA:
             switch Int32(pixelType) {
-            case GL_UNSIGNED_INT_8_8_8_8_REV:
+            case OEPixelType_UNSIGNED_INT_8_8_8_8_REV:
                 self = .abgr8Unorm
-            case GL_UNSIGNED_INT_8_8_8_8:
+            case OEPixelType_UNSIGNED_INT_8_8_8_8:
                 self = .rgba8Unorm
-            case GL_UNSIGNED_SHORT_1_5_5_5_REV:
+            case OEPixelType_UNSIGNED_SHORT_1_5_5_5_REV:
                 self = .r5g5b5a1Unorm
             default:
                 break
