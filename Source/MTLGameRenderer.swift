@@ -48,7 +48,7 @@ final class MTLGameRenderer: GameRenderer {
 
         let pixelFormat = gameCore.pixelFormat
         let pixelType   = gameCore.pixelType
-        guard let pf = glToRPixelFormat(pixelFormat: pixelFormat, pixelType: pixelType) else {
+        guard let pf = OEMTLPixelFormat(pixelFormat: pixelFormat, pixelType: pixelType) else {
             fatalError("Invalid pixel format")
         }
 
@@ -115,27 +115,29 @@ final class MTLGameRenderer: GameRenderer {
     
     func suspendFPSLimiting() { }
     func resumeFPSLimiting() { }
-    
-    private func glToRPixelFormat(pixelFormat: GLenum, pixelType: GLenum) -> OEMTLPixelFormat? {
+}
+
+extension OEMTLPixelFormat {
+    init?(pixelFormat: GLenum, pixelType: GLenum) {
         switch Int32(pixelFormat) {
         case GL_BGRA:
             if Int32(pixelType) == GL_UNSIGNED_INT_8_8_8_8_REV {
-                return .bgra8Unorm
+                self = .bgra8Unorm
             }
             
         case GL_RGB:
             if Int32(pixelType) == GL_UNSIGNED_SHORT_5_6_5 {
-                return .b5g6r5Unorm
+                self = .b5g6r5Unorm
             }
             
         case GL_RGBA:
             switch Int32(pixelType) {
             case GL_UNSIGNED_INT_8_8_8_8_REV:
-                return .abgr8Unorm
+                self = .abgr8Unorm
             case GL_UNSIGNED_INT_8_8_8_8:
-                return .rgba8Unorm
+                self = .rgba8Unorm
             case GL_UNSIGNED_SHORT_1_5_5_5_REV:
-                return .r5g5b5a1Unorm
+                self = .r5g5b5a1Unorm
             default:
                 break
             }
