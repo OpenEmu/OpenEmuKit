@@ -679,17 +679,16 @@ extension OSLog {
         CFRunLoopStop(CFRunLoopGetCurrent())
     }
     
-    public func gameCoreWillBeginFrame() {
+    public func gameCoreWillBeginFrame(_ isExecuting: Bool) {
         _scope.begin()
     }
     
-    public func gameCoreWillEndFrame() {
+    public func gameCoreWillEndFrame(_ isExecuting: Bool) {
         defer {
             _scope.end()
-            // _videoLayer.display()
         }
         
-        guard !gameCore.isEmulationPaused || _effectsMode == .displayAlways
+        guard isExecuting || _effectsMode == .displayAlways
         else { return }
         
         guard _inflightSemaphore.wait(timeout: .now()) == .success

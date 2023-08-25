@@ -67,39 +67,9 @@ class ShaderPresetTextReaderTests: XCTestCase {
         expect(got) == ShaderPresetData(name: "Unnamed shader preset", shader: "CRT", parameters: ["a": 5, "b": 6])
     }
 
-    func testShaderParamsIsValidSignature() throws {
-        let got = ShaderPresetTextReader.isSignedAndValid(text: #"$shader="CRT";a=5.0;b=6.0@9a2"#)
-        expect(got).to(beTrue())
-    }
-
-    func testShortSignatureIsNotValid() throws {
-        let got = ShaderPresetTextReader.isSignedAndValid(text: #"$shader="CRT";a=5.0;b=6.0@6a"#)
-        expect(got).to(beFalse())
-    }
-
-    func testLongSignatureIsNotValid() throws {
-        let got = ShaderPresetTextReader.isSignedAndValid(text: #"$shader="CRT";a=5.0;b=6.0@9a3"#)
-        expect(got).to(beFalse())
-    }
-
-    func testShaderParamsIsNotValidSignature() throws {
-        let got = ShaderPresetTextReader.isSignedAndValid(text: #"$shader="CRT";a=5.0;b=6.0@6b0"#)
-        expect(got).to(beFalse())
-    }
-
-    func testMissingSignatureIsNotValid() throws {
-        let got = ShaderPresetTextReader.isSignedAndValid(text: #"$shader="CRT";a=5.0;b=6.0"#)
-        expect(got).to(beFalse())
-    }
-
     func testReadNameShaderParamsSignature() throws {
         let got = try r.read(text: #"$name="Name";$shader="CRT";a=5.0;b=6.0@3b4"#)
         expect(got) == ShaderPresetData(name: "Name", shader: "CRT", parameters: ["a": 5, "b": 6])
-    }
-
-    func testNameShaderParamsIsValidSignature() throws {
-        let got = ShaderPresetTextReader.isSignedAndValid(text: #"$name="Name";$shader="CRT";a=5.0;b=6.0@3b4"#)
-        expect(got).to(beTrue())
     }
 
     func testReadParamsSignature() throws {

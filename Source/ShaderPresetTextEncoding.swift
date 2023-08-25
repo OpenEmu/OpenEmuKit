@@ -129,15 +129,6 @@ public enum ShaderPresetReadError: Error {
     
     public init() {}
     
-    /// Determines if text has a valid signature.
-    public static func isSignedAndValid(text: String) -> Bool {
-        let parts = text.split(separator: "@")
-        if parts.count != 2 {
-            return false
-        }
-        return Crypto.MD5.digest(string: parts[0]).prefix(3) == parts[1]
-    }
-    
     public func read(text: String, id: String? = nil) throws -> ShaderPresetData {
         // do we have a signature?
         var paramsEnd = text.endIndex
