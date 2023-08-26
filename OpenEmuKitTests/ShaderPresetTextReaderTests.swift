@@ -60,44 +60,6 @@ class ShaderPresetTextReaderTests: XCTestCase {
         expect(got) == ShaderPresetData(name: "Unnamed shader preset", shader: "", parameters: ["a": 5, "b": 6])
     }
 
-    // MARK: - With signature
-    
-    func testReadShaderParamsSignature() throws {
-        let got = try r.read(text: #"$shader="CRT";a=5.0;b=6.0@9a2"#)
-        expect(got) == ShaderPresetData(name: "Unnamed shader preset", shader: "CRT", parameters: ["a": 5, "b": 6])
-    }
-
-    func testReadNameShaderParamsSignature() throws {
-        let got = try r.read(text: #"$name="Name";$shader="CRT";a=5.0;b=6.0@3b4"#)
-        expect(got) == ShaderPresetData(name: "Name", shader: "CRT", parameters: ["a": 5, "b": 6])
-    }
-
-    func testReadParamsSignature() throws {
-        let got = try r.read(text: #"a=5.0;b=6.0@346"#)
-        expect(got) == ShaderPresetData(name: "Unnamed shader preset", shader: "", parameters: ["a": 5, "b": 6])
-    }
-    
-    func testInvalidSignature() {
-        let r = r!
-        expect {
-            try r.read(text: #"a=5.0;b=6.0@foo"#)
-        }.to(throwError(ShaderPresetReadError.invalidSignature))
-    }
-    
-    func testSignatureTooShort() {
-        let r = r!
-        expect {
-            try r.read(text: #"a=5.0;b=6.0@34"#)
-        }.to(throwError(ShaderPresetReadError.invalidSignature))
-    }
-    
-    func testSignatureTooLong() {
-        let r = r!
-        expect {
-            try r.read(text: #"a=5.0;b=6.0@346f"#)
-        }.to(throwError(ShaderPresetReadError.invalidSignature))
-    }
-    
     func testReadPerformance() {
         measure {
             _ = try? r.read(text: #"$name="Name";$shader="CRT";a=5.0;b=6.0;c=2.2;d=1.1;e=1.1;f=1.1"#)

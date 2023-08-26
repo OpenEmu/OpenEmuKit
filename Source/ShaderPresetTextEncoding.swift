@@ -41,7 +41,6 @@ public enum ShaderPresetWriteError: Error {
         public static let name      = Self(rawValue: 1 << 0)
         public static let shader    = Self(rawValue: 1 << 1)
         public static let createdAt = Self(rawValue: 1 << 2)
-        public static let sign      = Self(rawValue: 1 << 3)
         
         public static let all: Self = [.name, .shader]
     }
@@ -106,12 +105,6 @@ public enum ShaderPresetWriteError: Error {
             first = false
         }
         
-        if options.contains(.sign) {
-            let sig = Crypto.MD5.digest(string: s).prefix(3)
-            s.append("@")
-            s.append(contentsOf: sig)
-        }
-        
         return s
     }
 }
@@ -130,17 +123,7 @@ public enum ShaderPresetReadError: Error {
     public init() {}
     
     public func read(text: String, id: String? = nil) throws -> ShaderPresetData {
-        // do we have a signature?
-        var paramsEnd = text.endIndex
-        if let idx = text.lastIndex(of: "@") {
-            paramsEnd = idx
-            let sig = Crypto.MD5.digest(string: text[..<idx])
-            guard text[text.index(after: idx)..<text.endIndex] == sig.prefix(3) else {
-                throw ShaderPresetReadError.invalidSignature
-            }
-        }
-        
-        guard let tokens = try? PKVScanner.parse(text: text[..<paramsEnd])
+        guard let tokens = try? PKVScanner.parse(text: text)
         else { throw ShaderPresetReadError.malformed }
         
         var name   = "Unnamed shader preset"

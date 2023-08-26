@@ -58,13 +58,6 @@ class ShaderPresetTextWriterTests: XCTestCase {
         expect(got.isEmpty) == true
     }
     
-    // MARK: - signed
-    
-    func testWriteWithSignature() throws {
-        let got = try w.write(preset: .init(name: "foo", shader: "CRT", parameters: ["a": 5, "b": 6]), options: [.shader, .sign])
-        expect(got) == #"$shader="CRT";a=5;b=6@509"#
-    }
-    
     // MARK: - invalid characters in identifiers
     
     let invalidCharacters = ShaderPresetTextWriter.invalidCharacters
