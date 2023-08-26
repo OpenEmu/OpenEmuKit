@@ -110,7 +110,6 @@ public enum ShaderPresetWriteError: Error {
 public enum ShaderPresetReadError: Error {
     /// Preset is malformed
     case malformed
-    case invalidSignature
 }
 
 @frozen public enum ShaderPresetTextReader {
