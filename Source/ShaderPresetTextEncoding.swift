@@ -30,7 +30,7 @@ public enum ShaderPresetWriteError: Error {
     case missingCreatedAt
 }
 
-@frozen public struct ShaderPresetTextWriter {
+@frozen public enum ShaderPresetTextWriter {
     @frozen public struct Options: OptionSet {
         public let rawValue: Int
         
@@ -61,23 +61,21 @@ public enum ShaderPresetWriteError: Error {
     /// - Parameter s: The string to be validated.
     /// - Returns: `true` if s is a valid identifier.
     public static func isValidIdentifier(_ s: String) -> Bool {
-        s.rangeOfCharacter(from: Self.invalidCharacterSet) == nil
+        s.rangeOfCharacter(from: invalidCharacterSet) == nil
     }
     
-    public init() {}
-    
-    public func write(preset c: ShaderPresetData, options: Options = [.shader]) throws -> String {
+    public static func write(preset c: ShaderPresetData, options: Options = [.shader]) throws -> String {
         var s = ""
         
         var first = true
         if options.contains(.name) {
-            guard Self.isValidIdentifier(c.name) else { throw ShaderPresetWriteError.invalidCharacters }
+            guard isValidIdentifier(c.name) else { throw ShaderPresetWriteError.invalidCharacters }
             first = false
             s.append("$name=\"\(c.name)\"")
         }
         
         if options.contains(.shader) {
-            guard Self.isValidIdentifier(c.shader) else { throw ShaderPresetWriteError.invalidCharacters }
+            guard isValidIdentifier(c.shader) else { throw ShaderPresetWriteError.invalidCharacters }
             if !first {
                 s.append(";")
             } else {
@@ -101,7 +99,7 @@ public enum ShaderPresetWriteError: Error {
             if !first {
                 s.append(";")
             }
-            s.append("\(key)=\(Self.formatter.string(from: c.parameters[key]! as NSNumber)!)")
+            s.append("\(key)=\(formatter.string(from: c.parameters[key]! as NSNumber)!)")
             first = false
         }
         
@@ -115,14 +113,12 @@ public enum ShaderPresetReadError: Error {
     case invalidSignature
 }
 
-@frozen public struct ShaderPresetTextReader {
+@frozen public enum ShaderPresetTextReader {
     enum State {
         case key, value
     }
     
-    public init() {}
-    
-    public func read(text: String, id: String? = nil) throws -> ShaderPresetData {
+    public static func read(text: String, id: String? = nil) throws -> ShaderPresetData {
         guard let tokens = try? PKVScanner.parse(text: text)
         else { throw ShaderPresetReadError.malformed }
         

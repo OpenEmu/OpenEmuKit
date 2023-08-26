@@ -27,11 +27,7 @@ import Nimble
 @testable import OpenEmuKit
 
 class ShaderPresetTextReaderTests: XCTestCase {
-    var r: ShaderPresetTextReader!
-    
-    override func setUp() {
-        r = ShaderPresetTextReader()
-    }
+    typealias r = ShaderPresetTextReader
     
     // MARK: - Without signature
     

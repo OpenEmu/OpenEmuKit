@@ -27,11 +27,7 @@ import Nimble
 @testable import OpenEmuKit
 
 class ShaderPresetTextWriterTests: XCTestCase {
-    var w: ShaderPresetTextWriter!
-    
-    override func setUp() {
-        w = ShaderPresetTextWriter()
-    }
+    typealias w = ShaderPresetTextWriter
     
     func testWriteDefaultOptions() throws {
         let got = try w.write(preset: .init(name: "foo", shader: "CRT", parameters: ["a": 5, "b": 6]))
@@ -63,7 +59,6 @@ class ShaderPresetTextWriterTests: XCTestCase {
     let invalidCharacters = ShaderPresetTextWriter.invalidCharacters
     
     func testIdDoesNotAllowInvalidCharacters() {
-        let w = w!
         for ch in invalidCharacters {
             expect {
                 try w.write(preset: .init(name: "foo\(ch)foo", shader: "CRT", parameters: ["a": 5, "b": 6]), options: [.name])
@@ -72,7 +67,6 @@ class ShaderPresetTextWriterTests: XCTestCase {
     }
     
     func testShaderDoesNotAllowInvalidCharacters() {
-        let w = w!
         for ch in invalidCharacters {
             expect {
                 try w.write(preset: .init(name: "foo", shader: "CRT\(ch) Geom", parameters: ["a": 5, "b": 6]), options: [.shader])

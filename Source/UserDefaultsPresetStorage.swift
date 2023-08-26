@@ -84,7 +84,7 @@ public class UserDefaultsPresetStorage: ShaderPresetStorage {
             let preset    = ShaderPresetData(name: preset.name, shader: preset.shader, parameters: preset.parameters, id: preset.id, createdAt: createdAt)
             
             do {
-                let text = try ShaderPresetTextWriter().write(preset: preset, options: [.name, .shader, .createdAt])
+                let text = try ShaderPresetTextWriter.write(preset: preset, options: [.name, .shader, .createdAt])
                 store.set(text, forKey: Self.makeKey(preset.id))
                 
                 //
@@ -124,6 +124,6 @@ public class UserDefaultsPresetStorage: ShaderPresetStorage {
     
     func load(_ id: String) -> ShaderPresetData? {
         guard let text = store.string(forKey: Self.makeKey(id)) else { return nil }
-        return try? ShaderPresetTextReader().read(text: text, id: id)
+        return try? ShaderPresetTextReader.read(text: text, id: id)
     }
 }
