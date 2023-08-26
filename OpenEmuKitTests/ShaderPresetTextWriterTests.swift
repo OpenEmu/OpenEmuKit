@@ -27,6 +27,7 @@ import Nimble
 @testable import OpenEmuKit
 
 class ShaderPresetTextWriterTests: XCTestCase {
+    // swiftlint:disable:next type_name
     typealias w = ShaderPresetTextWriter
     
     func testWriteDefaultOptions() throws {

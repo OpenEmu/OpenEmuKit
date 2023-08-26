@@ -27,6 +27,7 @@ import Nimble
 @testable import OpenEmuKit
 
 class ShaderPresetTextReaderTests: XCTestCase {
+    // swiftlint:disable:next type_name
     typealias r = ShaderPresetTextReader
     
     // MARK: - Without signature
