@@ -224,42 +224,28 @@ extension GameCoreManager: OEGameCoreHelper {
 
 // MARK: - Synchronous image capture APIs
 
-@_implementationOnly import Atomics
-
-@objc extension GameCoreManager {
+extension GameCoreManager {
     public func captureOutputImage() -> NSBitmapImageRep {
-        let done = ManagedAtomic(false)
-        
+        let sem = DispatchSemaphore(value: 0)
         var res: NSBitmapImageRep?
         gameCoreHelper!.captureOutputImage { image in
             res = image
-            done.store(true, ordering: .sequentiallyConsistent)
+            sem.signal()
         }
         
-        while done.load(ordering: .sequentiallyConsistent) == false {
-            if CFRunLoopRunInMode(.defaultMode, 10.0, false) == .finished {
-                break
-            }
-        }
-        
+        sem.wait()
         return res!
     }
     
     public func captureSourceImage() -> NSBitmapImageRep {
-        let done = ManagedAtomic(false)
-        
+        let sem = DispatchSemaphore(value: 0)
         var res: NSBitmapImageRep?
         gameCoreHelper!.captureSourceImage { image in
             res = image
-            done.store(true, ordering: .sequentiallyConsistent)
+            sem.signal()
         }
         
-        while done.load(ordering: .sequentiallyConsistent) == false {
-            if CFRunLoopRunInMode(.defaultMode, 10.0, false) == .finished {
-                break
-            }
-        }
-        
+        sem.wait()
         return res!
     }
 }
