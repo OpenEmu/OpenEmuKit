@@ -516,6 +516,13 @@ extension OSLog {
             self._systemResponder.handleMouseEvent(event)
         }
     }
+
+    public func handleKeyboardEvent(_ event: OEHIDEvent) {
+        DispatchQueue.main.async {
+            guard self._handleEvents, self._handleKeyboardEvents else { return }
+            self._systemResponder.handle(event)
+        }
+    }
     
     public func setHandleEvents(_ handleEvents: Bool) {
         _handleEvents = handleEvents

@@ -79,6 +79,7 @@ import AudioToolbox
     func insertFile(at url: URL, completionHandler block: @escaping (Bool, Error?) -> Void)
     
     func handleMouseEvent(_ event: OEEvent)
+    func handleKeyboardEvent(_ event: OEHIDEvent)
     func setHandleEvents(_ handleEvents: Bool)
     func setHandleKeyboardEvents(_ handleKeyboardEvents: Bool)
     func systemBindingsDidSetEvent(_ event: OEHIDEvent, forBinding bindingDescription: OEBindingDescription, playerNumber: UInt)

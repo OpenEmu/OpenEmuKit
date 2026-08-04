@@ -204,6 +204,10 @@ extension GameCoreManager: OEGameCoreHelper {
     public func handleMouseEvent(_ event: OEEvent) {
         gameCoreHelper?.handleMouseEvent(event)
     }
+
+    public func handleKeyboardEvent(_ event: OEHIDEvent) {
+        gameCoreHelper?.handleKeyboardEvent(event)
+    }
     
     public func setHandleEvents(_ handleEvents: Bool) {
         gameCoreHelper?.setHandleEvents(handleEvents)
