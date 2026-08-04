@@ -89,6 +89,10 @@ extension OSLog {
     var _handleKeyboardEvents: Bool = false
     
     var loadedRom = false
+
+    private var normalGameplayRate: Float = 1.0
+    private var fastForwardGameplayRate: Float = 5.0
+    private var isFastForwarding = false
     
     // frame rate debugging
     var previous    = CFTimeInterval()
@@ -141,6 +145,19 @@ extension OSLog {
             try? setShaderURL(_shader, parameters: _shaderParameters)
             self._shader            = nil
             self._shaderParameters  = nil
+        }
+    }
+
+    private func applyGameplayRate() {
+        let rate = isFastForwarding ? fastForwardGameplayRate : normalGameplayRate
+
+        // nextDrawable() otherwise limits cores running faster than the display refresh rate.
+        // Fixes: https://github.com/OpenEmu/OpenEmu/issues/4780
+        _videoLayer?.displaySyncEnabled = rate <= 1.0
+
+        gameCore.perform {
+            guard !self.gameCore.isEmulationPaused else { return }
+            self.gameCore.rate = rate
         }
     }
     
@@ -361,10 +378,20 @@ extension OSLog {
             self._gameAudio.volume = volume
         }
     }
+
+    public func setGameplayRate(_ normalRate: Float, fastForwardRate: Float) {
+        normalGameplayRate = normalRate
+        fastForwardGameplayRate = fastForwardRate
+        applyGameplayRate()
+    }
     
     public func setPauseEmulation(_ paused: Bool) {
+        let rate = isFastForwarding ? fastForwardGameplayRate : normalGameplayRate
         gameCore.perform {
             self.gameCore.setPauseEmulation(paused)
+            if !paused {
+                self.gameCore.rate = rate
+            }
         }
     }
     
@@ -828,9 +855,8 @@ extension OSLog {
     }
     
     public func fastForwardGameplay(_ enable: Bool) {
-        // Required so that _videoLayer.nextDrawable() vends frames faster than the display refresh rate
-        // Fixes: https://github.com/OpenEmu/OpenEmu/issues/4780
-        _videoLayer.displaySyncEnabled = !enable
+        isFastForwarding = enable
+        applyGameplayRate()
         gameCoreOwner.fastForwardGameplay(enable)
     }
     
