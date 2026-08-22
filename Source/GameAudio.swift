@@ -84,7 +84,7 @@ final public class GameAudio: GameAudioProtocol {
         engine.stop()
         detachNodes()
         destroyNodes()
-        isRunning = true
+        isRunning = false
     }
     
     public func pauseAudio() {
