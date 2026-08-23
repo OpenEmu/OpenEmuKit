@@ -93,6 +93,7 @@ extension OSLog {
     private var normalGameplayRate: Float = 1.0
     private var fastForwardGameplayRate: Float = 5.0
     private var isFastForwarding = false
+    private var hasStartedEmulation = false
     
     // frame rate debugging
     var previous    = CFTimeInterval()
@@ -149,6 +150,12 @@ extension OSLog {
     }
 
     private func applyGameplayRate() {
+        // The host sends its configured rates during setup, before the core has
+        // started. Changing the Metal layer's display-sync mode at that point can
+        // leave the first drawable stalled when a game is launched again. Store
+        // those rates during setup and apply them once startEmulation completes.
+        guard hasStartedEmulation else { return }
+
         let rate = isFastForwarding ? fastForwardGameplayRate : normalGameplayRate
 
         // nextDrawable() otherwise limits cores running faster than the display refresh rate.
@@ -477,7 +484,11 @@ extension OSLog {
     }
     
     public func startEmulation(completionHandler handler: @escaping () -> Void) {
-        gameCore.startEmulation(completionHandler: handler)
+        gameCore.startEmulation {
+            self.hasStartedEmulation = true
+            self.applyGameplayRate()
+            handler()
+        }
     }
     
     public func resetEmulation(completionHandler handler: @escaping () -> Void) {
@@ -486,6 +497,8 @@ extension OSLog {
     
     public func stopEmulation(completionHandler handler: @escaping () -> Void) {
         guard let gameCore = gameCore else { return }
+
+        hasStartedEmulation = false
         
         gameCore.stopEmulation {
             self._gameAudio.stopAudio()
