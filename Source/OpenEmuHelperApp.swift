@@ -117,8 +117,7 @@ extension OSLog {
             os_log(.info, log: .helper, "Using GameAudio2 driver")
             _gameAudio = GameAudio2(withCore: gameCore)
         } else {
-            os_log(.info, log: .helper, "Using GameAudio driver")
-            _gameAudio = GameAudio(withCore: gameCore)
+            fatalError("Audio driver not supported")
         }
         
         _gameAudio.volume = 1.0
