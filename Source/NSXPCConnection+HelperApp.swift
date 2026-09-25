@@ -37,15 +37,16 @@ extension NSXPCConnection {
     static let helperServiceNameArgumentPrefix = "--org.openemu.broker.name="
     private static var xpcTaskKey = 0
     
-    static func makeConnection(serviceName name: String, executableURL url: URL) throws -> NSXPCConnection {
+    static func makeConnection(serviceName name: String, executableURL url: URL, architecture arch: String) throws -> NSXPCConnection {
         let identifier = UUID().uuidString
+        let fullServiceName = name + "." + arch
         
         /// 1. Launch Helper App
         /// This results in the helper app establishing a connection to the broker and registering its
         /// `identifier`
         let task = Process()
-        task.executableURL = url
-        task.arguments = ["\(Self.helperIdentifierArgumentPrefix)\(identifier)", "\(Self.helperServiceNameArgumentPrefix)\(name)"]
+        task.executableURL = URL(fileURLWithPath: "/usr/bin/arch")
+        task.arguments = ["-\(arch)", url.path, "\(Self.helperIdentifierArgumentPrefix)\(identifier)", "\(Self.helperServiceNameArgumentPrefix)\(fullServiceName)"]
         task.terminationHandler = { task in
             os_log(.error, log: .helper,
                    "Helper terminated unexpectedly. { id = %{public}@, reason = %ld, exit = %d }",
@@ -55,6 +56,7 @@ extension NSXPCConnection {
         }
         task.standardError  = FileHandle.standardError
         task.standardOutput = FileHandle.standardOutput
+
         do {
             try task.run()
         } catch {
@@ -74,7 +76,7 @@ extension NSXPCConnection {
         }
         
         /// 2. Launch a connection to the broker
-        let cn = NSXPCConnection(serviceName: name)
+        let cn = NSXPCConnection(serviceName: fullServiceName)
         cn.invalidationHandler = {
             os_log(.error, log: .helper, "Broker connection was unexpectedely invalidated.")
         }
@@ -101,7 +103,7 @@ extension NSXPCConnection {
 #if XPC_WAIT_FOREVER
         sem.wait()
 #else
-        if sem.wait(timeout: .now() + .seconds(2)) == .timedOut {
+        if sem.wait(timeout: .now() + .seconds(3)) == .timedOut {
             // mediation of connection between host and helper via broker timed out
             os_log(.error, log: .helper, "Timeout waiting for listener endpoint from broker.")
             

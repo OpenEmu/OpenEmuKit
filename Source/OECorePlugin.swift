@@ -24,6 +24,7 @@
 
 import Foundation
 import OpenEmuBase
+import os.log
 
 public class OECorePlugin: OEPlugin {
     
@@ -213,6 +214,39 @@ public class OECorePlugin: OEPlugin {
                 }
             }
         }
+    }
+    
+    private func isCodeSigned(forArchitecture architecture: OECorePlugin.Architecture) -> Bool {
+        var code: SecStaticCode?
+        let attributes: [String: Any] = [kSecCodeAttributeArchitecture as String: architecture]
+        
+        // Create a code object for the bundle
+        let result = SecStaticCodeCreateWithPathAndAttributes(url as CFURL, [], attributes as CFDictionary, &code)
+        if let code = code,
+           result == errSecSuccess {
+            
+            // Check the code signature
+            let flags = SecCSFlags(rawValue: kSecCSBasicValidateOnly)
+            let validityResult = SecStaticCodeCheckValidity(code, flags, nil)
+            if validityResult == errSecSuccess {
+                return true
+            } else {
+                os_log(.debug, log: .default, "Code sign check failed. bundle =%@, arch =%@, error =%@", url.absoluteString, architecture, SecCopyErrorMessageString(validityResult, nil) as String? ?? "")
+                return false
+            }
+        }
+        
+        os_log(.debug, log: .default, "Code sign check failed. bundle =%@, arch =%@, error =%@", url.absoluteString, architecture, SecCopyErrorMessageString(result, nil) as String? ?? "")
+        return false
+    }
+    
+    public func canRunArchitecture(_ architecture: OECorePlugin.Architecture) -> Bool {
+        if architecture == .x86_64 {
+            return self.architectures.contains(.x86_64) && (Platform.isRosettaAvailable || Platform.isIntelX86)
+        } else if architecture == .arm64 {
+            return self.architectures.contains(.arm64) && self.isCodeSigned(forArchitecture: .arm64) && Platform.isAppleSilicon
+        }
+        return false
     }
 }
 

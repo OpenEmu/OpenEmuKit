@@ -80,6 +80,7 @@
 		05EEF0F22707C875008A03DC /* ShaderPresetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05EEF0F12707C875008A03DC /* ShaderPresetData.swift */; };
 		05EEF1022707C986008A03DC /* ShaderPresetStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05EEF1012707C986008A03DC /* ShaderPresetStoreTests.swift */; };
 		05EEF1052707CA9B008A03DC /* OpenEmuKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E6957F24CA5D4200ACFB35 /* OpenEmuKit.framework */; };
+		8BDFCA8C2FFF2266009A0672 /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDFCA8B2FFF2266009A0672 /* Platform.swift */; };
 		8F3A1837285C9F88008A7AC9 /* NSBundle+CacheFlushing.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F3A1836285C9F0E008A7AC9 /* NSBundle+CacheFlushing.m */; };
 		DD75EE5D298976C60056B3BA /* MTL3DGameRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD75EE5C298976C60056B3BA /* MTL3DGameRenderer.swift */; };
 /* End PBXBuildFile section */
@@ -191,6 +192,7 @@
 		05EEF0F72707C96B008A03DC /* OpenEmuKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenEmuKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		05EEF1012707C986008A03DC /* ShaderPresetStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderPresetStoreTests.swift; sourceTree = "<group>"; };
 		05EEF1032707CA7A008A03DC /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/MacOSX.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		8BDFCA8B2FFF2266009A0672 /* Platform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
 		8F3A1836285C9F0E008A7AC9 /* NSBundle+CacheFlushing.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+CacheFlushing.m"; sourceTree = "<group>"; };
 		8F4AEABF27354776005C6246 /* NSBundle+CacheFlushing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+CacheFlushing.h"; sourceTree = "<group>"; };
 		DD75EE5C298976C60056B3BA /* MTL3DGameRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MTL3DGameRenderer.swift; sourceTree = "<group>"; };
@@ -438,6 +440,7 @@
 		05E6BA3324CCD78300ACFB35 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				8BDFCA8B2FFF2266009A0672 /* Platform.swift */,
 				05C40F8926F6A72F0072B722 /* ApproximatelyEqual.swift */,
 				0547C20B2707F60500D386D3 /* Crypto.swift */,
 				057E7FEC28755CB100BC1C04 /* Logging.swift */,
@@ -666,6 +669,7 @@
 				05E6BA1D24CCD71D00ACFB35 /* OESystemPlugin.swift in Sources */,
 				0572A426287B969500AC32F8 /* OEGameCoreOwner.swift in Sources */,
 				0572A4012877883100AC32F8 /* OpenEmuXPCHelperApp.swift in Sources */,
+				8BDFCA8C2FFF2266009A0672 /* Platform.swift in Sources */,
 				0572A419287A334600AC32F8 /* OEXPCGameCoreManager.swift in Sources */,
 				057E7FED28755CB100BC1C04 /* Logging.swift in Sources */,
 				057E7FF128762D5400BC1C04 /* OpenGL3GameRenderer.swift in Sources */,

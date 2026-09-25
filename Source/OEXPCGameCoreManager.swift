@@ -29,10 +29,12 @@ import OpenEmuKitPrivate
 @objc public class OEXPCGameCoreManager: GameCoreManager {
     let serviceName: String
     let helperExecutableName: String
+    let architecture: OECorePlugin.Architecture
     
-    @objc public init(startupInfo: OEGameStartupInfo, gameCoreOwner: OEGameCoreOwner, serviceName: String, helperExecutableName: String) {
+    @objc public init(startupInfo: OEGameStartupInfo, gameCoreOwner: OEGameCoreOwner, serviceName: String, helperExecutableName: String, architecture: OECorePlugin.Architecture) {
         self.serviceName = serviceName
         self.helperExecutableName = helperExecutableName
+        self.architecture = architecture
         super.init(startupInfo: startupInfo, gameCoreOwner: gameCoreOwner)
     }
     
@@ -49,7 +51,7 @@ import OpenEmuKitPrivate
         
         let cn: NSXPCConnection
         do {
-            cn = try .makeConnection(serviceName: serviceName, executableURL: executableURL)
+            cn = try .makeConnection(serviceName: serviceName, executableURL: executableURL, architecture: architecture)
             helperConnection = cn
         } catch {
             DispatchQueue.main.async {
