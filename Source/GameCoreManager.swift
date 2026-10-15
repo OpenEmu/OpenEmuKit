@@ -80,6 +80,10 @@ extension GameCoreManager: OEGameCoreHelper {
     public func setVolume(_ value: Float) {
         gameCoreHelper?.setVolume(value)
     }
+
+    public func setGameplayRate(_ normalRate: Float, fastForwardRate: Float) {
+        gameCoreHelper?.setGameplayRate(normalRate, fastForwardRate: fastForwardRate)
+    }
     
     public func setPauseEmulation(_ pauseEmulation: Bool) {
         gameCoreHelper?.setPauseEmulation(pauseEmulation)
