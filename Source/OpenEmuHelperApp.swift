@@ -90,6 +90,13 @@ extension OSLog {
     
     var loadedRom = false
     
+    private var normalGameplayRate: Float = 1.0
+    private var fastForwardGameplayRate: Float = 5.0
+    private var isFastForwarding = false
+    private var fastForwardButtonToggles = false
+    private var hasStartedEmulation = false
+    private var lastFastForwardPresentTime: TimeInterval = 0
+    
     // frame rate debugging
     var previous    = CFTimeInterval()
     var frameRate   = CFTimeInterval()
@@ -140,6 +147,27 @@ extension OSLog {
             try? setShaderURL(_shader, parameters: _shaderParameters)
             self._shader            = nil
             self._shaderParameters  = nil
+        }
+    }
+    
+    private var activeGameplayRate: Float {
+        isFastForwarding ? fastForwardGameplayRate : normalGameplayRate
+    }
+    
+    private func applyGameplayRate() {
+        // Rates may be configured during setup, before the core has started.
+        // They are applied once startEmulation completes.
+        guard hasStartedEmulation else { return }
+        
+        let rate = activeGameplayRate
+        
+        // Required so that _videoLayer.nextDrawable() vends frames faster than the display refresh rate
+        // Fixes: https://github.com/OpenEmu/OpenEmu/issues/4780
+        _videoLayer?.displaySyncEnabled = rate <= 1.0
+        
+        gameCore.perform {
+            guard !self.gameCore.isEmulationPaused else { return }
+            self.gameCore.rate = rate
         }
     }
     
@@ -361,9 +389,28 @@ extension OSLog {
         }
     }
     
+    public func setGameplayRate(_ normalRate: Float, fastForwardRate: Float) {
+        normalGameplayRate = normalRate
+        fastForwardGameplayRate = fastForwardRate
+        applyGameplayRate()
+    }
+    
+    public func setFastForwardEnabled(_ enabled: Bool) {
+        setFastForward(enabled)
+    }
+    
+    public func setFastForwardButtonToggles(_ toggles: Bool) {
+        fastForwardButtonToggles = toggles
+    }
+    
     public func setPauseEmulation(_ paused: Bool) {
+        let rate = activeGameplayRate
         gameCore.perform {
             self.gameCore.setPauseEmulation(paused)
+            // The core restores the rate it had when paused; fast-forward may have changed since.
+            if !paused {
+                self.gameCore.rate = rate
+            }
         }
     }
     
@@ -449,7 +496,11 @@ extension OSLog {
     }
     
     public func startEmulation(completionHandler handler: @escaping () -> Void) {
-        gameCore.startEmulation(completionHandler: handler)
+        gameCore.startEmulation {
+            self.hasStartedEmulation = true
+            self.applyGameplayRate()
+            handler()
+        }
     }
     
     public func resetEmulation(completionHandler handler: @escaping () -> Void) {
@@ -458,6 +509,8 @@ extension OSLog {
     
     public func stopEmulation(completionHandler handler: @escaping () -> Void) {
         guard let gameCore = gameCore else { return }
+        
+        hasStartedEmulation = false
         
         gameCore.stopEmulation {
             self._gameAudio.stopAudio()
@@ -690,6 +743,17 @@ extension OSLog {
         guard isExecuting || _effectsMode == .displayAlways
         else { return }
         
+        // While fast-forwarding, present at most 120 frames per second. Waiting for a
+        // drawable for every emulated frame would otherwise cap the emulation speed.
+        if isExecuting && gameCore.rate > 1 {
+            let now = ProcessInfo.processInfo.systemUptime
+            guard now - lastFastForwardPresentTime >= 1.0 / 120.0 else {
+                _skippedFrames += 1
+                return
+            }
+            lastFastForwardPresentTime = now
+        }
+        
         guard _inflightSemaphore.wait(timeout: .now()) == .success
         else {
             _skippedFrames += 1
@@ -826,10 +890,28 @@ extension OSLog {
         gameCoreOwner.takeScreenshot()
     }
     
+    /// Sent by the system responder when the Fast Forward button is pressed (`true`) or released (`false`).
     public func fastForwardGameplay(_ enable: Bool) {
-        // Required so that _videoLayer.nextDrawable() vends frames faster than the display refresh rate
-        // Fixes: https://github.com/OpenEmu/OpenEmu/issues/4780
-        _videoLayer.displaySyncEnabled = !enable
+        guard fastForwardButtonToggles else {
+            setFastForward(enable)
+            return
+        }
+        
+        if enable {
+            setFastForward(!isFastForwarding)
+        } else {
+            // The responder also sets the core's rate directly on release; restore the active rate.
+            applyGameplayRate()
+        }
+    }
+    
+    public func toggleFastForwardGameplay(_ sender: Any) {
+        setFastForward(!isFastForwarding)
+    }
+    
+    private func setFastForward(_ enable: Bool) {
+        isFastForwarding = enable
+        applyGameplayRate()
         gameCoreOwner.fastForwardGameplay(enable)
     }
     
