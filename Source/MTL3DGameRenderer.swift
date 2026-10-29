@@ -80,11 +80,9 @@ final class MTL3DGameRenderer: GameRenderer {
     }
     
     func didExecuteFrame() {
-        // Wait for the rendering thread to complete this frame.
-        // Most cores with rendering threads don't seem to handle timing themselves - they're probably relying on Vsync.
-        if isFPSLimiting.load(ordering: .sequentiallyConsistent) != 0 {
-            executeThreadCanProceed.wait()
-        }
+        // Nothing to wait for: the core's texture is rendered on this thread, right after the core
+        // produced the frame (see -gameCoreWillEndFrame:). The semaphores in this class only serve
+        // renderers whose core renders on a thread of its own, like Mupen64Plus does.
     }
     
     func resumeFPSLimiting() {

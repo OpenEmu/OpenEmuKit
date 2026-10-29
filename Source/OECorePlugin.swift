@@ -295,4 +295,24 @@ public extension OECorePlugin {
         }
         return architectures
     }
+
+    /// The architecture of the slice this process is currently running as.
+    static var currentArchitecture: Architecture {
+#if arch(arm64)
+        return .arm64
+#elseif arch(x86_64)
+        return .x86_64
+#else
+        return "unknown"
+#endif
+    }
+
+    /// Whether this core contains code for the architecture this process runs as.
+    ///
+    /// Cores are loaded into the helper process, which is spawned from this app
+    /// bundle and therefore runs the same slice. A core without that slice can
+    /// never be loaded, even though its Info.plist can still be read normally.
+    var isCompatibleWithCurrentArchitecture: Bool {
+        return architectures.contains(Self.currentArchitecture)
+    }
 }
