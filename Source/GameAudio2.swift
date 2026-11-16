@@ -151,15 +151,12 @@ final public class GameAudio2: GameAudioProtocol {
         let read = readBlockForBuffer(gameCore.audioBuffer(at: 0))
         let sd   = streamDescription
         let bytesPerFrame = sd.mBytesPerFrame
-        let channelCount  = sd.mChannelsPerFrame
         
-        src = AVAudioSourceNode(format: renderFormat) { _, _, frameCount, inputData in
-            let bytesRequested = UInt(frameCount * bytesPerFrame)
-            let bytesCopied    = read(inputData.pointee.mBuffers.mData, bytesRequested)
-            
-            inputData.pointee.mBuffers.mDataByteSize    = UInt32(bytesCopied)
-            inputData.pointee.mBuffers.mNumberChannels  = channelCount
-            
+        src = AVAudioSourceNode(format: renderFormat) { isSilence, _, frameCount, inputData in
+            let bytesRequested = frameCount * bytesPerFrame
+            isSilence.pointee = ObjCBool(Self.renderAudioBuffer(&inputData.pointee.mBuffers,
+                                                              byteCount: bytesRequested,
+                                                              read: read))
             return noErr
         }
         
@@ -168,6 +165,19 @@ final public class GameAudio2: GameAudioProtocol {
         }
     }
     
+    // A source node must return all requested frames, including during an underrun.
+    // Keep the buffer length consistent with frameCount and pad unread data with silence.
+    static func renderAudioBuffer(_ buffer: inout AudioBuffer, byteCount: UInt32,
+                                  read: OEAudioBufferReadBlock) -> Bool {
+        let bytesRequested = UInt(byteCount)
+        let bytesCopied = read(buffer.mData, bytesRequested)
+        if bytesCopied < bytesRequested, let data = buffer.mData {
+            memset(data.advanced(by: Int(bytesCopied)), 0, Int(bytesRequested - bytesCopied))
+        }
+        buffer.mDataByteSize = byteCount
+        return bytesCopied == 0
+    }
+
     private func destroyNodes() {
         if let src {
             engine.detach(src)
